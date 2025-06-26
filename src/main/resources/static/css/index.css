@@ -1,0 +1,57 @@
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+A{
+    text-decoration: none;
+    color:inherit;
+}
+
+UL{
+    list-style-type:none;
+}
+IMG{ width:100%; }
+INPUT{
+    border:0;
+    outline: none;
+    border-radius:7px;
+    padding:10px;
+    border:1px solid #fcfcfc;
+}
+
+
+/*  header.html */
+#header_wrap{
+    width:100%;
+    padding:20px 0;
+    background: #fff;
+    transition: all 0.8s;
+}
+#header_wrap:hover{
+    background: #3340cb;
+    color:white;
+}
+#nav{
+    display:flex;
+    align-items: center;
+    width:100%;
+}
+#nav .logo-img{
+    min-width: 200px;
+    width:20%;
+    text-align:center;
+}
+#menuBox{ width:50%;}
+#menuBox .menu-list{
+    display:flex;
+    justify-content: center;
+}
+#menuBox .menu{ flex:1;  text-align: center;}
+#userBox{
+    width:30%;
+    display: flex;
+    justify-content: center;
+}
+#userBox .uitem{ flex:1; text-align: center;}
