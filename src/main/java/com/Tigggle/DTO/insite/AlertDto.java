@@ -7,9 +7,11 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
-public class ExpenseByKetwordDto {
+@Getter @Setter
+public class AlertDto {
     private String keyword; //키워드
-    private Long expenseAmount; //지출금액
+    private Long goalAmount; //목표금액
+    private Long expenseAmount; //사용금액
+    private Long excessAmount; //초과금액
+
 }
