@@ -23,6 +23,7 @@ public class CommunityWriteDto {
         CommunityBoard communityBoard = new CommunityBoard();
         communityBoard.setTitle(this.title);
         communityBoard.setContent(this.content);
+        communityBoard.setUser(user);
 
         return communityBoard;
     }

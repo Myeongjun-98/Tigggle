@@ -20,7 +20,7 @@ public class CommunityBoardGraph {
     @JoinColumn(name = "community_board_id")
     private CommunityBoard communityBoard; // 커뮤니티 게시글 일련번호
 
-    private LocalDateTime startdate; // 그래프 날짜설정(시작일)
+    private LocalDateTime startDate; // 그래프 날짜설정(시작일)
 
     private LocalDateTime finishDate; // 그래프 날짜설정(마지막날짜)
 }
