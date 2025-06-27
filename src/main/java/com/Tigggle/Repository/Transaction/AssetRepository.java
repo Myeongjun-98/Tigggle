@@ -1,4 +1,4 @@
-package com.Tigggle.Repository;
+package com.Tigggle.Repository.Transaction;
 
 public interface AssetRepository {
 
