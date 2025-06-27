@@ -27,11 +27,33 @@ public class ProductListDto {
     private Long expectedAmount;
     private Boolean isActive;
     private Boolean isRecommended;
-    private LocalDateTime cretedDate;
+    private LocalDateTime createdDate;
     private LocalDateTime updateDate;
 
-//    public static ProductListDto from(Product product, User user, boolean isRecommended) {
-//
-//
-//    }
+    public static ProductListDto from(Product product,
+                                      User user,
+                                      boolean isRecommended,
+                                      Long expectedAmount) {
+
+        ProductListDto productListDto = new ProductListDto();
+
+        productListDto.setId(product.getId());
+        productListDto.setBankId(product.getBank().getId());
+        productListDto.setBankName(product.getBank().getName());
+        productListDto.setLogoUrl(product.getBank().getLogoUrl());
+        productListDto.setHomepageUrl(product.getBank().getHomepageUrl());
+        productListDto.setProductType(product.getProductType());
+        productListDto.setDataSource(product.getDataSource());
+        productListDto.setPeriodMonth(product.getPeriodMonth());
+        productListDto.setAmountMoney(product.getAmountMoney());
+        productListDto.setInterestRate(product.getInterestRate());
+        productListDto.setExpectedAmount(expectedAmount);
+        productListDto.setIsActive(product.getIsActive());
+        productListDto.setIsRecommended(isRecommended);
+        productListDto.setCreatedDate(product.getCreatedDate());
+        productListDto.setUpdateDate(product.getUpdateDate());
+
+        return productListDto;
+
+    }
 }
