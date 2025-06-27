@@ -14,7 +14,4 @@ public class SoultionByKeywordDto {
     private Long goalAmount; //목표금액
     private Long currentAmount; //현재금액
     private Long excessAmount; //초과금액
-
-
-    public
 }
