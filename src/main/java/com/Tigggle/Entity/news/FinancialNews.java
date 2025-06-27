@@ -19,7 +19,7 @@ public class FinancialNews {
     private String newsUrl; // api주소
 
     @Column(columnDefinition = "BOOLEAN DEFAULT true")
-    private Boolean show; // 활성화 여부
+    private Boolean isVisible; // 활성화 여부
 
     private String source; // 출처
 
