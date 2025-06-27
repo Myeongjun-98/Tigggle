@@ -1,5 +1,5 @@
-package com.Tigggle.Constant;
+package com.Tigggle.Constant.Transaction;
 
 public enum LimitType {
-    month, day
+    MONTHLY, DAILY
 }

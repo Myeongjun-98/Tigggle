@@ -3,7 +3,7 @@ package com.Tigggle.Entity.Transaction;
 import com.Tigggle.Entity.product.Bank;
 import org.hibernate.annotations.ColumnDefault;
 
-import com.Tigggle.Constant.LimitType;
+import com.Tigggle.Constant.Transaction.LimitType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
@@ -36,9 +36,9 @@ public class BankAccount extends Asset{
 
     private Long expenseLimit;          // 출금 한도
 
-    @ColumnDefault("MONTH")
     @Enumerated(EnumType.STRING)
-    private LimitType limitType;        // 출금한도 종류
+    @Column(nullable = false)
+    private LimitType limitType = LimitType.MONTHLY;        // 출금한도 종류
 
     private Long balance = 0L;               // 잔액
 }

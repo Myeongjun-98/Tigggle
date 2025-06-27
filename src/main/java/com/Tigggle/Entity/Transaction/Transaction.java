@@ -2,7 +2,7 @@ package com.Tigggle.Entity.Transaction;
 
 import java.time.LocalDate;
 
-import com.Tigggle.Constant.PayMethod;
+import com.Tigggle.Constant.Transaction.PayMethod;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
