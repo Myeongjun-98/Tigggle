@@ -1,4 +1,4 @@
-package com.Tigggle.DTO;
+package com.Tigggle.DTO.Transaction;
 
 public class CashListDto {
 

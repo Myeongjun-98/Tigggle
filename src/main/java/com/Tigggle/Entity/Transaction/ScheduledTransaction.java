@@ -4,8 +4,8 @@ import java.time.LocalDate;
 
 import org.hibernate.annotations.ColumnDefault;
 
-import com.Tigggle.Constant.Frequency;
-import com.Tigggle.Constant.PayMethod;
+import com.Tigggle.Constant.Transaction.Frequency;
+import com.Tigggle.Constant.Transaction.PayMethod;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
