@@ -18,7 +18,7 @@ public class CommunityDetailDto {
     private String title;
     private String content;
     private CommunityCategory category;
-    private String nickName;
+    private String name;
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
     private List<CommunityCommentDto> comments;
@@ -34,7 +34,7 @@ public class CommunityDetailDto {
         communityDetailDto.setTitle(communityBoard.getTitle());
         communityDetailDto.setContent(communityBoard.getContent());
         communityDetailDto.setCategory(communityBoard.getCommunityCategory());
-        communityDetailDto.setNickName(communityBoard.getUser().getNickName());
+        communityDetailDto.setName(communityBoard.getUser().getName());
         communityDetailDto.setWriteDate(communityBoard.getWriteDate());
         communityDetailDto.setUpdateDate(communityBoard.getUpdateDate());
         communityDetailDto.setComments(communityCommentsDtos);

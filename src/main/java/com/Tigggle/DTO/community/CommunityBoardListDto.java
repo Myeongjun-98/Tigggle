@@ -15,7 +15,7 @@ public class CommunityBoardListDto {
     private Long id;
     private String title;
     private CommunityCategory category;
-    private String nickName;
+    private String name;
     private LocalDateTime writeDate;
     private int commentCount;
     private int hit;
@@ -27,7 +27,7 @@ public class CommunityBoardListDto {
             communityBoardListDto.setId(communityBoard.getId());
             communityBoardListDto.setTitle(communityBoard.getTitle());
             communityBoardListDto.setCategory(communityBoard.getCommunityCategory());
-            communityBoardListDto.setNickName(communityBoard.getUser().getNickName());
+            communityBoardListDto.setName(communityBoard.getUser().getName());
             communityBoardListDto.setWriteDate(communityBoard.getWriteDate());
             communityBoardListDto.setCommentCount(commentCount);
             communityBoardListDto.setHit(communityBoard.getHit());

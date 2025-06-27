@@ -1,5 +1,6 @@
 package com.Tigggle.Entity.Transaction;
 
+import com.Tigggle.Entity.User;
 import org.hibernate.annotations.ColumnDefault;
 
 import jakarta.persistence.Entity;
