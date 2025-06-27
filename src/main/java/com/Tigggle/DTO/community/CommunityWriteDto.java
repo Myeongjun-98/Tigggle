@@ -1,6 +1,7 @@
 package com.Tigggle.DTO.community;
 
 import com.Tigggle.Constant.CommunityCategory;
+import com.Tigggle.Entity.User;
 import com.Tigggle.Entity.community.CommunityBoard;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +22,9 @@ public class CommunityWriteDto {
     public CommunityBoard to(User user) {
         CommunityBoard communityBoard = new CommunityBoard();
         communityBoard.setTitle(this.title);
-        communityBoard.setContent();
+        communityBoard.setContent(this.content);
+        communityBoard.setCommunityCategory(this.category);
+        communityBoard.setUser(user);
 
         return communityBoard;
     }

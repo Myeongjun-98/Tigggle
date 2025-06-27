@@ -3,10 +3,15 @@ package com.Tigggle.Entity;
 import com.Tigggle.Constant.Role;
 import com.Tigggle.Constant.UserStatus;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
+
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

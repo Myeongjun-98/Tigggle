@@ -1,10 +1,11 @@
 package com.Tigggle.Entity.community;
 
 import com.Tigggle.Constant.CommunityCategory;
+import com.Tigggle.Entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.core.userdetails.User;
+
 
 import java.time.LocalDateTime;
 

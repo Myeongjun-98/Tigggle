@@ -1,5 +1,6 @@
 package com.Tigggle.DTO.community;
 
+import com.Tigggle.Entity.User;
 import com.Tigggle.Entity.community.CommunityBoard;
 import com.Tigggle.Entity.community.CommunityComment;
 import lombok.Getter;
@@ -14,7 +15,7 @@ public class CommunityCommentDto {
 
     private Long id;
     private String content;
-    private String nickName;
+    private String name;
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
     private Boolean deleted;
@@ -38,7 +39,7 @@ public class CommunityCommentDto {
 
         communityCommentDto.setId(communityComment.getId());
         communityCommentDto.setContent(communityComment.getContent());
-        communityCommentDto.setNickName(communityComment.getUser().getNickName());
+        communityCommentDto.setName(communityComment.getUser().getName());
         communityCommentDto.setWriteDate(communityComment.getWriteDate());
         communityCommentDto.setUpdateDate(communityComment.getUpdateDate());
         communityCommentDto.setDeleted(communityComment.isDeleted());

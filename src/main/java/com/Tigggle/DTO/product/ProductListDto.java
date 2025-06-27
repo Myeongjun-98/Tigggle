@@ -2,6 +2,7 @@ package com.Tigggle.DTO.product;
 
 import com.Tigggle.Constant.DataSource;
 import com.Tigggle.Constant.ProductType;
+import com.Tigggle.Entity.User;
 import com.Tigggle.Entity.product.Bank;
 import com.Tigggle.Entity.product.Product;
 import lombok.Getter;
