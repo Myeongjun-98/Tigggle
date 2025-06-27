@@ -1,16 +1,26 @@
 package com.Tigggle.Entity.insite;
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.catalina.User;
 
 import java.time.LocalDate;
 
-@Getter @Setter
+@Getter @Setter @Entity
 public class MoneyExpenseByKeyword {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; //아이디
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
     private User user; //유저
-    private String keyword; //키워드
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false)
+    private Keywords keyword; //키워드
+
     private LocalDate YM; //월
     private Long amount; //금액
 }
