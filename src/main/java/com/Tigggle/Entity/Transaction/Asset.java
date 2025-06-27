@@ -2,6 +2,7 @@ package com.Tigggle.Entity.Transaction;
 
 import java.time.LocalDate;
 
+import com.Tigggle.Entity.User;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -1,5 +1,6 @@
 package com.Tigggle.Entity.Transaction;
 
+import com.Tigggle.Entity.product.Bank;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.Tigggle.Constant.LimitType;

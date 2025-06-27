@@ -18,7 +18,7 @@ public class CommunityDetailDto {
     private String title;
     private String content;
     private CommunityCategory category;
-    private String Name;
+    private String name;
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
     private List<CommunityCommentDto> comments;
