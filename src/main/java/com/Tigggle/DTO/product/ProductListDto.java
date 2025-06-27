@@ -2,6 +2,7 @@ package com.Tigggle.DTO.product;
 
 import com.Tigggle.Constant.DataSource;
 import com.Tigggle.Constant.ProductType;
+import com.Tigggle.Entity.User;
 import com.Tigggle.Entity.product.Product;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,8 +30,8 @@ public class ProductListDto {
     private LocalDateTime cretedDate;
     private LocalDateTime updateDate;
 
-    public static ProductListDto from(Product product, User user, boolean isRecommended) {
-
-
-    }
+//    public static ProductListDto from(Product product, User user, boolean isRecommended) {
+//
+//
+//    }
 }

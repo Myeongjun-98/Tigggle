@@ -25,33 +25,45 @@ INPUT{
 /*  header.html */
 #header_wrap{
     width:100%;
-    padding:20px 0;
     background: #fff;
     transition: all 0.8s;
+    position: relative;
+}
+#nav{
+    padding: 20px 40px;
 }
 #header_wrap:hover{
     background: #3340cb;
     color:white;
 }
-#nav{
+#header_wrap .innerNav{
     display:flex;
     align-items: center;
     width:100%;
+    justify-content: space-between;
 }
-#nav .logo-img{
-    min-width: 200px;
-    width:20%;
+#header_wrap .logo-img{
+    width: 200px;
     text-align:center;
 }
-#menuBox{ width:50%;}
-#menuBox .menu-list{
+#header_wrap .menuBox{ width:100%;}
+#header_wrap .menuBox .menu-list{
     display:flex;
     justify-content: center;
 }
-#menuBox .menu{ flex:1;  text-align: center;}
-#userBox{
-    width:30%;
+#header_wrap .menuBox .menu{ flex:1;  text-align: center;}
+#header_wrap .userBox{
     display: flex;
     justify-content: center;
+    align-items: center;
 }
-#userBox .uitem{ flex:1; text-align: center;}
+#header_wrap .userBox .uitem{ flex:1; text-align: center; width:100px;}
+#header_wrap .userBox .signUp-bt{
+    border-radius:20px;
+    padding:10px 5px;
+    background-image: linear-gradient(to bottom, #1a53d1, #3a78ea);
+    color:#fff;
+}
+#content{
+    width:100%;
+}

@@ -1,5 +1,7 @@
 package com.Tigggle.Entity.insite;
 
+import com.Tigggle.Entity.Transaction.Keywords;
+import com.Tigggle.Entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
