@@ -3,6 +3,8 @@ package com.Tigggle.Entity.Transaction;
 import java.time.LocalDate;
 
 import com.Tigggle.Entity.User;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,9 +30,9 @@ public class Asset {
     @JoinColumn(nullable = false)
     private User user;          // 유저 정보
 
-    @JoinColumn(nullable = false)
+    @Column(nullable = false)
     private String alias;       // 자산 별칭
     
-    @JoinColumn(nullable = false)
+    @Column(nullable = false)
     private LocalDate openDate; // 자산 등록일
 }

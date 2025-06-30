@@ -31,6 +31,7 @@ INPUT{
 }
 #nav{
     padding: 20px 40px;
+    position: relative;
 }
 #header_wrap:hover{
     background: #3340cb;
@@ -40,18 +41,18 @@ INPUT{
     display:flex;
     align-items: center;
     width:100%;
-    justify-content: space-between;
+    position: relative;
 }
 #header_wrap .logo-img{
-    width: 200px;
-    text-align:center;
+    min-width: 240px;
+    width:20%;
 }
-#header_wrap .menuBox{ width:100%;}
+#header_wrap .menuBox{position: relative; min-width:850px; width:100%;}
 #header_wrap .menuBox .menu-list{
     display:flex;
-    justify-content: center;
+    position: relative;
 }
-#header_wrap .menuBox .menu{ flex:1;  text-align: center;}
+#header_wrap .menuBox .menu{ position: relative;padding:10px 30px;}
 #header_wrap .userBox{
     display: flex;
     justify-content: center;
@@ -63,6 +64,18 @@ INPUT{
     padding:10px 5px;
     background-image: linear-gradient(to bottom, #1a53d1, #3a78ea);
     color:#fff;
+}
+#nav .sub-menu-list{
+    position:absolute;
+    top:0; left:0;
+    width:0;
+    height:0;
+}
+#nav .sub-menu{
+
+}
+#nav .major-menu:hover{
+
 }
 #content{
     width:100%;

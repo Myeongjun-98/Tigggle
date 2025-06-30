@@ -1,6 +1,5 @@
 package com.Tigggle.Entity.Transaction;
 
-import org.hibernate.annotations.ColumnDefault;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -10,6 +9,5 @@ import lombok.Setter;
 @Entity @Getter @Setter
 @DiscriminatorValue("CASH")
 public class Cash extends Asset{
-    @ColumnDefault("0")
-    private Long balance = 0L;   // 잔액
+    private Long balance;   // 잔액
 }
