@@ -6,6 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Setter @Getter @NoArgsConstructor @AllArgsConstructor
-public class CashListDto {
-    private Long cashId;    // (자산 中 현금) 아이디
+public class BankAccountListDto {
+    private Long bankAccountId; // (은행 계좌인) 자산 아이디
 }

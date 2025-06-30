@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter @Getter @NoArgsConstructor @AllArgsConstructor
-public class CashListDto {
-    private Long cashId;    // (자산 中 현금) 아이디
+@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+public class CreditCardListDto {
+    private Long cardId;    // (신용)카드 아이디
 }
