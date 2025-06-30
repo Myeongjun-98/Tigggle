@@ -19,27 +19,27 @@ public class CommunityBoardService {
 
     private final CommunityCommentRepository communityCommentRepository;
 
-    public List<CommunityBoardListDto> getCommunityBoards() {
-
-        List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
-
-        List<CommunityBoard> communityBoards = communityBoardRepository.
-                findCommunityCategoryAndDeletedFalseAndOrderByWriteDateDesc();
-
-        for (CommunityBoard communityBoard : communityBoards) {
-
-            int commentCount = communityCommentRepository
-                    .countByCommunityBoardIdAndDeletedFalse(communityBoard.getId());
-
-            CommunityBoardListDto communityBoardListDto
-                    = CommunityBoardListDto.from(communityBoard, commentCount);
-
-            communityBoardListDtos.add(communityBoardListDto);
-        }
-
-        return communityBoardListDtos;
-
-    }
+//    public List<CommunityBoardListDto> getCommunityBoards() {
+//
+//        List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
+//
+//        List<CommunityBoard> communityBoards = communityBoardRepository.
+//                findCommunityCategoryAndDeletedFalseAndOrderByWriteDateDesc();
+//
+//        for (CommunityBoard communityBoard : communityBoards) {
+//
+//            int commentCount = communityCommentRepository
+//                    .countByCommunityBoardIdAndDeletedFalse(communityBoard.getId());
+//
+//            CommunityBoardListDto communityBoardListDto
+//                    = CommunityBoardListDto.from(communityBoard, commentCount);
+//
+//            communityBoardListDtos.add(communityBoardListDto);
+//        }
+//
+//        return communityBoardListDtos;
+//
+//    }
 
 }
 
