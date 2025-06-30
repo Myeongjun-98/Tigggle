@@ -12,5 +12,5 @@ public class CreditDard extends Card{
 
     private float creditCardInterest;   // 신용카드 이자율
 
-    private Long creditCardLimit = null;// 신용카드 금액한도
+    private Long creditCardLimit;// 신용카드 금액한도
 }

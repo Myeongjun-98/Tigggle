@@ -14,10 +14,10 @@ public class InstallmentSaving extends BankAccount{
 
     private LocalDate expireDay;            // 적금 만기일
 
-    private Long monthlyPaymentAmount = 0L; // 1달 납부액
+    private Long monthlyPaymentAmount; // 1달 납부액
 
     private int paymentDay;                 // 납부일
 
-    private int currentPaymentCount = 0;    // 누적 납부횟수
+    private int currentPaymentCount;    // 누적 납부횟수
 
 }

@@ -20,7 +20,7 @@ public class BankAccount extends Asset{
 
     private float interest = 0;             // 이자율
 
-    private boolean isCompound = false;         // 복리 여부
+    private boolean isCompound;         // 복리 여부
 
     private Long expenseLimit;          // 출금 한도
 
