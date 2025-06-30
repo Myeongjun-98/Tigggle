@@ -1,7 +1,7 @@
 package com.Tigggle.Entity.community;
 
 import com.Tigggle.Constant.CommunityCategory;
-import com.Tigggle.Entity.User;
+import com.Tigggle.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ public class CommunityBoard {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user; // 사용자
+    private Member member; // 사용자
 
     private String title; // 제목
 

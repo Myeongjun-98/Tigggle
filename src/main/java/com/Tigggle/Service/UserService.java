@@ -1,8 +1,9 @@
 package com.Tigggle.Service;
 
-import com.Tigggle.Entity.User;
+import com.Tigggle.Entity.Member;
 import com.Tigggle.Repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -16,11 +17,14 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByAccessId(username);
-        if(user == null) {
+        Member member = userRepository.findByAccessId(username);
+        if(member == null) {
             throw new UsernameNotFoundException(username);
         }
 
-        return null;
+        return User.builder()
+                .username(member.getAccessId())
+                .password(member.getPassword())
+                .roles(member.getRole().toString()).build();
     }
 }

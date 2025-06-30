@@ -1,7 +1,7 @@
 package com.Tigggle.Entity.insite;
 
 import com.Tigggle.Entity.Transaction.Keywords;
-import com.Tigggle.Entity.User;
+import com.Tigggle.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ public class MoneyExpenseByKeyword {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private User user; //유저
+    private Member member; //유저
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
