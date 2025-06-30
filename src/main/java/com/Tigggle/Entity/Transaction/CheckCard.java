@@ -10,5 +10,5 @@ import lombok.Setter;
 @Setter
 @DiscriminatorValue("CHECK")
 public class CheckCard extends Card{
-    private Long dailyLimit = null; // 1일 이용 한도금액
+    private Long dailyLimit; // 1일 이용 한도금액
 }
