@@ -1,6 +1,6 @@
 package com.Tigggle.Entity.Transaction;
 
-import com.Tigggle.Entity.User;
+import com.Tigggle.Entity.Member;
 import org.hibernate.annotations.ColumnDefault;
 
 import jakarta.persistence.Entity;
@@ -22,7 +22,7 @@ public class Goal {
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private User user;
+    private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)

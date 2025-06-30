@@ -1,12 +1,10 @@
 package com.Tigggle.DTO.community;
 
 import com.Tigggle.Constant.CommunityCategory;
-import com.Tigggle.Entity.User;
+import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.community.CommunityBoard;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.util.Locale;
 
 @Getter
 @Setter
@@ -19,11 +17,11 @@ public class CommunityWriteDto {
 
     private String content;
 
-    public CommunityBoard to(User user) {
+    public CommunityBoard to(Member member) {
         CommunityBoard communityBoard = new CommunityBoard();
         communityBoard.setTitle(this.title);
         communityBoard.setContent(this.content);
-        communityBoard.setUser(user);
+        communityBoard.setMember(member);
 
         return communityBoard;
     }

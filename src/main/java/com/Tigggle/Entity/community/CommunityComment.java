@@ -1,6 +1,6 @@
 package com.Tigggle.Entity.community;
 
-import com.Tigggle.Entity.User;
+import com.Tigggle.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -24,7 +24,7 @@ public class CommunityComment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user; // 댓글 작성자
+    private Member member; // 댓글 작성자
 
     private String content; // 댓글 내용
 

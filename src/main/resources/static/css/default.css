@@ -1,0 +1,87 @@
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+A{
+    text-decoration: none;
+    color:inherit;
+}
+
+UL{
+    list-style-type:none;
+}
+IMG{ width:100%; }
+INPUT{
+    border:0;
+    outline: none;
+    border-radius:7px;
+    padding:10px;
+    border:1px solid #fcfcfc;
+}
+
+.no-select{
+
+}
+/*  header.html */
+#header_wrap{
+    width:100%;
+    background: #fff;
+    transition: all 0.8s;
+    position: relative;
+}
+#nav{
+    padding: 20px 40px;
+    position: relative;
+}
+/*#header_wrap:hover{*/
+/*    background: #3340cb;*/
+/*    color:white;*/
+/*}*/
+#nav .innerNav{
+    display:flex;
+    align-items: center;
+    width:100%;
+    position: relative;
+}
+#nav .logo-img{
+    min-width: 240px;
+    width:20%;
+}
+#nav .menuBox{position: relative; min-width:850px; width:100%;}
+#nav .menuBox .menu-list{
+    display:flex;
+    position: relative;
+}
+#nav .menuBox .menu{ position: relative;}
+#nav .menuBox .menu .major-menu{padding:25px 30px;}
+#nav .userBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#nav .userBox .uitem{ flex:1; text-align: center; width:100px;}
+#nav .userBox .signUp-bt{
+    border-radius:20px;
+    padding:10px 5px;
+    background-image: linear-gradient(to bottom, #1a53d1, #3a78ea);
+    color:#fff;
+}
+#nav .menuBox .menu .sub-menu-list{
+    display:none;
+    position:absolute;
+    top:54px; left:0;
+    width:200px;
+    height:0;
+}
+#nav .menuBox .menu .sub-menu-list .sub-menu{
+
+}
+#nav .menuBox .menu .sub-menu-list .sub-menu a{
+    padding:5px 30px;
+}
+
+#content{
+    width:100%;
+}
