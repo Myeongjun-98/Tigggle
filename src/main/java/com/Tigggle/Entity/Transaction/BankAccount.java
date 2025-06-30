@@ -25,7 +25,7 @@ public class BankAccount extends Asset{
     private Long expenseLimit;          // 출금 한도
 
     @Enumerated(EnumType.STRING)
-    private LimitType limitType = LimitType.MONTHLY;        // 출금한도 종류
+    private LimitType limitType;        // 출금한도 종류
 
     private Long balance;               // 잔액
 }
