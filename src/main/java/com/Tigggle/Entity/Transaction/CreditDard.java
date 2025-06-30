@@ -8,7 +8,7 @@ import lombok.Setter;
 @Entity @Getter @Setter @DiscriminatorValue("CREDIT")
 public class CreditDard extends Card{
 
-    private int expenseDay;             // 만기일
+    private int expenseDay;             // 정산일
 
     private float creditCardInterest;   // 신용카드 이자율
 
