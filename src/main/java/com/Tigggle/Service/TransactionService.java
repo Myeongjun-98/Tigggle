@@ -21,9 +21,8 @@ public class TransactionService {
     // }
 
     // 사용자의 모든 계좌정보 가져오기
-//    public List<Asset> findOrdinaryAndCash(Long userId){
-//        List<String> OrdinaryAndCash = List.of("ORDINARY", "CASH");
-//        return assetRepository.findByUserIdAndAssetTypeInOrderByIdAsc(userId, OrdinaryAndCash);
-//    }
+   public List<Asset> findOrdinaryAndCash(Long memberId){
+       return assetRepository.findCashAndOrdinaryAssetsByMemberId(memberId);
+   }
 
 }
