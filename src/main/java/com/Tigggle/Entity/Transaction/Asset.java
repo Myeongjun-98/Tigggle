@@ -2,7 +2,7 @@ package com.Tigggle.Entity.Transaction;
 
 import java.time.LocalDate;
 
-import com.Tigggle.Entity.User;
+import com.Tigggle.Entity.Member;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
@@ -28,7 +28,7 @@ public class Asset {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private User user;          // 유저 정보
+    private Member member;          // 유저 정보
 
     @Column(nullable = false)
     private String alias;       // 자산 별칭

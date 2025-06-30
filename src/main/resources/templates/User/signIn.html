@@ -8,6 +8,41 @@
 
 <div  layout:fragment="content">
 
+    <form method="post" action="/signIn" name="loginFm" id="loginFm">
+        <div class="input-field">
+            <label for="accessId">ID</label>
+            <input type="text" name="accessId" id="accessId">
+        </div>
+        <div class="input-field">
+            <label for="password">PASSWORD</label>
+            <input type="password" name="password" id="password">
+        </div>
+        <div>
+            <button type="button" id="loginBt">LOGIN</button>
+        </div>
+    </form>
+
+    <script>
+        $("#accessId").focus();
+        $(document).on("keydown", function(e){
+            if(e.key==='Enter'){
+                $("#loginBt").trigger('click');
+            }
+        });
+        $("#loginBt").on("click",function(){
+            var id = $("#accessId").val();
+            var pw = $("#password").val();
+            if(id===''){
+                alert("야!  아이디 입력해");
+                $("#accessId").focus();
+            }else if(pw===''){
+                alert("야!! 비번 입력해야지@!!!");
+                $("#password").focus();
+            }else{
+                $("#loginFm").submit();
+            }
+        });
+    </script>
 </div>
 
 </html>

@@ -2,13 +2,11 @@ package com.Tigggle.DTO.community;
 
 import com.Tigggle.Constant.CommunityCategory;
 import com.Tigggle.Entity.community.CommunityBoard;
-import com.Tigggle.Entity.community.CommunityComment;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 
 @Getter
 @Setter
@@ -34,7 +32,7 @@ public class CommunityDetailDto {
         communityDetailDto.setTitle(communityBoard.getTitle());
         communityDetailDto.setContent(communityBoard.getContent());
         communityDetailDto.setCategory(communityBoard.getCommunityCategory());
-        communityDetailDto.setName(communityBoard.getUser().getName());
+        communityDetailDto.setName(communityBoard.getMember().getName());
         communityDetailDto.setWriteDate(communityBoard.getWriteDate());
         communityDetailDto.setUpdateDate(communityBoard.getUpdateDate());
         communityDetailDto.setComments(communityCommentsDtos);
