@@ -19,7 +19,7 @@ public class CommunityBoard {
     private Long id; // 게시글 일련번호
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private Member member; // 사용자
 
     private String title; // 제목

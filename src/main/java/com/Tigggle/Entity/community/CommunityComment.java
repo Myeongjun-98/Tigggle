@@ -23,7 +23,7 @@ public class CommunityComment {
     private CommunityBoard communityBoard; // 커뮤니티 게시글 일련번호
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "member_id")
     private Member member; // 댓글 작성자
 
     private String content; // 댓글 내용
