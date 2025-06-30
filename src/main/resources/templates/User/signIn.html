@@ -9,6 +9,7 @@
 <div  layout:fragment="content">
 
     <form method="post" action="/signIn" name="loginFm" id="loginFm">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         <div class="input-field">
             <label for="accessId">ID</label>
             <input type="text" name="accessId" id="accessId">

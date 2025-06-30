@@ -2,12 +2,93 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/defaultLayout}">
-
+<head>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
 <th:block layout:fragment="css"></th:block>
 <th:block layout:fragment="script"></th:block>
 
 <div  layout:fragment="content">
 
+    <form name="joinFm" id="joinFm" method="post" action="signUp" th:object="${memberFormDto}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <div class="input-field">
+            <label th:for="accessId">아이디</label>
+            <input type="text" th:field="*{accessId}">
+            <p class="dupCheck"></p>
+        </div>
+        <div class="input-field">
+            <label th:for="password">비밀번호</label>
+            <input type="password" th:field="*{password}">
+        </div>
+        <div class="input-field">
+            <label for="password2">비밀번호 다시입력</label>
+            <input type="password" id="password2">
+        </div>
+        <div class="input-field">
+            <label th:for="name">이름</label>
+            <input type="text" th:field="*{name}">
+        </div>
+        <div class="input-field">
+            <label th:for="gender">성별</label>
+            <input type="radio" th:name="gender" value="0">여자
+            <input type="radio" th:name="gender" value="1">남자
+        </div>
+        <div class="input-field">
+            <label th:for="birthday">생년월일</label>
+            <input type="month" th:field="*{birthday}">
+        </div>
+        <div>
+            <button type="button" id="joinBt">가입</button>
+        </div>
+    </form>
+
+    <script>
+        $("#accessId").focus(); // 처음 로드시  아이디 에 커서
+        $(document).on("keydown", function(e){ // 엔터키 입력 처리
+            if(e.key==='Enter'){
+                $("#joinBt").trigger('click');
+            }
+        });
+        $("#accessId").blur(function(){ // 아이디 중복체크 - 커서 블러 처리시 동작
+            var token = $("meta[name='_csrf']").attr("content");
+            var header = $("meta[name='_csrf_header']").attr("content");
+
+            var url = "/user/idCheck/?id=" + $(this).val();
+
+            $.ajax({
+                url      : url,
+                type     : "POST",
+                beforeSend : function(xhr){
+                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+                    xhr.setRequestHeader(header, token);
+                },
+                dataType : "json",
+                cache   : false,
+                success  : function(result, status){
+                    $(".dupcheck").text("사용가능한 아이디 입니다.");
+                },
+                error : function(jqXHR, status, error){
+                    $(".dupcheck").text("사용중인 아이디 입니다.");
+
+                    // $("#joinBt").attr("disabled","true");
+                }
+            });
+        });
+        $("#joinBt").on("click",function(){ // 대충 그냥 만든거 - 회원가입 체크
+
+            if($("#accessId").val()===''){
+                alert("야!  아이디 입력해");
+                $("#accessId").focus();
+            }else if($("#password").val()===''){
+                alert("야!! 비번 입력해야지@!!!");
+                $("#password").focus();
+            }else{
+                $("#loginFm").submit();
+            }
+        });
+    </script>
 </div>
 
 </html>
