@@ -24,7 +24,7 @@ public class CommunityBoardService {
         List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
 
         List<CommunityBoard> communityBoards = communityBoardRepository.
-                findCommunityCategoryAndDeletedFalseAndOrderByWriteDateDesc();
+                findCommunityCategoryAndDeletedFalseOrderByWriteDateDesc();
 
         for (CommunityBoard communityBoard : communityBoards) {
 
