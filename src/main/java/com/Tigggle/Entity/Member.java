@@ -29,7 +29,7 @@ public class Member {
     private LocalDate birthday;   //생년월일
     private byte counselingTokken=3;
     @Column(nullable = false)
-    private String profileImage;  // 프로필이미지
+    private String profileImage="/image/defProfile.jpg";  // 프로필이미지
     private Role role; // 권한
     private UserStatus userStatus; // 유저 상태 - 가입, 탈퇴, 탈퇴대기
 

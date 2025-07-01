@@ -2,6 +2,9 @@
 <html lang="ko"  xmlns:th="http://www.thymeleaf/org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
+
+<th:block layout:fragment="css"><link rel="stylesheet" href="css/index.css"></th:block>
+<th:block layout:fragment="script"><script src="javascript/index.js"></script></th:block>
 <div  th:fragment="header" id="header_wrap"  class="no-select">
 
     <!-- 메뉴 -->
@@ -30,8 +33,8 @@
         </div>
         <div class="userBox">
             <span class="uitem">신명훈님</span>
-            <span class="uitem">로그인</span>
-            <span class="uitem signUp-bt">Get Started</span>
+            <span class="uitem"><a href="/user/signIn">로그인</a></span>
+            <span class="uitem signUp-bt"><a href="/user/signUp">Get Started</a></span>
         </div>
         </div>
     </div>
