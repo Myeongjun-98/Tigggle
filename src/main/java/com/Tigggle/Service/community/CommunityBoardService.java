@@ -1,5 +1,6 @@
 package com.Tigggle.Service.community;
 
+import com.Tigggle.Constant.CommunityCategory;
 import com.Tigggle.DTO.community.CommunityBoardListDto;
 import com.Tigggle.Entity.community.CommunityBoard;
 import com.Tigggle.Repository.community.CommunityBoardRepository;
@@ -19,12 +20,12 @@ public class CommunityBoardService {
 
     private final CommunityCommentRepository communityCommentRepository;
 
-    public List<CommunityBoardListDto> getCommunityBoards() {
+    public List<CommunityBoardListDto> getCommunityBoards(CommunityCategory communityCategory) {
 
         List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
 
         List<CommunityBoard> communityBoards = communityBoardRepository.
-                findCommunityCategoryAndDeletedFalseAndOrderByWriteDateDesc();
+                findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(communityCategory);
 
         for (CommunityBoard communityBoard : communityBoards) {
 
@@ -39,6 +40,21 @@ public class CommunityBoardService {
 
         return communityBoardListDtos;
 
+    }
+
+    public List<CommunityBoardListDto> getTipBoards() {
+
+        return getCommunityBoards(CommunityCategory.TIP);
+    }
+
+    public List<CommunityBoardListDto> getDiscussionBoards() {
+
+        return getCommunityBoards(CommunityCategory.DISCUSSION);
+    }
+
+    public List<CommunityBoardListDto> getEconomicMarketBoards() {
+
+        return getCommunityBoards(CommunityCategory.ECONOMIC_MARKET);
     }
 
 }
