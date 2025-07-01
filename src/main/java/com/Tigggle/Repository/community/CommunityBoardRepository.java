@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 
 public interface CommunityBoardRepository extends JpaRepository<CommunityBoard, Long> {
-    List<CommunityBoard> findCommunityCategoryAndDeletedFalseOrderByWriteDateDesc();
+    // List<CommunityBoard> findCommunityCategoryAndDeletedFalseAndOrderByWriteDateDesc();
 }
