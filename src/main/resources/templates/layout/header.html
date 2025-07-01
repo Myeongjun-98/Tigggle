@@ -31,9 +31,10 @@
             </ul>
         </div>
         <div class="userBox">
-            <span class="uitem">신명훈님</span>
-            <span class="uitem"><a href="/user/signIn">로그인</a></span>
-            <span class="uitem signUp-bt"><a href="/user/signUp">Get Started</a></span>
+            <span sec:authorize="isAuthenticated()" class="px-3 uitem" sec:authentication="name"></span>
+            <span sec:authorize="isAuthenticated()" class="px-3 uitem"> <a class="nav-link" href="/logout">로그아웃</a></span>
+            <span class="uitem" sec:authorize="isAnonymous()"><a href="/user/signIn">로그인</a></span>
+            <span class="uitem signUp-bt" sec:authorize="isAnonymous()"><a href="/user/signUp">Get Started</a></span>
         </div>
         </div>
     </div>

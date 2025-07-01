@@ -33,11 +33,11 @@ public class UserController {
     }
     @PostMapping("/user/signUp")
     public String signUp(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
-            return "User/signUp";
-        }
+//        if(bindingResult.hasErrors()){
+//            return "User/signUp";
+//        }
         userService.signUpSave(memberFormDto,passwordEncoder);
-        return " redirect:/";
+        return "redirect:/";
     }
 
     @PostMapping("/user/idCheck")
