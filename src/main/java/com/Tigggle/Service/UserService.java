@@ -1,7 +1,7 @@
 package com.Tigggle.Service;
 
 import com.Tigggle.Entity.Member;
-import com.Tigggle.Repository.UserRepository;
+import com.Tigggle.Repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -12,12 +12,12 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
 
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = userRepository.findByAccessId(username);
+        Member member = memberRepository.findByAccessId(username);
         if(member == null) {
             throw new UsernameNotFoundException(username);
         }
@@ -27,4 +27,5 @@ public class UserService implements UserDetailsService {
                 .password(member.getPassword())
                 .roles(member.getRole().toString()).build();
     }
+
 }

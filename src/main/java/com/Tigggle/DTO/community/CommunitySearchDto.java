@@ -1,7 +1,7 @@
 package com.Tigggle.DTO.community;
 
-import com.Tigggle.Constant.CommunityCategory;
-import com.Tigggle.Constant.SearchType;
+import com.Tigggle.Constant.Community.CommunityCategory;
+import com.Tigggle.Constant.Community.SearchType;
 import lombok.Getter;
 import lombok.Setter;
 

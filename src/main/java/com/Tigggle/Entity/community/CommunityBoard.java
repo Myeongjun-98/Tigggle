@@ -1,6 +1,6 @@
 package com.Tigggle.Entity.community;
 
-import com.Tigggle.Constant.CommunityCategory;
+import com.Tigggle.Constant.Community.CommunityCategory;
 import com.Tigggle.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;

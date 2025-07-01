@@ -8,6 +8,9 @@
 
 <div  layout:fragment="content">
 
+    <!-- templates/User/signIn.html -->
+    <p th:text="'현재 회원 ID: ' + ${memberId}"></p>
+
     <form method="post" action="/signIn" name="loginFm" id="loginFm">
         <div class="input-field">
             <label for="accessId">ID</label>

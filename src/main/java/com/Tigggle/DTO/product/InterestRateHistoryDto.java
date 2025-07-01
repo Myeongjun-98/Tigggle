@@ -1,6 +1,6 @@
 package com.Tigggle.DTO.product;
 
-import com.Tigggle.Constant.ProductType;
+import com.Tigggle.Constant.FinancialProduct.ProductType;
 import com.Tigggle.Entity.product.InterestRateHistory;
 import lombok.Getter;
 import lombok.Setter;
