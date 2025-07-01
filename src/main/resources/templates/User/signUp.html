@@ -31,13 +31,17 @@
             <input type="text" th:field="*{name}">
         </div>
         <div class="input-field">
+            <label th:for="name">연락처</label>
+            <input type="text" th:field="*{tel}">
+        </div>
+        <div class="input-field">
             <label th:for="gender">성별</label>
             <input type="radio" th:name="gender" value="0">여자
             <input type="radio" th:name="gender" value="1">남자
         </div>
         <div class="input-field">
             <label th:for="birthday">생년월일</label>
-            <input type="month" th:field="*{birthday}">
+            <input type="date" th:field="*{birthday}">
         </div>
         <div>
             <button type="button" id="joinBt">가입</button>
@@ -52,29 +56,29 @@
             }
         });
         $("#accessId").blur(function(){ // 아이디 중복체크 - 커서 블러 처리시 동작
-            var token = $("meta[name='_csrf']").attr("content");
-            var header = $("meta[name='_csrf_header']").attr("content");
-
-            var url = "/user/idCheck/?id=" + $(this).val();
-
-            $.ajax({
-                url      : url,
-                type     : "POST",
-                beforeSend : function(xhr){
-                    /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
-                    xhr.setRequestHeader(header, token);
-                },
-                dataType : "json",
-                cache   : false,
-                success  : function(result, status){
-                    $(".dupcheck").text("사용가능한 아이디 입니다.");
-                },
-                error : function(jqXHR, status, error){
-                    $(".dupcheck").text("사용중인 아이디 입니다.");
-
-                    // $("#joinBt").attr("disabled","true");
-                }
-            });
+            // var token = $("meta[name='_csrf']").attr("content");
+            // var header = $("meta[name='_csrf_header']").attr("content");
+            //
+            // var url = "/user/idCheck/?id=" + $(this).val();
+            //
+            // $.ajax({
+            //     url      : url,
+            //     type     : "POST",
+            //     beforeSend : function(xhr){
+            //         /* 데이터를 전송하기 전에 헤더에 csrf값을 설정 */
+            //         xhr.setRequestHeader(header, token);
+            //     },
+            //     dataType : "json",
+            //     cache   : false,
+            //     success  : function(result, status){
+            //         $(".dupcheck").text("사용가능한 아이디 입니다.");
+            //     },
+            //     error : function(jqXHR, status, error){
+            //         $(".dupcheck").text("사용중인 아이디 입니다.");
+            //
+            //         // $("#joinBt").attr("disabled","true");
+            //     }
+            // });
         });
         $("#joinBt").on("click",function(){ // 대충 그냥 만든거 - 회원가입 체크
 
@@ -85,7 +89,7 @@
                 alert("야!! 비번 입력해야지@!!!");
                 $("#password").focus();
             }else{
-                $("#loginFm").submit();
+                $("#joinFm").submit();
             }
         });
     </script>
