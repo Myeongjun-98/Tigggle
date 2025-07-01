@@ -28,11 +28,11 @@ public class SecurityConf {
         http.requestCache(rq->rq.requestCache(requestCache))
                 .authorizeHttpRequests(
                         ar -> ar
-                                .requestMatchers("/*","/user/**")// 요청 매처를 사용하여 요청을 매칭
-                                .permitAll() // requestMatchers에 작성된 주소요청에대해 모두 허용 - 인증 노!
+//                                .requestMatchers("/*","/user/**")// 요청 매처를 사용하여 요청을 매칭
+//                                .permitAll() // requestMatchers에 작성된 주소요청에대해 모두 허용 - 인증 노!
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .anyRequest()  // 모든 요청에 대해
-                                .authenticated() // 인증 해야 한다. - 로그인 해야함
+                                .anyRequest().permitAll()  // 모든 요청에 대해
+                               // .authenticated() // 인증 해야 한다. - 로그인 해야함
                 )
                 .formLogin(
                         form -> form

@@ -1,5 +1,7 @@
 package com.Tigggle.DTO;
 
+import com.Tigggle.Constant.Role;
+import com.Tigggle.Constant.UserStatus;
 import com.Tigggle.Entity.Member;
 import lombok.Data;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,6 +34,8 @@ public class MemberFormDto {
         member.setTel(tel);
         member.setGender(gender);
         member.setBirthday(birthday);
+        member.setRole(Role.USER);
+        member.setUserStatus(UserStatus.JOIN);
 
         return member;
     }
