@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MemberRepository extends JpaRepository<Member, Integer> {
+public interface UserRepository extends JpaRepository<Member, Integer> {
     Member findByAccessId(String accessId);  //  로그인 및 그외 용 인데.....
 
 }
