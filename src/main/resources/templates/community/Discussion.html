@@ -21,10 +21,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr>
+        <tr th:each="board : ${communityBoardListDto}">
             <td>
-                <a th:href="@{/community/detail/}"></a>
+                <a th:href="@{/community/detail/{id}(id=${board.id})}" th:text="${board.title}"></a>
+                <span th:if="${board.hasImage}" style="margin-left:4px">🖼️</span>
             </td>
+            <td th:text="${board.name}"></td>
+            <td th:text="${board.formattedWriteDate}"></td>
+            <td th:text="${board.hit}"></td>
         </tr>
         </tbody>
     </table>

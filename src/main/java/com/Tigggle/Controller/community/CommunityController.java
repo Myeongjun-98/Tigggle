@@ -32,11 +32,27 @@ public class CommunityController {
     }
 
     @GetMapping("/community/detail/{id}")
-    public String tipDetail(@PathVariable Long id, Model model) {
+    public String Detail(@PathVariable Long id, Model model) {
 
         CommunityDetailDto communityDetailDto = communityBoardService.getBoardDetail(id);
-        model.addAttribute("TipDetailDto", communityDetailDto);
-        return "community/TipDetail";
+        model.addAttribute("DetailDto", communityDetailDto);
+
+        switch(communityDetailDto.getCategory()) {
+            case TIP -> {
+
+                return "community/TipDetail";
+            }
+            case DISCUSSION -> {
+
+                return "community/DiscussionDetail";
+            }
+            case ECONOMIC_MARKET -> {
+
+                return "community/EconomicMarketDetail";
+            }
+            default -> throw new IllegalStateException("알 수 없는 카테고리");
+        }
+
     }
 
     @GetMapping("/community/TipWrite")
@@ -55,6 +71,12 @@ public class CommunityController {
 
         return "community/Discussion";
 
+    }
+
+    @GetMapping("/community/DiscussionWrite")
+    public String discussionWriteForm() {
+
+        return "community/DiscussionWrite";
     }
 
     @GetMapping("/communityEconomicMarket")
