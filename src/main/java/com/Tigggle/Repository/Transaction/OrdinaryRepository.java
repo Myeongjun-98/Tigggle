@@ -13,6 +13,9 @@ import com.Tigggle.Entity.Transaction.OrdinaryAccount;
 public interface OrdinaryRepository extends JpaRepository<OrdinaryAccount, Long>{
     
     // 보통예금계좌 정보 가져오기
-    @Query("SELECT a FROM ASSET a WHERE a.member.id = :memberID AND TYPE(a) IN (Ordinary)")
+    @Query("SELECT a FROM Asset a WHERE a.member.id = :memberId AND TYPE(a) IN (OrdinaryAccount)")
     List<OrdinaryAccount> OrdinaryAccountList(@Param("memberId") Long memberId);
+
+    OrdinaryAccount findByMemberId(Long memberId);
+
 }

@@ -13,6 +13,6 @@ import com.Tigggle.Entity.Transaction.Cash;
 public interface CashRepository extends JpaRepository<Cash, Long>{
     
     // 현금계좌 정보 가져오기
-    @Query("SELECT a FROM ASSET a WHERE a.member.id = :memberID AND TYPE(a) IN (Cash)")
+    @Query("SELECT a FROM Asset a WHERE a.member.id = :memberID AND TYPE(a) IN (Cash)")
     List<Cash> cashList(@Param("memberId") Long memberId);
 }
