@@ -1,97 +1,117 @@
-*{
-    padding:0;
-    margin:0;
-    box-sizing: border-box;
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
-A{
-    text-decoration: none;
-    color:inherit;
+A {
+  text-decoration: none;
+  color: inherit;
 }
 
-UL{
-    list-style-type:none;
+UL {
+  list-style-type: none;
 }
-IMG{ width:100%; }
-INPUT{
-    border:0;
-    outline: none;
-    border-radius:7px;
-    padding:10px;
-    border:1px solid #fcfcfc;
+IMG {
+  width: 100%;
+}
+INPUT {
+  border: 0;
+  outline: none;
+  border-radius: 7px;
+  padding: 10px;
+  border: 1px solid #fcfcfc;
 }
 
 /* 마우스 블럭 금지 */
 .no-select {
-    user-select: none;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
-
 
 /*  header.html */
-#header_wrap{
-    width:100%;
-    background: #fff;
-    transition: all 0.8s;
-    position: relative;
+#header_wrap {
+  width: 100%;
+  background: #fff;
+  transition: all 0.8s;
+  position: relative;
 }
-#nav{
-    padding: 20px 40px;
-    position: relative;
+#nav {
+  padding: 20px 40px;
+  position: relative;
 }
 /*#header_wrap:hover{*/
 /*    background: #3340cb;*/
 /*    color:white;*/
 /*}*/
-#nav .innerNav{
-    display:flex;
-    align-items: center;
-    width:100%;
-    position: relative;
+#nav .innerNav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
 }
-#nav .logo-img{
-    min-width: 240px;
-    width:20%;
+#nav .logo-img {
+  min-width: 240px;
+  width: 20%;
 }
-#nav .menuBox{position: relative; min-width:850px; width:100%;}
-#nav .menuBox .menu-list{
-    display:flex;
-    position: relative;
+#nav .menuBox {
+  position: relative;
+  min-width: 850px;
+  width: 100%;
 }
-#nav .menuBox .menu-list .menu{ position: relative;padding:25px 30px;}
-#nav .menuBox .menu-list .menu a{display:block;}
-#nav .menuBox .menu-list .menu .sub-menu-list{
-    position:absolute;
-    top:74px; left:0;
-    display: none;
+#nav .menuBox .menu-list {
+  display: flex;
+  position: relative;
 }
-#nav .menuBox .menu-list .menu .sub-menu-list .sub-menu a{
-    padding:5px 30px;
-    width:200px;
+#nav .menuBox .menu-list .menu {
+  position: relative;
+  padding: 25px 30px;
 }
-#nav .menuBox .menu-list .menu:hover .sub-menu-list{
-    z-index: 100;
-    display:block;
+#nav .menuBox .menu-list .menu a {
+  display: block;
 }
-
-#nav .userBox{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+#nav .menuBox .menu-list .menu .sub-menu-list {
+  position: absolute;
+  top: 74px;
+  left: 0;
+  display: none;
 }
-#nav .userBox .uitem{ flex:1; text-align: center; width:100px;}
-#nav .userBox .signUp-bt{
-    border-radius:20px;
-    padding:10px 5px;
-    background-image: linear-gradient(to bottom, #1a53d1, #3a78ea);
-    color:#fff;
+#nav .menuBox .menu-list .menu .sub-menu-list .sub-menu a {
+  padding: 5px 30px;
+  width: 200px;
+}
+#nav .menuBox .menu-list .menu:hover .sub-menu-list {
+  z-index: 100;
+  display: block;
 }
 
+#nav .userBox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#nav .userBox .uitem {
+  flex: 1;
+  text-align: center;
+  width: 100px;
+}
+#nav .userBox .signUp-bt {
+  border-radius: 20px;
+  padding: 10px 5px;
+  background-image: linear-gradient(to bottom, #1a53d1, #3a78ea);
+  color: #fff;
+}
 
-#content{
-    width:100%;
-    position:relative;
-    display: flex;
+#content {
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+#content .error {
+  color: red;
+}
+#content .visible {
+  opacity: 1;
 }
