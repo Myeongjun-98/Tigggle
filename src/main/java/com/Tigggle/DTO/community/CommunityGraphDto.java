@@ -1,6 +1,7 @@
 package com.Tigggle.DTO.community;
 
 import com.Tigggle.Constant.Community.CommunityCategory;
+import com.Tigggle.Entity.community.CommunityBoard;
 import com.Tigggle.Entity.community.CommunityBoardGraph;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +19,16 @@ public class CommunityGraphDto {
     private LocalDateTime startDate;
     private LocalDateTime finishDate;
 
+    public CommunityBoardGraph to(CommunityBoard communityBoard) {
+
+        CommunityBoardGraph communityBoardGraph = new CommunityBoardGraph();
+        communityBoardGraph.setCommunityBoard(communityBoard);
+        communityBoardGraph.setStartDate(this.startDate);
+        communityBoardGraph.setFinishDate(this.finishDate);
+
+        return communityBoardGraph;
+    }
+
     public static CommunityGraphDto from(CommunityBoardGraph communityBoardGraph) {
 
         CommunityGraphDto communityGraphDto = new CommunityGraphDto();
@@ -31,4 +42,5 @@ public class CommunityGraphDto {
         return communityGraphDto;
 
     }
+
 }

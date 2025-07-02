@@ -7,7 +7,31 @@
 <th:block layout:fragment="script"></th:block>
 
 <div layout:fragment="content">
-
+    <h2>지출/저축tip 게시판</h2>
+    <div>
+        <a th:href="@{/community/TipWrite}" class="write-button">작성</a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board : ${communityBoardListDto}">
+            <td>
+                <a th:href="@{/community/detail/{id}(id=${board.id})}" th:text="${board.title}"></a>
+                <span th:if="${board.hasImage}" style="margin-left:4px">🖼️</span>
+                <span th:if="${board.hasGraph}" style="margin-left:2px">📊</span>
+            </td>
+            <td th:text="${board.name}"></td>
+            <td th:text="${board.formattedWriteDate}"></td>
+            <td th:text="${board.hit}"></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
-
 </html>

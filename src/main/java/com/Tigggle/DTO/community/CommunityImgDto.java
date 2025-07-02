@@ -26,4 +26,17 @@ public class CommunityImgDto {
 
         return communityBoardImage;
     }
+
+    public static CommunityImgDto from(CommunityBoardImage communityBoardImage) {
+
+        CommunityImgDto communityImgDto = new CommunityImgDto();
+
+        communityImgDto.setId(communityBoardImage.getId());
+        communityImgDto.setCommunityBoardId(communityBoardImage.getCommunityBoard().getId());
+        communityImgDto.setOriginalName(communityBoardImage.getOriginalName());
+        communityImgDto.setImgName(communityBoardImage.getImgName());
+        communityImgDto.setImgUrl(communityBoardImage.getImgUrl());
+
+        return communityImgDto;
+    }
 }
