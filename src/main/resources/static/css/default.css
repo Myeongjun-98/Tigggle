@@ -94,3 +94,10 @@ INPUT{
     width:100%;
     position:relative;
 }
+#content .error{
+    color:red;
+}
+#content .visible{
+    opacity: 1;
+
+}
