@@ -9,6 +9,60 @@
 <div  layout:fragment="content">
   <h2>지출/저축tip 게시판</h2>
 
+  <div>
+    <h3 th:text="${DetailDto.title}">게시글 제목</h3>
+  </div>
+
+  <div>
+    <p><strong>작성자 :</strong> <span th:text="${DetailDto.name}">작성자</span></p>
+    <p><strong>작성일 :</strong>
+      <span th:text="${#temporals.format(DetailDto.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+      <span th:if="${DetailDto.updateDate != null and
+      DetailDto.writeDate != DetailDto.updateDate}">(수정됨)</span>
+    </p>
+  </div>
+
+<!--  게시글내용-->
+  <div>
+    <p th:text="${DetailDto.content}">내용</p>
+  </div>
+
+<!--  이미지 리스트-->
+  <div th:if="${DetailDto.images != null}">
+    <h4>첨부 이미지</h4>
+    <div th:each="image : ${DetailDto.images}">
+      <img th:src="${image.imgUrl}" th:alt="${image.originalName}">
+    </div>
+  </div>
+
+<!--  그래프 리스트-->
+  <div th:if="${DetailDto.graphs != null}">
+    <h4>첨부 그래프</h4>
+    <ul>
+      <li th:each="graph : ${DetailDto.graphs}">
+        기간: <span th:text="${#temporals.format(graph.startDate, 'yyyy-MM-dd')}"></span>
+        <span th:text="${#temporals.format(graph.finishDate, 'yyyy-MM-dd')}"></span>
+      </li>
+    </ul>
+  </div>
+
+<!--  댓글 입력-->
+  <h4>댓글</h4>
+  <form th:action="@{/community/detail/{id}/comment(id=${DetailDto.id})}" method="post" id="commentForm">
+    <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
+    <button type="submit">댓글 등록</button>
+  </form>
+  
+<!--  댓글 목록-->
+  <div th:each="comment : ${DetailDto.comments}">
+    <p>
+    <strong th:text="${comment.name}">작성자</strong>
+    <span th:text="${#temporals.format(comment.writeDate, 'yyyy-MM-dd')}">작성일</span>
+    <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
+    </p>
+    <p th:text="${comment.content}">댓글 내용</p><hr>
+  </div>
+
 </div>
 
 </html>

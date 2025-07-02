@@ -4,13 +4,13 @@ import com.Tigggle.Constant.Community.CommunityCategory;
 import com.Tigggle.DTO.community.CommunityBoardListDto;
 import com.Tigggle.DTO.community.CommunityDetailDto;
 import com.Tigggle.Service.community.CommunityBoardService;
+import com.Tigggle.Service.community.CommunityCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -19,6 +19,7 @@ import java.util.List;
 public class CommunityController {
 
     private final CommunityBoardService communityBoardService;
+    private final CommunityCommentService communityCommentService;
 
     @GetMapping("/communityTip")
 
@@ -53,6 +54,17 @@ public class CommunityController {
             default -> throw new IllegalStateException("알 수 없는 카테고리");
         }
 
+    }
+
+    @PostMapping("/community/detail/{id}/comment")
+    public String addComment(@PathVariable Long id,
+                             @RequestParam("content")
+                             String content,
+                             Principal principal) {
+
+        communityCommentService.addComment(id,  principal.getName(), content);
+
+        return "redirect:/community/detail/" + id;
     }
 
     @GetMapping("/community/TipWrite")
