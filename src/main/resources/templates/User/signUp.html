@@ -104,7 +104,14 @@
         $("#accessId").focus(); // 처음 로드시  아이디 에 커서
         $(document).on("keydown", function(e){ // 엔터키 입력 처리
             if(e.key==='Enter'){
-                $("#joinBt").trigger('click');
+                var hasAllWrite=true;
+                $.each($(".input-field"),function(){
+                    if($(this).find("input").val() === '' ) {
+                        hasAllWrite = false;
+                    }
+                });
+                if(hasAllWrite)
+                    $("#joinBt").trigger('click');
             }
         });
         $("#accessId").blur(function(){ // 아이디 중복체크 - 커서 블러 처리시 동작
