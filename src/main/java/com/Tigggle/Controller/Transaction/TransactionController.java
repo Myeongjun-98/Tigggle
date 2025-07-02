@@ -2,26 +2,23 @@ package com.Tigggle.Controller.Transaction;
 
 
 import java.security.Principal;
-import java.util.List;
 
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import com.Tigggle.DTO.Transaction.AssetListDto;
 import com.Tigggle.DTO.Transaction.CashDto;
 import com.Tigggle.DTO.Transaction.OrdinaryAccountDto;
 import com.Tigggle.Entity.Transaction.Asset;
 import com.Tigggle.Entity.Transaction.Cash;
 import com.Tigggle.Entity.Transaction.OrdinaryAccount;
 import com.Tigggle.Repository.UserRepository;
-import com.Tigggle.Service.TransactionService;
+import com.Tigggle.Service.Transaction.TransactionService;
 
 import lombok.RequiredArgsConstructor;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @RequestMapping("/transaction")
 public class TransactionController {
