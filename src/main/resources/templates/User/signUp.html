@@ -34,6 +34,10 @@
                     <p class="hint">ⓘ 본인확인시 필요합니다.</p>
                 </div>
                 <div class="input-field">
+                    <label th:for="email">이메일</label>
+                    <input type="email" th:field="*{email}">
+                </div>
+                <div class="input-field">
                     <label >성별</label>
                     <div class="gender-box">
                         <input type="radio" th:name="gender" value="0" name="gender" id="g0">
@@ -79,6 +83,9 @@
                 $(this).parent().parent().prev().css("display","flex");
                 $(this).parent().parent().prev().find("input").focus();
             }
+        });
+        $("#email").blur(function(){
+            activeInput($(this).parent());
         });
         $("#tel").blur(function(){
             activeInput($(this).parent());

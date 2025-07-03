@@ -18,11 +18,11 @@ import lombok.RequiredArgsConstructor;
 public class TransactionController {
     private final TransactionService transactionService;
 
-    @GetMapping("/bankAccount")
+    @GetMapping("/wallet")
     public String transactionPage(Model model,
                                     Principal principal){
 
 
-        return "/transaction/bankAccount";
+        return "transaction/bankAccount";
     }
 }
