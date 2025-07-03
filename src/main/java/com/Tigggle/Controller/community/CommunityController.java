@@ -3,6 +3,7 @@ package com.Tigggle.Controller.community;
 import com.Tigggle.Constant.Community.CommunityCategory;
 import com.Tigggle.DTO.community.CommunityBoardListDto;
 import com.Tigggle.DTO.community.CommunityDetailDto;
+import com.Tigggle.DTO.community.CommunityWriteDto;
 import com.Tigggle.Service.community.CommunityBoardService;
 import com.Tigggle.Service.community.CommunityCommentService;
 import lombok.RequiredArgsConstructor;
@@ -83,11 +84,22 @@ public class CommunityController {
         return "redirect:/community/detail/" + boardId;
     }
 
+    // 작성 페이지
     @GetMapping("/community/TipWrite")
-    public String tipWriteForm() {
-
-        return "community/TipWrite";
+    public String tipWriteForm(Model model) {
+        model.addAttribute("communityWriteDto", new CommunityWriteDto());  // 작성 폼용 DTO 초기화
+        return "community/TipWrite";  // 작성 폼 뷰 이름
     }
+
+    @PostMapping("/community/TipWrite")
+    public String writePost(@ModelAttribute CommunityWriteDto communityWriteDto,
+                            Principal principal) {
+        communityWriteDto.setCategory(CommunityCategory.TIP);
+
+        Long savedId = communityBoardService.saveTipBoard(communityWriteDto, principal.getName());
+        return "redirect:/communityTip";
+    }
+
 
     @GetMapping("/communityDiscussion")
 
