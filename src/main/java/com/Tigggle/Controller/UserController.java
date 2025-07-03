@@ -25,17 +25,12 @@ public class UserController {
 
 
     // 아이디 찾기 페이지
-    @GetMapping("/user/forgetId")
-    public String forgetId(Model model) {
-        return "User/findId";
+    @GetMapping("/user/forget")
+    public String forgetId(@RequestParam String target, Model model) {
+        model.addAttribute("target", target);
+        return "User/findIdAndPassword";
     }
 
-
-    //비밀번호 찾기 페이지
-    @GetMapping("/user/forgetPw")
-    public String forgetPw(Model model) {
-        return "User/findPassword";
-    }
 
 
     //로그인 페이지
