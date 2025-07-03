@@ -16,6 +16,7 @@ public class CommunityCommentDto {
     private Long id;
     private String content;
     private String name;
+    private String userAccessId;
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
     private boolean deleted;
@@ -39,6 +40,7 @@ public class CommunityCommentDto {
 
         communityCommentDto.setId(communityComment.getId());
         communityCommentDto.setName(communityComment.getMember().getName());
+        communityCommentDto.setUserAccessId(communityComment.getMember().getAccessId());
         communityCommentDto.setWriteDate(communityComment.getWriteDate());
         communityCommentDto.setUpdateDate(communityComment.getUpdateDate());
         communityCommentDto.setDeleted(communityComment.isDeleted());

@@ -38,4 +38,43 @@ public class CommunityCommentService {
 
         communityCommentRepository.save(communityComment);
     }
+
+    public void deleteComment(Long commentId, String requesterName) {
+        CommunityComment communityComment = communityCommentRepository
+                .findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글이 존재하지 않습니다."));
+
+        if (!communityComment.getMember().getAccessId().equals(requesterName)) {
+            throw new RuntimeException("삭제 권한이 없습니다.");
+        }
+
+        communityComment.setDeleted(true);
+        communityComment.setDeletedDate(LocalDateTime.now());
+        communityCommentRepository.save(communityComment);
+
+    }
+
+    public void updateComment(Long commentId,
+                              String newContent,
+                              String requesterName) {
+
+        CommunityComment communityComment = communityCommentRepository
+                .findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글이 존재하지 않습니다."));
+
+        if(!communityComment.getMember().getAccessId().equals(requesterName)) {
+            throw new RuntimeException("수정 권한이 없습니다.");
+        }
+
+        communityComment.setContent(newContent);
+        communityComment.setUpdateDate(LocalDateTime.now());
+        communityCommentRepository.save(communityComment);
+    }
+
+    public Long getBoardIdByComment(Long commentId) {
+        CommunityComment communityComment = communityCommentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("댓글이 존재하지 않습니다."));
+
+        return communityComment.getCommunityBoard().getId();
+    }
 }

@@ -23,12 +23,12 @@
         <tbody>
         <tr th:each="board : ${communityBoardListDto}">
             <td>
-                <a th:href="@{/community/detail/{id}(id=${board.id})}" th:text="${board.title}"></a>
+                <a th:href="@{/community/detail/{id}(id=${board.id})}" th:text="${board.title}">제목</a>
                 <span th:if="${board.hasImage}" style="margin-left:4px">🖼️</span>
             </td>
-            <td th:text="${board.name}"></td>
-            <td th:text="${board.formattedWriteDate}"></td>
-            <td th:text="${board.hit}"></td>
+            <td th:text="${board.name}">작성자</td>
+            <td th:text="${board.formattedWriteDate}">작성일</td>
+            <td th:text="${board.hit}">조회수</td>
         </tr>
         </tbody>
     </table>

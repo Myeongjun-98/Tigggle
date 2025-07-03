@@ -7,7 +7,7 @@
 <th:block layout:fragment="script"></th:block>
 
 <div  layout:fragment="content">
-  <h2>예/적금 분석 및 토론 게시판</h2>
+  <h2>경제시장</h2>
 
   <div>
     <h3 th:text="${DetailDto.title}">게시글 제목</h3>
@@ -16,9 +16,10 @@
   <div>
     <p><strong>작성자 :</strong> <span th:text="${DetailDto.name}">작성자</span></p>
     <p><strong>작성일 :</strong>
-      <span th:text="${#temporals.format(DetailDto.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+      <span th:text="${#temporals.format(
+      DetailDto.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
       <span th:if="${DetailDto.updateDate != null and
-      DetailDto.writeDate != DetailDto.updateDate}">(수정됨)</span>
+       DetailDto.writeDate != DetailDto.updateDate}">(수정됨)</span>
     </p>
   </div>
 
@@ -39,21 +40,15 @@
   <h4>댓글</h4>
   <form th:action="@{/community/detail/{id}/comment(id=${DetailDto.id})}"
         method="post" id="commentForm">
-  <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
-  <button type="submit">댓글 등록</button>
+    <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
+    <button type="submit">댓글 등록</button>
   </form>
 
 <!--  댓글 목록-->
   <div th:each="comment : ${DetailDto.comments}">
-
-<!--    삭제된 댓글-->
-    <div th:if="${comment.deleted}">
-      <p><i style="color: gray;">삭제된 댓글입니다.</i></p><br>
-    </div>
     <p>
       <strong th:text="${comment.name}">작성자</strong>
-      <span th:text="${#temporals.format(
-      comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+      <span th:text="${#temporals.format(comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
       <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
     </p>
     <p th:text="${comment.content}">댓글 내용</p><br>
