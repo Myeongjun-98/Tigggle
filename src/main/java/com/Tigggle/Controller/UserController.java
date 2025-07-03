@@ -55,9 +55,9 @@ public class UserController {
     //회원가입 처리
     @PostMapping("/user/signUp")
     public String signUp(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
-        if(bindingResult.hasErrors()){
-            return "User/signUp";
-        }
+//        if(bindingResult.hasErrors()){
+//            return "User/signUp";
+//        }
         userService.signUpSave(memberFormDto,passwordEncoder);
         return "redirect:/";
     }
