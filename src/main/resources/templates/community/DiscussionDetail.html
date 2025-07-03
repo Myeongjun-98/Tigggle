@@ -69,10 +69,16 @@
         </form>
       </div>
 
-    </div>
+      <!-- 댓글 내용 -->
+      <p th:id="|comment-content-${comment.id}|" th:text="${comment.content}">댓글 내용</p><br>
 
-
-    <p th:text="${comment.content}">댓글 내용</p><br>
+      <!-- 인라인 수정 폼 -->
+      <div th:id="|update-form-${comment.id}|" style="display: none;">
+        <form th:action="@{/community/comment/update/{commentId}(commentId=${comment.id})}" method="post">
+          <textarea name="content" th:text="${comment.content}"></textarea>
+          <button type="submit">저장</button>
+        </form>
+      </div>
   </div>
 </div>
 
