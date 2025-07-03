@@ -1,63 +1,44 @@
 <!DOCTYPE html>
-<html
-  lang="ko"
-  xmlns:th="http://www.thymeleaf/org"
-  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
->
-  <div th:fragment="header" id="header_wrap" class="no-select">
+<html lang="ko"  xmlns:th="http://www.thymeleaf/org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+
+
+<div  th:fragment="header" id="header_wrap"  class="no-select">
+
     <!-- 메뉴 -->
     <div id="nav">
-      <div class="innerNav">
+        <div class="innerNav">
         <div class="logo-img">
-          <a href=""><img src="" alt="명준바보" /></a>
+            <a href=""><img src="" alt="명준바보"></a>
         </div>
         <div class="menuBox">
-          <ul class="menu-list">
-            <li class="menu">
-              <a href="/asset" class="major-menu">내 자산</a>
-            </li>
-            <li class="menu">
-              <a href="" class="major-menu">커뮤니티</a>
-              <ul class="sub-menu-list">
-                <li class="sub-menu">
-                  <a href="/communityTip">지출/저축 Tip</a>
+            <ul class="menu-list">
+                <li class="menu"><a href="/asset" class="major-menu">내 자산</a></li>
+                <li class="menu">
+                    <a href="" class="major-menu">커뮤니티</a>
+                    <ul class="sub-menu-list">
+                        <li class="sub-menu"><a href="/communityTip">지출/저축 Tip</a></li>
+                        <li class="sub-menu"><a href="/communityDiscussion">예.적금 분석 및 토론</a></li>
+                        <li class="sub-menu"><a href="/communityEconomicMarket">경제시장</a></li>
+                    </ul>
                 </li>
-                <li class="sub-menu">
-                  <a href="/communityDiscussion">예.적금 분석 및 토론</a>
-                </li>
-                <li class="sub-menu">
-                  <a href="/communityEconomicMarket">경제시장</a>
-                </li>
-              </ul>
-            </li>
-            <li class="menu"><a href="#" class="major-menu">금융늬우스</a></li>
-            <li class="menu">
-              <a href="/insite" class="major-menu">인사이트</a>
-            </li>
-            <li class="menu">
-              <a href="/transaction/wallet" class="major-menu">가계부</a>
-            </li>
-            <li class="menu"><a href="" class="major-menu">금융상품</a></li>
-            <li class="menu"><a href="" class="major-menu">마이페이지</a></li>
-          </ul>
+                <li class="menu"><a href="#" class="major-menu">금융늬우스</a></li>
+                <li class="menu"><a href="/insite" class="major-menu">인사이트</a></li>
+                <li class="menu"><a href="/transaction/wallet" class="major-menu">가계부</a></li>
+                <li class="menu"><a href="" class="major-menu">금융상품</a></li>
+                <li class="menu"><a href="" class="major-menu">마이페이지</a></li>
+            </ul>
         </div>
         <div class="userBox">
-          <span
-            sec:authorize="isAuthenticated()"
-            class="px-3 uitem"
-            sec:authentication="name"
-          ></span>
-          <span sec:authorize="isAuthenticated()" class="px-3 uitem">
-            <a class="nav-link" href="/logout">로그아웃</a></span
-          >
-          <span class="uitem" sec:authorize="isAnonymous()"
-            ><a href="/user/signIn">로그인</a></span
-          >
-          <span class="uitem signUp-bt" sec:authorize="isAnonymous()"
-            ><a href="/user/signUp">Get Started</a></span
-          >
+            <span sec:authorize="isAuthenticated()" class="px-3 uitem" sec:authentication="name"></span>
+            <span sec:authorize="isAuthenticated()" class="px-3 uitem"> <a class="nav-link" href="/logout">로그아웃</a></span>
+            <span class="uitem" sec:authorize="isAnonymous()"><a href="/user/signIn">로그인</a></span>
+            <span class="uitem signUp-bt" sec:authorize="isAnonymous()"><a href="/user/signUp">Get Started</a></span>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
+
+</div>
+
 </html>

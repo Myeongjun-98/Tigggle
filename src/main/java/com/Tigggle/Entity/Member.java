@@ -22,6 +22,8 @@ public class Member {
     @Column(nullable = false)
     private String name;  //이름
     @Column(nullable = false)
+    private String email;
+    @Column(nullable = false)
     private String tel;  //연락처
     @Column(nullable = false)
     private boolean gender; //성별

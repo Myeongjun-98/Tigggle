@@ -9,9 +9,7 @@
 <div  layout:fragment="content">
     <div id="loginWrap">
         <h2 class="wrapTitle">로그인</h2>
-        <p  th:if="${fieldError}" class="error">
-            아이디 혹은 비밀번호가 잘못되었습니다.
-        </p>
+
         <div id="loginBox">
             <form method="post" action="/user/signIn" name="loginFm" id="loginFm">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -23,31 +21,26 @@
                     <label for="password">비밀번호</label>
                     <input type="password" name="password" id="password" placeholder="비밀번호 8~16자 입력해주세요.">
                 </div>
-
+                <p  th:if="${fieldError}" class="error">
+                    아이디 혹은 비밀번호가 잘못되었습니다.
+                </p>
                 <div class="form-bt">
                     <button type="button" id="loginBt" class="btn">로그인</button>
                 </div>
             </form>
         </div>
+        <div id="forgetAndJoinBox">
+            <a href="/user/signUp">회원가입</a>
+            <a href="/user/forgetId">아이디 찾기</a>
+            <a href="/user/forgetPw">비밀번호 찾기</a>
+        </div>
     </div>
     <script>
         $(function(){
             $(".wrapTitle").addClass("visible");
-            $(".input-field").eq(0).addClass("visible");
         });
         $("#accessId").focus();
 
-        $("#accessId").keyup(function(){
-            if($(this).val().length >= 2){
-                $(".input-field").eq(1).addClass("visible");
-            }
-        });
-
-        $("#password").keyup(function(){
-            if($(this).val().length >= 4){
-                $(".form-bt").eq(0).addClass("visible");
-            }
-        });
 
         $(document).on("keydown", function(e){
             if(e.key==='Enter'){
