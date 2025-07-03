@@ -22,15 +22,37 @@ public class UserController {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
+
+
+    // 아이디 찾기 페이지
+    @GetMapping("/user/forgetId")
+    public String forgetId(Model model) {
+        return "User/findId";
+    }
+
+
+    //비밀번호 찾기 페이지
+    @GetMapping("/user/forgetPw")
+    public String forgetPw(Model model) {
+        return "User/findPassword";
+    }
+
+
+    //로그인 페이지
     @GetMapping("/user/signIn")
     public String signIn(){
         return "User/signIn";
     }
+
+
+    //회원가입 페이지 제공
     @GetMapping("/user/signUp")
     public String signUp(Model model){
         model.addAttribute("memberFormDto", new MemberFormDto());
         return "User/signUp";
     }
+
+    //회원가입 처리
     @PostMapping("/user/signUp")
     public String signUp(@Valid MemberFormDto memberFormDto, BindingResult bindingResult, Model model){
 //        if(bindingResult.hasErrors()){
@@ -40,6 +62,7 @@ public class UserController {
         return "redirect:/";
     }
 
+    // 회원가입시 아이디 중복체크
     @PostMapping("/user/idCheck")
     public @ResponseBody ResponseEntity idCheck(String id){
 

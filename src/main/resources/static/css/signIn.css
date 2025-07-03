@@ -1,6 +1,6 @@
 #loginWrap{
     width:600px;
-    margin:120px auto;
+    margin:50px auto;
 }
 .wrapTitle{
     text-align: center;
@@ -12,11 +12,10 @@
 
 #loginBox{
     width:100%;
-    margin:70px 0 ;
+    margin:30px 0 ;
 }
 
 .input-field, .form-bt{
-    opacity: 0;
     transition: all 0.8s;
     display: flex;
     flex-direction: column;
@@ -46,7 +45,29 @@
     cursor: pointer;
 }
 
-
+#forgetAndJoinBox{
+    text-align: center;
+    padding:20px 0;
+}
+#forgetAndJoinBox a{
+    padding: 0 25px;
+    font-size:19px;
+    position:relative;
+}
+#forgetAndJoinBox a:nth-child(2)::before{
+    content:"";
+    position:absolute;
+    left:0; top:4px;
+    width:1px; height: 19px;
+    background-color: #000;
+}
+#forgetAndJoinBox a:nth-child(2)::after{
+    content:"";
+    position:absolute;
+    right:0; top:4px;
+    width:1px; height: 19px;
+    background-color: #000;
+}
 
 
 #loginWrap .visible{
