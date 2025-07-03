@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 @RequiredArgsConstructor
-public class AssetController {
+public class assetController {
 
     @GetMapping("")
     public String asset(){
