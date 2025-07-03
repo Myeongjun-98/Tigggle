@@ -69,7 +69,8 @@
     <div th:unless="${comment.deleted}">
       <p>
         <strong th:text="${comment.name}">작성자</strong>
-        <span th:text="${#temporals.format(comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+        <span th:text="${#temporals.format(
+        comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
         <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
       </p>
 
