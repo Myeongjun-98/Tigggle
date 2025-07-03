@@ -5,7 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-@RequiredArgsConstructor public class AssetController {
+@RequiredArgsConstructor
+public class AssetController {
 
     @GetMapping("")
     public String asset(){
