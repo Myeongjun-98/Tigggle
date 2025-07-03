@@ -2,9 +2,13 @@ package com.Tigggle.DTO.Transaction;
 
 import java.util.List;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
+@Builder
+@Setter
 //? 일별 거래내역을 담기 위한 DTO
 public class DailyLedgerDto {
     private int day;            // 날짜 (ex : 27)

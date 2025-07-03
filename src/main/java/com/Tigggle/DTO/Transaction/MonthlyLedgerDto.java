@@ -3,10 +3,9 @@ package com.Tigggle.DTO.Transaction;
 import java.time.LocalDate;
 import java.util.List;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+@Builder @Setter
 @Getter @NoArgsConstructor @AllArgsConstructor
 //? 월별 가계부를 담는 최상위 DTO
 public class MonthlyLedgerDto {

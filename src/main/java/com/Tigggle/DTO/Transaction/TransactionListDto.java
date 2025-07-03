@@ -1,6 +1,7 @@
 package com.Tigggle.DTO.Transaction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,5 +14,5 @@ public class TransactionListDto {
     private boolean isConsumption;          // 지출 여부
     private String description;             // 내용
     private Long amount;                    // 금액
-    private LocalDate transactionDate;      // 내역 발생 일시
+    private LocalDateTime transactionDate;      // 내역 발생 일시
 }
