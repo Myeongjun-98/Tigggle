@@ -21,9 +21,15 @@ INPUT{
     border:1px solid #fcfcfc;
 }
 
-.no-select{
-
+/* 마우스 블럭 금지 */
+.no-select {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
 }
+
+
 /*  header.html */
 #header_wrap{
     width:100%;
@@ -54,8 +60,22 @@ INPUT{
     display:flex;
     position: relative;
 }
-#nav .menuBox .menu{ position: relative;}
-#nav .menuBox .menu .major-menu{padding:25px 30px;}
+#nav .menuBox .menu-list .menu{ position: relative;padding:25px 30px;}
+#nav .menuBox .menu-list .menu a{display:block;}
+#nav .menuBox .menu-list .menu .sub-menu-list{
+    position:absolute;
+    top:74px; left:0;
+    display: none;
+}
+#nav .menuBox .menu-list .menu .sub-menu-list .sub-menu a{
+    padding:5px 30px;
+    width:200px;
+}
+#nav .menuBox .menu-list .menu:hover .sub-menu-list{
+    z-index: 100;
+    display:block;
+}
+
 #nav .userBox{
     display: flex;
     justify-content: center;
@@ -68,20 +88,16 @@ INPUT{
     background-image: linear-gradient(to bottom, #1a53d1, #3a78ea);
     color:#fff;
 }
-#nav .menuBox .menu .sub-menu-list{
-    display:none;
-    position:absolute;
-    top:54px; left:0;
-    width:200px;
-    height:0;
-}
-#nav .menuBox .menu .sub-menu-list .sub-menu{
 
-}
-#nav .menuBox .menu .sub-menu-list .sub-menu a{
-    padding:5px 30px;
-}
 
 #content{
     width:100%;
+    position:relative;
+}
+#content .error{
+    color:red;
+}
+#content .visible{
+    opacity: 1;
+
 }
