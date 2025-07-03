@@ -19,27 +19,6 @@ import static java.time.YearMonth.now;
 @RequiredArgsConstructor
 public class InsiteService {
 
-//    private final InsiteRepository insiteRepository;
-//
-//    // amount 다더함 (is_consumption==true, reflect_on_asset==true인 amount)
-//    public Map<Integer, Long> getMonthlyConsumption(LocalDate now){
-//        // insiteRepository에서 현재 달 포함 이전 6개월치 가져옴
-//        LocalDate targetDate = LocalDate.of(2025, 7, 1);
-//        LocalDate startDate = targetDate.minusMonths(5);
-//
-//        List<Transaction> results = insiteRepository.findByTransactionDateBetween(startDate, targetDate);
-//        List<Object[]> monthResult = insiteRepository.getMonthlyTotalAmount();
-//
-//        Map<Integer, Long> monthlyAmount = new TreeMap<>();
-//
-//        for(Object[] row : monthResult){
-//            Integer month = ( (Number) row[0]).intValue();
-//            Long amount = ( (Number) row[1]).longValue();
-//            monthlyAmount.put(month, amount);
-//        }
-//
-//        return monthlyAmount;
-//    }
     private final InsiteRepository insiteRepository;
 
     public InsiteReponseDto getSixMonthSpendingSummary(Long memberId, String keyword){

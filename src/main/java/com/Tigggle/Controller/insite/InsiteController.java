@@ -21,10 +21,10 @@ public class InsiteController {
 
     private final UserRepository memberRepository;
 
-//    @GetMapping("/insite")
-//    public String insite(){
-//        return "/insite";
-//    }
+    @GetMapping("/insite")
+    public String insitePage(){
+        return "insite/insite";
+    }
 
 
 //    // 월간 소비내역 차트
@@ -40,15 +40,11 @@ public class InsiteController {
 //        model.addAttribute("amount", monthlyData.values());
 //
 //        return "insite";
-//
-//
 //    }
 
     private final InsiteService insiteService;
-
     @GetMapping("/api/insite/spending-summary")
     public InsiteReponseDto getSpendingSummary(
-//            @AuthenticationPrincipal UserDetailsImpl userDetails,
             Principal principal, @RequestParam(required = false) String keyword){
 
         Long memberId = memberRepository.findByAccessId(principal.getName()).getId();

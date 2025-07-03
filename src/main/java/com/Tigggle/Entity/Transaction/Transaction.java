@@ -1,6 +1,7 @@
 package com.Tigggle.Entity.Transaction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.Tigggle.Constant.Transaction.PayMethod;
 
@@ -31,7 +32,7 @@ public class Transaction {
     private String description;                 // 내용
 
     @Column(nullable=false)
-    private LocalDate transactionDate;          // 내역 발생 일시
+    private LocalDateTime transactionDate;          // 내역 발생 일시
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)

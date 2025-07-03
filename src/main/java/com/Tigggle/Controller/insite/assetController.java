@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 public class assetController {
 
-        @GetMapping("")
+        @GetMapping("/aaset")
         public String asset(){
-            return "";
+            return "insite/asset";
         }
 }
 
