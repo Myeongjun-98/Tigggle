@@ -8,5 +8,66 @@
   <th:block layout:fragment="css"></th:block>
   <th:block layout:fragment="script"></th:block>
 
-  <div layout:fragment="content"></div>
+  <div layout:fragment="content">
+    <h1>hello</h1>
+
+    <!-- 사이드바 -->
+    <div class="TR-menu-box">
+      <ul class="TR-menu-list">
+        <li class="TR-sub-menu"><a href="/transaction/wallet"></a></li>
+        <li class="TR-sub-menu"><a href="/transaction/saving"></a></li>
+        <li class="TR-sub-menu"><a href="/transaction/creditcard"></a></li>
+        <li class="TR-sub-menu"><a href="/transaction/goal"></a></li>
+      </ul>
+    </div>
+    <!-- 사이드바 -->
+
+    <!-- 멤버 이름이 들어간 공간 -->
+    <div class="TR-main-content">
+
+      <div class="TR-member-container">
+        <span th:text="|${memberInfo.getName()}님의 가계부|"></span>
+      </div>
+    <!-- 멤버 이름이 들어간 공간 -->
+    <!-- 사용자 자산들 관련 종합 정보 표시 및 핸들링하는 공간 -->
+      <!-- OrdinaryAccount일 시 표현 -->
+      <div class="|TR-wallet-list|">
+        <ul>
+        <p>여기엔 사용자의 지갑자산들의 아이디로 연결되는 가계부페이지가 들어갈 예정</p>
+        <!--     지갑자산들을 th:each로 li태그 만들 예정     -->
+        </ul>
+        <br>
+        <div th:if="${OrdinaryAccountDto != null}">
+<!--     은행로고       <img th:src="@{/TigggleFile/{file}(file=${OrdinaryAccount.bankLogo})}">-->
+            <span th:text="${OrdinaryAccountDto.getBankName()}"></span>
+            <span th:text="${OrdinaryAccountDto.getAccountNumber()}"></span>
+        </div>
+      </div>
+      <!-- OrdinaryAccount일 시 표현 -->
+      <!-- 일단.. -->
+      <section class="summary-section">
+        <div class="date-navigator">
+          <button class="arrow-button">◀</button>
+          <h2>📅 2025년 6월</h2>
+          <button class="arrow-button">▶</button>
+        </div>
+        <div class="summary-cards">
+          <div class="card">
+            <label>신선우님의 잔액</label>
+            <span class="amount">2,407,010원</span>
+          </div>
+          <div class="card">
+            <label>6월 지출액</label>
+            <span class="amount">1,200,200원</span>
+          </div>
+          <div class="card">
+            <label>남은 금액???</label>
+            <span class="amount">100,000원</span>
+          </div>
+        </div>
+      </section>
+      <!-- 일단.. -->
+    <!-- 사용자 자산들 관련 종합 정보 표시 및 핸들링하는 공간 -->
+    </div>
+  </div>
 </html>

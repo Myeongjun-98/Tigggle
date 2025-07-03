@@ -3,6 +3,8 @@ package com.Tigggle.Controller.Transaction;
 
 import java.security.Principal;
 
+import com.Tigggle.Entity.Member;
+import com.Tigggle.Service.Transaction.AssetService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,38 +24,35 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RequestMapping("/transaction")
 public class TransactionController {
-    private final TransactionService transactionService;
     private final UserRepository memberRepository;
 
+    private final TransactionService transactionService;
+    private final AssetService assetService;
     // 멤버 아이디 찾기
-    public Long getMemberId(Principal principal){
-        return memberRepository.findByAccessId(principal.getName()).getId();
-    };
+    // public Long getMemberId(Principal principal){
+    //     return memberRepository.findByAccessId(principal.getName()).getId();+++
+    // }
 
-    @GetMapping("/")
+    @GetMapping("/wallet")
     public String DefaultTransactionPage(Principal principal, Model model){
-        // 멤버 아이디
-        Long memberId = getMemberId(principal);
 
-        // 멤버아이디로 타입 불명의 디폴트 자산을 가져옴
-        // 이 자산은 기본적으로 보통예금(Ordinary)를 반환, 없을 시 현금(Cash), 둘 다 아니라면 null 반환함
-        Asset asset = transactionService.determineDefaultWalletAsset(memberId);
+        Member memberInfo = memberRepository.findByAccessId(principal.getName());
 
-        if(!(asset == null)){
-            // 가져온 자산이 보통예금이라면, 보통예금 DTO 반환
-            if(asset instanceof OrdinaryAccount){
-                OrdinaryAccountDto dto = transactionService.getDefaultOrdinary(asset);
-                model.addAttribute("OrdinaryAccountDto", dto);
+        // 사용자의 계좌를 검색, OrdinaryAccount를 우선적으로 가져오나 혹 OrdinaryAccount가 없을 시 Cash를,
+        // 그래도 없다면 반환하지 않음.
+        Asset a = transactionService.determineDefaultWalletAsset(memberInfo.getId());
+        if(!(a == null)){
+            if(a instanceof OrdinaryAccount){
+                model.addAttribute("OrdinaryAccountDto", transactionService.getDefaultOrdinary(a));
             }
-            // 가져온 자산이 현금이라면, 현금DTO 반환
-            if(asset instanceof Cash){
-                CashDto dto = transactionService.getDefaultCash(asset);
-                model.addAttribute("CashDto", dto);
+            if(a instanceof Cash){
+                model.addAttribute("CashDto", transactionService.getDefaultCash(a));
             }
-            else System.out.println("알 수 없는 종류의 자산입니다.");
         }
+        // 사용자 이름
+        model.addAttribute("memberInfo", memberInfo);
 
-        return "/transaction/wallet";
+        return "transaction/wallet";
     }
 
 

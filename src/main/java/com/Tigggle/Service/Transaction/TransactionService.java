@@ -26,6 +26,9 @@ public class TransactionService {
      private final UserRepository memberRepository;
      private final OrdinaryRepository ordinaryRepository;
 
+     private final AssetService assetService;
+
+     //! 디폴트 관련
      //* ○ "지갑"을 클릭했을 시, 디폴트 지갑자산을 결정해주는 메서드.
      public Asset determineDefaultWalletAsset(Long memberId) {
         // 1. Repository를 통해 '지갑'에 해당하는 모든 자산(현금, 보통예금)을 조회합니다.
@@ -54,44 +57,18 @@ public class TransactionService {
      //* ○ 얻어낸 디폴트 Asset으로 OrdinaryAccountDto반환하기
      public OrdinaryAccountDto getDefaultOrdinary (Asset asset){
           Long id = asset.getId();
-          return ordinaryAccountInfo(id);
+          return assetService.ordinaryAccountInfo(id);
      }
 
      //* ○ 얻어낸 디폴트 Asset으로 CashDto반환하기
      public CashDto getDefaultCash (Asset asset){
           Long id = asset.getId();
-          return cashInfo(id);
+          return assetService.cashInfo(id);
      }
+     //! 디폴트 관련
 
-     
-     //* 현금 정보 DTO에 담기
-     public CashDto cashInfo(Long cashId){
-          Optional<Cash> cash = cashRepository.findById(cashId);
 
-          CashDto cashDto = new CashDto();
-          cashDto.setAlias(cash.get().getAlias());
-          cashDto.setBalance(cash.get().getBalance());
 
-          return cashDto;
-     }
-
-    //* 보통예금 정보 DTO에 담기
-     public OrdinaryAccountDto ordinaryAccountInfo(Long OrdinaryAccountId){
-     Optional<OrdinaryAccount> ordinary = ordinaryRepository.findById(OrdinaryAccountId);
-
-          OrdinaryAccountDto accountDto = new OrdinaryAccountDto();
-          accountDto.setAccoutNumber(ordinary.get().getAccountNumber());
-          accountDto.setAlias(ordinary.get().getAlias());
-          accountDto.setBalance(ordinary.get().getBalance());
-          accountDto.setBankLogo(ordinary.get().getBank().getLogoUrl());
-          accountDto.setBankName(ordinary.get().getBank().getName());
-          accountDto.setCompound(ordinary.get().isCompound());
-          accountDto.setExpenseLimit(ordinary.get().getExpenseLimit());
-          accountDto.setInterest(ordinary.get().getInterest());
-          accountDto.setLimitType(ordinary.get().getLimitType());
-
-          return accountDto;
-     }
 
 
 }
