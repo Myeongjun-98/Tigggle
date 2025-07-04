@@ -46,4 +46,19 @@ public interface InsiteRepository extends JpaRepository<Transaction, Long> {
             @Param("endDate") LocalDate endDate,
             @Param("keyword") String keyword);
 
+
+
+
+
+    @Query("SELECT k.majorKeyword, MONTH(t.transactionDate), SUM(t.amount) " +
+            "FROM Transaction t JOIN t.keyword k " +
+            "WHERE t.member.id = :memberId " +
+            "AND t.transactionDate BETWEEN :start AND :end " +
+            "AND t.isConsumption = true " +
+            "AND t.reflectOnAsset = true " +
+            "GROUP BY k.majorKeyword, MONTH(t.transactionDate)")
+    List<Object[]> getKeywordMonthlyChart(@Param("memberId") Long memberId,
+                                          @Param("start") LocalDate start,
+                                          @Param("end") LocalDate end);
+
 }
