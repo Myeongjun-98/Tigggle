@@ -84,7 +84,7 @@ public class CommunityController {
         return "redirect:/community/detail/" + boardId;
     }
 
-    // 작성 페이지
+    // tip 게시판 작성 페이지
     @GetMapping("/community/TipWrite")
     public String tipWriteForm(Model model) {
         model.addAttribute("communityWriteDto", new CommunityWriteDto());  // 작성 폼용 DTO 초기화
@@ -92,7 +92,7 @@ public class CommunityController {
     }
 
     @PostMapping("/community/TipWrite")
-    public String writePost(@ModelAttribute CommunityWriteDto communityWriteDto,
+    public String TipWritePost(@ModelAttribute CommunityWriteDto communityWriteDto,
                             Principal principal) {
         communityWriteDto.setCategory(CommunityCategory.TIP);
 
@@ -113,14 +113,23 @@ public class CommunityController {
 
     }
 
+    //    discussion 게시판 작성 페이지
     @GetMapping("/community/DiscussionWrite")
-    public String discussionWriteForm() {
+    public String discussionWriteForm(Model model) {
+        model.addAttribute("communityWriteDto", new CommunityWriteDto());  // 작성 폼용 DTO 초기화
+        return "community/DiscussionWrite";  // 작성 폼 뷰 이름
+    }
 
-        return "community/DiscussionWrite";
+    @PostMapping("/community/DiscussionWrite")
+    public String DiscussionWritePost(@ModelAttribute CommunityWriteDto communityWriteDto,
+                            Principal principal) {
+        communityWriteDto.setCategory(CommunityCategory.DISCUSSION);
+
+        Long savedId = communityBoardService.saveDiscussionBoard(communityWriteDto, principal.getName());
+        return "redirect:/communityDiscussion";
     }
 
     @GetMapping("/communityEconomicMarket")
-
     public String communityEconomicMarket(Model model) {
 
         List<CommunityBoardListDto> communityBoardListDtos = communityBoardService
@@ -128,6 +137,22 @@ public class CommunityController {
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
 
         return "community/EconomicMarket";
+    }
+
+    //    discussion 게시판 작성 페이지
+    @GetMapping("/community/EconomicMarketWrite")
+    public String economicMarketWriteForm(Model model) {
+        model.addAttribute("communityWriteDto", new CommunityWriteDto());  // 작성 폼용 DTO 초기화
+        return "community/EconomicMarketWrite";  // 작성 폼 뷰 이름
+    }
+
+    @PostMapping("/community/EconomicMarketWrite")
+    public String EconomicMarketWritePost(@ModelAttribute CommunityWriteDto communityWriteDto,
+                                      Principal principal) {
+        communityWriteDto.setCategory(CommunityCategory.ECONOMIC_MARKET);
+
+        Long savedId = communityBoardService.saveEconomicMarketBoard(communityWriteDto, principal.getName());
+        return "redirect:/communityEconomicMarket";
     }
 
 }

@@ -3,10 +3,20 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/defaultLayout}">
 
-<th:block layout:fragment="css"></th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/css/community/DiscussionDetail.css}" />
+</th:block>
+<th:block layout:fragment="script">
+  <script th:src="@{/javascript/community/DiscussionDetail.js}"></script>
+</th:block>
 
 <div  layout:fragment="content">
+  <!-- 이미지 확대용 모달 -->
+  <div id="imageModal" class="modal">
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImage">
+  </div>
+
   <h2>예/적금 분석 및 토론 게시판</h2>
 
   <div>
@@ -31,7 +41,10 @@
   <div th:if="${DetailDto.images != null}">
     <h4>첨부 이미지</h4>
     <div th:each="image : ${DetailDto.images}">
-      <img th:src="${image.imgUrl}" th:alt="${image.originalName}">
+      <img class="detail-image"
+           th:src="@{${image.imgUrl}}"
+           th:alt="${image.originalName}"
+           onclick="openModal(this.src)" />
     </div>
   </div>
 

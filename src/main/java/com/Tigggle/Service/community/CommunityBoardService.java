@@ -63,6 +63,7 @@ public class CommunityBoardService {
 
     }
 
+//    팁 게시판 저장 메서드
     public Long saveTipBoard(CommunityWriteDto communityWriteDto,
                                           String userAccessId) {
 
@@ -115,6 +116,92 @@ public class CommunityBoardService {
         return communityBoard.getId();
     }
 
+//    예적금 분석 게시판 메서드
+    public Long saveDiscussionBoard(CommunityWriteDto communityWriteDto,
+                             String userAccessId) {
+
+        // 사용자 조회
+        Member member = userRepository .findByAccessId(userAccessId);
+        if(member == null) throw new RuntimeException("사용자 없음");
+
+        // 게시글 생성 및 저장
+        CommunityBoard communityBoard = communityWriteDto.to(member);
+        communityBoard.setWriteDate(LocalDateTime.now());
+        communityBoard.setCommunityCategory(communityWriteDto.getCategory());
+        communityBoardRepository.save(communityBoard);
+
+        // 이미지 저장
+        if(communityWriteDto.getImages() != null) {
+            for (MultipartFile file : communityWriteDto.getImages()) {
+                if(!file.isEmpty()) {
+                    try {
+                        String originalName = file.getOriginalFilename();
+                        String uuid = UUID.randomUUID().toString();
+                        String extension = originalName.substring(
+                                originalName.lastIndexOf("."));
+                        String savedName = uuid + extension;
+                        String fullPath = uploadDir + savedName;
+
+                        file.transferTo(new File(fullPath));
+
+                        CommunityBoardImage communityBoardImage = new CommunityBoardImage();
+                        communityBoardImage.setCommunityBoard(communityBoard);
+                        communityBoardImage.setOriginalName(originalName);
+                        communityBoardImage.setImgName(savedName);
+                        communityBoardImage.setImgUrl("/uploads/" + savedName);
+                        communityBoardImageRepository.save(communityBoardImage);
+                    } catch (IOException e) {
+                        throw new RuntimeException("이미지 저장 실패",e);
+                    }
+                }
+            }
+        }
+
+        return communityBoard.getId();
+    }
+
+    public Long saveEconomicMarketBoard(CommunityWriteDto communityWriteDto,
+                                    String userAccessId) {
+
+        // 사용자 조회
+        Member member = userRepository .findByAccessId(userAccessId);
+        if(member == null) throw new RuntimeException("사용자 없음");
+
+        // 게시글 생성 및 저장
+        CommunityBoard communityBoard = communityWriteDto.to(member);
+        communityBoard.setWriteDate(LocalDateTime.now());
+        communityBoard.setCommunityCategory(communityWriteDto.getCategory());
+        communityBoardRepository.save(communityBoard);
+
+        // 이미지 저장
+        if(communityWriteDto.getImages() != null) {
+            for (MultipartFile file : communityWriteDto.getImages()) {
+                if(!file.isEmpty()) {
+                    try {
+                        String originalName = file.getOriginalFilename();
+                        String uuid = UUID.randomUUID().toString();
+                        String extension = originalName.substring(
+                                originalName.lastIndexOf("."));
+                        String savedName = uuid + extension;
+                        String fullPath = uploadDir + savedName;
+
+                        file.transferTo(new File(fullPath));
+
+                        CommunityBoardImage communityBoardImage = new CommunityBoardImage();
+                        communityBoardImage.setCommunityBoard(communityBoard);
+                        communityBoardImage.setOriginalName(originalName);
+                        communityBoardImage.setImgName(savedName);
+                        communityBoardImage.setImgUrl("/uploads/" + savedName);
+                        communityBoardImageRepository.save(communityBoardImage);
+                    } catch (IOException e) {
+                        throw new RuntimeException("이미지 저장 실패",e);
+                    }
+                }
+            }
+        }
+
+        return communityBoard.getId();
+    }
 
     public CommunityDetailDto getBoardDetail(Long id) {
 

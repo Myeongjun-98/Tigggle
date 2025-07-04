@@ -9,6 +9,28 @@
 <div  layout:fragment="content">
   <h2>경제시장</h2>
 
+  <form th:action="@{/community/EconomicMarketWrite}" method="post" enctype="multipart/form-data" th:object="${communityWriteDto}">
+    <div>
+      <label for="title">제목</label>
+      <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required />
+    </div>
+
+    <div>
+      <label for="content">내용</label>
+      <textarea id="content" th:field="*{content}" rows="8" placeholder="내용을 입력하세요" required></textarea>
+    </div>
+
+    <div>
+      <label for="images">이미지 첨부</label>
+      <input type="file" id="images" th:field="*{images}" multiple accept="image/*" />
+    </div>
+
+    <div>
+      <button type="submit">작성 완료</button>
+      <a th:href="@{/communityEconomicMarket}">취소</a>
+    </div>
+  </form>
+
 </div>
 
 </html>

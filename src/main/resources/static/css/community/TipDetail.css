@@ -1,0 +1,53 @@
+/* 상세페이지 이미지 크기*/
+.detail-image {
+  max-width: 150px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+/* 모달 전체 화면 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+
+  /* 화면 중앙 배치 */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: auto;      /* 모달 가로 크기 고정 */
+  max-width: 90vw;   /* 화면 가로 90% 이하로 제한 */
+  max-height: 80vh;  /* 화면 세로 80% 이하로 제한 */
+
+  background-color: rgba(0, 0, 0, 0.9);
+  border-radius: 10px;
+  overflow: auto;
+  padding: 20px;     /* 내부 여백 */
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+/* 모달 속 이미지 */
+.modal-content {
+  display: inline-block;
+  max-width: 90%;      /* 이미지 가로 90% */
+  max-height: 70vh;    /* 이미지 최대 높이 */
+  border-radius: 8px;
+}
+
+/* 닫기 버튼 */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #fff;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}
+
