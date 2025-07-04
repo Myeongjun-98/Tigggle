@@ -3,36 +3,48 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/defaultLayout}">
 
-<th:block layout:fragment="css"></th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/css/community/TipWrite.css}" />
+</th:block>
+<th:block layout:fragment="script">
+  <script th:src="@{/javascript/community/TipWrite.js}" defer></script>
+</th:block>
 
 <div layout:fragment="content">
   <h2>지출/저축tip 게시판</h2>
 
-  <form th:action="@{/community/TipWrite}" method="post" enctype="multipart/form-data" th:object="${communityWriteDto}">
+  <!-- 이 줄에서 onsubmit 제거하고 id 추가 -->
+  <form id="writeForm" enctype="multipart/form-data">
+
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+
     <div>
       <label for="title">제목</label>
-      <input type="text" id="title" th:field="*{title}" placeholder="제목을 입력하세요" required />
+      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required />
     </div>
 
     <div>
-      <label for="content">내용</label>
-      <textarea id="content" th:field="*{content}" rows="8" placeholder="내용을 입력하세요" required></textarea>
+      <label for="tipContent">내용</label>
+      <textarea id="tipContent" name="content" rows="8" placeholder="내용을 입력하세요" required></textarea>
     </div>
 
     <div>
       <label for="images">이미지 첨부</label>
-      <input type="file" id="images" th:field="*{images}" multiple accept="image/*" />
+      <input type="file" id="images" name="images"
+             multiple accept="image/*" onchange="handleFiles(this.files)"/>
+      <div id="preview-container"></div>
     </div>
 
     <div>
       <label for="startDate">그래프 시작일</label>
-      <input type="date" id="startDate" th:field="*{startDate}" />
+      <input type="date" id="startDate" name="startDate" />
     </div>
 
     <div>
       <label for="finishDate">그래프 종료일</label>
-      <input type="date" id="finishDate" th:field="*{finishDate}" />
+      <input type="date" id="finishDate" name="finishDate" />
     </div>
 
     <div>

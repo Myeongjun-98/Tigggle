@@ -43,7 +43,7 @@
     <h4>첨부 이미지</h4>
     <div th:each="image : ${DetailDto.images}">
       <img class="detail-image"
-           th:src="@{${image.imgUrl}}"
+           th:src="${image.imgUrl}"
            th:alt="${image.originalName}"
             onclick="openModal(this.src)" />
     </div>

@@ -1,0 +1,16 @@
+/* 이미지 미리보기 컨테이너 */
+#preview-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* 미리보기 이미지 스타일 */
+#preview-container img {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}

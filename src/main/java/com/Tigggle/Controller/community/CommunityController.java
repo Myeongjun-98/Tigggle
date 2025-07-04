@@ -121,8 +121,8 @@ public class CommunityController {
     }
 
     @PostMapping("/community/DiscussionWrite")
-    public String DiscussionWritePost(@ModelAttribute CommunityWriteDto communityWriteDto,
-                            Principal principal) {
+    public String discussionWritePost(@ModelAttribute CommunityWriteDto communityWriteDto,
+                               Principal principal) {
         communityWriteDto.setCategory(CommunityCategory.DISCUSSION);
 
         Long savedId = communityBoardService.saveDiscussionBoard(communityWriteDto, principal.getName());
@@ -139,7 +139,7 @@ public class CommunityController {
         return "community/EconomicMarket";
     }
 
-    //    discussion 게시판 작성 페이지
+    //    EconomicMarket 게시판 작성 페이지
     @GetMapping("/community/EconomicMarketWrite")
     public String economicMarketWriteForm(Model model) {
         model.addAttribute("communityWriteDto", new CommunityWriteDto());  // 작성 폼용 DTO 초기화
