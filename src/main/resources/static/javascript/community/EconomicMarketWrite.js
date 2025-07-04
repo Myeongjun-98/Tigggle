@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }).then(response => {
       if (response.ok) {
         alert('게시글이 등록되었습니다.');
-        window.location.href = '/communityTip';
+        window.location.href = '/communityEconomicMarket';
       } else {
         alert('작성에 실패했습니다.');
       }
