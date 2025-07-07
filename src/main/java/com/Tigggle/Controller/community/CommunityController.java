@@ -7,6 +7,7 @@ import com.Tigggle.DTO.community.CommunityWriteDto;
 import com.Tigggle.Service.community.CommunityBoardService;
 import com.Tigggle.Service.community.CommunityCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +34,7 @@ public class CommunityController {
         return "community/Tip";
     }
 
+    // 상세페이지
     @GetMapping("/community/detail/{id}")
     public String Detail(@PathVariable Long id, Model model, Principal principal) {
 
@@ -52,6 +54,31 @@ public class CommunityController {
 
     }
 
+
+    // 수정 처리
+    @PostMapping("/community/edit/{id}")
+    public String editPost(@PathVariable Long id,
+                           @ModelAttribute CommunityWriteDto communityWriteDto,
+                           Principal principal) {
+        communityBoardService.updatePost(id, communityWriteDto, principal.getName());
+
+        return "redirect:/community/detail/" + id;
+    }
+
+    // 게시글 삭제
+    @PostMapping("/community/delete/{id}")
+    public String deletePost(@PathVariable Long id, Principal principal) {
+        CommunityCategory communityCategory = communityBoardService
+                .softDeletedPost(id, principal.getName());
+
+        return switch (communityCategory) {
+            case TIP -> "redirect:/communityTip";
+            case DISCUSSION -> "redirect:/communityDiscussion";
+            case ECONOMIC_MARKET -> "redirect:/communityEconomicMarket";
+        };
+    }
+
+    // 댓글 추가
     @PostMapping("/community/detail/{id}/comment")
     public String addComment(@PathVariable Long id,
                              @RequestParam("content")
@@ -63,6 +90,7 @@ public class CommunityController {
         return "redirect:/community/detail/" + id;
     }
 
+    // 댓글 삭제
     @PostMapping("/community/comment/delete/{commentId}")
     public String deleteComment(@PathVariable Long commentId,
                                 Principal principal) {
@@ -73,6 +101,7 @@ public class CommunityController {
         return "redirect:/community/detail/" + boardId;
     }
 
+    // 댓글 수정
     @PostMapping("/community/comment/update/{commentId}")
     public String updateComment(@PathVariable Long commentId,
                                 @RequestParam String content,

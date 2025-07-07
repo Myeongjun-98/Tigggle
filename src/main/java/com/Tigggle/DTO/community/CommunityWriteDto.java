@@ -22,10 +22,9 @@ public class CommunityWriteDto {
     private String content;
 
     private List<MultipartFile> images; // 이미지 업로드용
+    private List<Long> deleteImageIds;
 
-    // 그래프 기간
-    private LocalDate startDate;
-    private LocalDate finishDate;
+    private List<CommunityGraphDto> graphs; // 그래프 기간들
 
     public CommunityBoard to(Member member) {
         CommunityBoard communityBoard = new CommunityBoard();
@@ -36,5 +35,17 @@ public class CommunityWriteDto {
         communityBoard.setCommunityCategory(this.category);
 
         return communityBoard;
+    }
+
+    public static CommunityWriteDto from(CommunityDetailDto communityDetailDto) {
+
+        CommunityWriteDto communityWriteDto = new CommunityWriteDto();
+
+        communityWriteDto.setTitle(communityDetailDto.getTitle());
+        communityWriteDto.setContent(communityDetailDto.getContent());
+        communityWriteDto.setCategory(communityDetailDto.getCategory());
+
+        communityWriteDto.setGraphs(communityDetailDto.getGraphs());
+        return communityWriteDto;
     }
 }

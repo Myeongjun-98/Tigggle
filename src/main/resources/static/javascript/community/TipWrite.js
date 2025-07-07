@@ -60,8 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData();
     formData.append('title', document.getElementById('title').value);
     formData.append('content', content);
-    formData.append('startDate', document.getElementById('startDate').value);
-    formData.append('finishDate', document.getElementById('finishDate').value);
+//    formData.append('startDate', document.getElementById('startDate').value);
+//    formData.append('finishDate', document.getElementById('finishDate').value);
 
     const imageInput = document.getElementById('images');
     for (const file of imageInput.files) {
@@ -91,3 +91,5 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById('writeForm').addEventListener('submit', submitForm);
   window.handleFiles = handleFiles; // onchange에서 접근 가능하게 등록
 });
+
+

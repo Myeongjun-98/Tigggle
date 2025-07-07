@@ -12,4 +12,6 @@ public interface CommunityBoardGraphRepository extends JpaRepository<CommunityBo
     boolean existsByCommunityBoardId(Long communityBoardId);
 
     List<CommunityBoardGraph> findByCommunityBoardId(Long boardId);
+
+    void deleteByCommunityBoardId(Long boardId);
 }

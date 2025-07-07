@@ -19,6 +19,17 @@
 
   <h2>경제시장</h2>
 
+  <!-- 게시글 수정/삭제 버튼 (작성자만 보임) -->
+  <div th:if="${loginUserName == DetailDto.memberAccessId}">
+    <form th:action="@{/community/delete/{id}(id=${DetailDto.id})}" method="post" style="display:inline">
+      <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">게시글 삭제</button>
+    </form>
+
+    <form th:action="@{/community/EconomicMarketEdit/{id}(id=${DetailDto.id})}" method="get" style="display:inline">
+      <button type="submit" onclick="return confirm('수정 하시겠습니까?')">게시글 수정</button>
+    </form>
+  </div>
+
   <div>
     <h3 th:text="${DetailDto.title}">게시글 제목</h3>
   </div>

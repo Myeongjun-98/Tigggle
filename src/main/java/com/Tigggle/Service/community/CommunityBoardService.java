@@ -6,14 +6,15 @@ import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.community.CommunityBoard;
 import com.Tigggle.Entity.community.CommunityBoardGraph;
 import com.Tigggle.Entity.community.CommunityBoardImage;
-import com.Tigggle.Entity.community.CommunityComment;
 import com.Tigggle.Repository.UserRepository;
 import com.Tigggle.Repository.community.CommunityBoardGraphRepository;
 import com.Tigggle.Repository.community.CommunityBoardImageRepository;
 import com.Tigggle.Repository.community.CommunityBoardRepository;
 import com.Tigggle.Repository.community.CommunityCommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -105,12 +106,11 @@ public class CommunityBoardService {
         }
 
         // 그래프 정보 저장
-        if (communityWriteDto.getStartDate() != null && communityWriteDto.getFinishDate() != null) {
-            CommunityBoardGraph graph = new CommunityBoardGraph();
-            graph.setCommunityBoard(communityBoard);
-            graph.setStartDate(communityWriteDto.getStartDate().atStartOfDay());
-            graph.setFinishDate(communityWriteDto.getFinishDate().atTime(23, 59, 59));
-            communityBoardGraphRepository.save(graph);
+        if (communityWriteDto.getGraphs() != null) {
+            for (CommunityGraphDto communityGraphDto : communityWriteDto.getGraphs()) {
+                CommunityBoardGraph communityBoardGraph = communityGraphDto.to(communityBoard);
+                communityBoardGraphRepository.save(communityBoardGraph);
+            }
         }
 
         return communityBoard.getId();
@@ -203,6 +203,7 @@ public class CommunityBoardService {
         return communityBoard.getId();
     }
 
+    // 상세페이지
     public CommunityDetailDto getBoardDetail(Long id) {
 
         CommunityBoard communityBoard = communityBoardRepository.findById(id)
@@ -225,6 +226,61 @@ public class CommunityBoardService {
 
 
         return CommunityDetailDto.from(communityBoard, comments, images, graphs);
+    }
+
+    // 게시글 삭제
+    @Transactional
+    public CommunityCategory softDeletedPost(Long postId, String memberAccessId) {
+        CommunityBoard communityBoard = communityBoardRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
+
+        if(!communityBoard.getMember().getAccessId().equals(memberAccessId)) {
+            throw new AccessDeniedException("삭제 권한이 없습니다.");
+        }
+
+        communityBoard.setDeleted(true);
+
+        return communityBoard.getCommunityCategory();
+    }
+
+    // 게시글 수정
+    @Transactional
+    public void updatePost(Long postId, CommunityWriteDto communityWriteDto,
+                           String accessId) {
+
+        CommunityBoard communityBoard = communityBoardRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+
+        if(!communityBoard.getMember().getAccessId().equals(accessId)) {
+            throw new AccessDeniedException("수정 권한이 없습니다.");
+        }
+
+        // 게시글 정보 수정
+        communityBoard.setTitle(communityWriteDto.getTitle());
+        communityBoard.setContent(communityWriteDto.getContent());
+        communityBoard.setUpdateDate(LocalDateTime.now());
+        communityBoardRepository.save(communityBoard);
+
+        // 이미지 삭제 처리
+        List<Long> deleteImageIds = communityWriteDto.getDeleteImageIds();
+        if (deleteImageIds != null && !deleteImageIds.isEmpty()) {
+            for (Long imageId : deleteImageIds) {
+                communityBoardImageRepository.deleteById(imageId);
+            }
+        }
+
+        // 기존 그래프 삭제
+        communityBoardGraphRepository.deleteByCommunityBoardId(postId);
+
+        // 새로운 그래프 저장
+        if(communityWriteDto.getGraphs() != null) {
+            for(CommunityGraphDto communityGraphDto : communityWriteDto.getGraphs()) {
+                CommunityBoardGraph communityBoardGraph = communityGraphDto.to(communityBoard);
+                communityBoardGraphRepository.save(communityBoardGraph);
+            }
+        }
+
+        communityBoardRepository.save(communityBoard);
     }
 
     public List<CommunityBoardListDto> getTipBoards() {
