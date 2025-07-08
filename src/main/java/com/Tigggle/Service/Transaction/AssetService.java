@@ -4,10 +4,7 @@ import com.Tigggle.DTO.Transaction.AssetListDto;
 import com.Tigggle.DTO.Transaction.CashDto;
 import com.Tigggle.DTO.Transaction.OrdinaryAccountDto;
 import com.Tigggle.Entity.Member;
-import com.Tigggle.Entity.Transaction.Asset;
-import com.Tigggle.Entity.Transaction.Cash;
-import com.Tigggle.Entity.Transaction.CreditCard;
-import com.Tigggle.Entity.Transaction.OrdinaryAccount;
+import com.Tigggle.Entity.Transaction.*;
 import com.Tigggle.Repository.Transaction.CashRepository;
 import com.Tigggle.Repository.Transaction.CreditCardRepository;
 import com.Tigggle.Repository.Transaction.OrdinaryRepository;
@@ -67,10 +64,6 @@ public class AssetService {
 
         switch (payMethod) {
             case "NORMAL":
-            case "CREDIT_CARD":
-                List<CreditCard> creditCards = creditCardRepository.findByMember(member);
-                assetListDtos = creditCards.stream().map(this::convertToAssetListDto).toList();
-                break;
             case "MY_ACCOUNT_TRANSFER":
                 List<OrdinaryAccount> ordinaryAccounts = ordinaryRepository
                         .findByMember(member);
@@ -83,6 +76,10 @@ public class AssetService {
                 assetListDtos = combinedList.stream().map(this::convertToAssetListDto)
                         .toList();
                 break;
+            case "CREDIT_CARD":
+                List<CreditCard> creditCards = creditCardRepository.findByMember(member);
+                assetListDtos = creditCards.stream().map(this::convertToAssetListDto).toList();
+                break;
 
             default:throw new IllegalArgumentException("알 수 없는 결제 방식입니다.");
         }
@@ -90,8 +87,25 @@ public class AssetService {
     }
 
     private AssetListDto convertToAssetListDto(Asset asset) {
-        // Asset의 공통 필드를 사용하여 DTO를 생성합니다.
-        return new AssetListDto(asset.getId(), asset.getAlias());
+
+        String type;
+        String name;
+
+        if (asset instanceof CreditCard) {
+            type = "신용카드";
+            name = ((Card) asset).getCardName();
+        } else if (asset instanceof OrdinaryAccount) {
+            type = "보통예금";
+            name = asset.getAlias();
+        } else if (asset instanceof Cash) {
+            type = "현금";
+            name = asset.getAlias();
+        } else {
+            type = "기타 자산";
+            name = asset.getAlias();
+        }
+
+        return new AssetListDto(asset.getId(), name, type);
     }
 
 

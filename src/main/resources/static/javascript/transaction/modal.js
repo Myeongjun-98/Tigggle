@@ -1,4 +1,5 @@
-// 페이지 로드 완료 시, 모달 관련 로직을 초기화합니다.
+// modal.js
+
 document.addEventListener('DOMContentLoaded', () => {
     initializeCreateModal();
     initializeAlertModal();
@@ -28,7 +29,7 @@ function showAlert(message) {
 function initializeCreateModal() {
     // 1. 필요한 HTML 요소들을 미리 찾아 변수에 할당합니다.
     const modalOverlay = document.getElementById('transaction-modal');
-    const openModalBtn = document.querySelector('.TR-actions-save'); // '내역 입력' 버튼 ID
+    const openModalBtn = document.querySelector('.TR-actions-save');
     const closeModalBtn = document.querySelector('.close-button');
 
     const transactionTypeRadios = document.querySelectorAll('input[name="transactionType"]');
@@ -40,6 +41,12 @@ function initializeCreateModal() {
     const creditCardDetailsSection = document.getElementById('TR-credit-card-details');
     const myAccountTransferDetailsSection = document.getElementById('TR-my-account-transfer-details');
 
+    // openModalBtn이 null이 아닐 때만 이벤트 리스너를 등록 (오류 방지)
+    if (openModalBtn) {
+        openModalBtn.addEventListener('click', () => {
+            document.getElementById('transaction-modal').classList.remove('TR-hidden');
+        });
+    }
 
     // --- 이벤트 리스너 등록 ---
 
@@ -72,12 +79,8 @@ function initializeCreateModal() {
     });
 
     // 5. '결제 수단' 선택 변경 시
-    payMethodSelect.addEventListener('change', (event) => {
+    payMethodSelect.addEventListener('change', async (event) => {
         const selectedMethod = event.target.value;
-
-        // ! ▼▼▼▼▼ 디버깅을 위해 이 한 줄을 추가해주세요 ▼▼▼▼▼
-        console.log('선택된 결제 수단 값:', selectedMethod);
-        // ! ▲▲▲▲▲ 디버깅을 위해 이 한 줄을 추가해주세요 ▲▲▲▲▲
 
         // 신용카드 할부 섹션 처리
         if (selectedMethod === 'CREDIT_CARD') {
@@ -95,9 +98,58 @@ function initializeCreateModal() {
             destinationAssetSelect.value = ''; // 내 계좌 이체가 아니면 목적지 자산 초기화
         }
 
+        // --- 출금 자산 목록을 동적으로 불러오는 로직 ---
+        const sourceAssetSelect = document.getElementById('TR-tx-source-asset');
+        sourceAssetSelect.innerHTML = '<option>불러오는 중...</option>'; // 로딩 중 표시
+
+        // 신용카드는 출금 자산이 없으므로 API를 호출하지 않음
+        if (selectedMethod === 'CREDIT_CARD') {
+            sourceAssetSelect.innerHTML = '<option value="">카드를 선택하세요</option>'; // 예시
+            try {
+                const response = await fetch(`/api/transactions/by-paymethod?payMethod=${selectedMethod}`);
+                const assets = await response.json();
+
+                sourceAssetSelect.innerHTML = ''; // 기존 옵션을 모두 비웁니다.
+
+                assets.forEach(asset => {
+                    const option = document.createElement('option');
+                    option.value = asset.id;
+                    option.textContent = `[${asset.type}] ${asset.alias}`;
+                    sourceAssetSelect.appendChild(option);
+                });
+
+            } catch (error) {
+                console.error('카드/계좌 목록을 불러오는 데 실패했습니다:', error);
+                sourceAssetSelect.innerHTML = '<option value="">목록을 불러올 수 없습니다.</option>';
+            }
+            return; // 아래 로직을 실행하지 않고 종료
+        }
+
+        try {
+            // 1. 백엔드 API를 호출하여 선택된 거래 방식에 맞는 자산 목록을 요청
+            const response = await fetch(`/api/transactions/by-paymethod?payMethod=${selectedMethod}`);
+            if (!response.ok) throw new Error('자산 목록 로딩 실패');
+
+            const assets = await response.json();
+
+            // 2. 받아온 데이터로 <option> 태그를 만들어 드롭다운을 새로 채움
+            sourceAssetSelect.innerHTML = ''; // 로딩 중 메시지를 지웁니다.
+
+            if (assets.length === 0) {
+                sourceAssetSelect.innerHTML = '<option value="">선택 가능한 자산이 없습니다.</option>';
+            } else {
+                assets.forEach(asset => {
+                    const option = document.createElement('option');
+                    option.value = asset.id;
+                    option.textContent = `[${asset.type}] ${asset.alias}`;
+                    sourceAssetSelect.appendChild(option);
+                });
+            }
+        } catch (error) {
+            console.error('카드/계좌 목록을 불러오는 데 실패했습니다:', error);
+            sourceAssetSelect.innerHTML = '<option value="">목록을 불러올 수 없습니다.</option>';
+        }
         });
-
-
 
     // * 폼 제출 이벤트 처리
     const form = document.getElementById('TR-create-form')
@@ -113,30 +165,30 @@ function initializeCreateModal() {
         createDto.transactionType = transactionType;
 
         // 공통 필드 값 가져오기
-        createDto.transactionDate = document.getElementById('tx-date').value;
-        createDto.amount = document.getElementById('tx-amount').value;
-        createDto.description = document.getElementById('tx-description').value;
-        createDto.keywordId = document.getElementById('tx-keyword').value;
-        createDto.note = document.getElementById('tx-note').value;
+        createDto.transactionDate = document.getElementById('TR-tx-date').value;
+        createDto.amount = document.getElementById('TR-tx-amount').value;
+        createDto.description = document.getElementById('TR-tx-description').value;
+        createDto.keywordId = document.getElementById('TR-tx-keyword').value;
+        createDto.note = document.getElementById('TR-tx-note').value;
 
         // 지출(EXPENSE)일 경우에만 추가 정보 수집
         if (transactionType === 'EXPENSE') {
-            const payMethod = document.getElementById('tx-pay-method').value;
+            const payMethod = document.getElementById('TR-tx-pay-method').value;
             createDto.payMethod = payMethod;
-            createDto.sourceAssetId = document.getElementById('tx-source-asset').value;
+            createDto.sourceAssetId = document.getElementById('TR-tx-source-asset').value;
 
             // 신용카드일 경우 할부 정보 수집
             if (payMethod === 'CREDIT_CARD') {
-                createDto.creditCardId = document.getElementById('tx-source-asset').value;
-                createDto.installment = document.getElementById('tx-installment').value;
+                createDto.creditCardId = document.getElementById('TR-tx-source-asset').value;
+                createDto.installment = document.getElementById('TR-tx-installment').value;
             }
             // 내 계좌 이체일 경우 목적지 자산 정보 수집
             if (payMethod === 'MY_ACCOUNT_TRANSFER') {
-                createDto.destinationAssetId = document.getElementById('tx-destination-asset').value;
+                createDto.destinationAssetId = document.getElementById('TR-tx-destination-asset').value;
             }
 
         } else { // 수입(INCOME)일 경우, 출금 자산 ID가 필요. (어느 자산으로 수입이 되었는지)
-            createDto.sourceAssetId = document.getElementById('tx-source-asset').value;
+            createDto.sourceAssetId = document.getElementById('TR-tx-source-asset').value;
         }
 
 

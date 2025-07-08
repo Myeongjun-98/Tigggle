@@ -42,6 +42,7 @@ public class TransactionRestController {
         @RequestParam String payMethod,
         Principal principal
     ){
+
         // 서비스에 payMethod와 사용자 정보를 넘겨 자산 목록을 조회
         List<AssetListDto> assets = assetService.getAssetsByPayMethod(payMethod,
                 memberRepository.findByAccessId(principal.getName()));
