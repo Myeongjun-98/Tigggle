@@ -52,8 +52,12 @@ INPUT{
     position: relative;
 }
 #nav .logo-img{
-    min-width: 240px;
     width:20%;
+    padding-right:80px;
+}
+#nav .logo-img a{
+    display:block;
+    width:190px;
 }
 #nav .menuBox{position: relative; min-width:850px; width:100%;}
 #nav .menuBox .menu-list{
