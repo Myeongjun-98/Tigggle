@@ -36,7 +36,7 @@ public interface InsiteRepository extends JpaRepository<Transaction, Long> {
             "WHERE t.asset.member.id = :memberId " +
             "AND t.isConsumption = true " + // 지출 내역만
             "AND t.transactionDate BETWEEN :startDate AND :endDate " +
-            "AND (LOWER(t.keyword.MajorKeyword) = LOWER(:keyword) OR :keyword IS NULL) " + // 키워드 필터링: minorKeyword -> MajorKeyword 수정
+            "AND (LOWER(t.keyword.majorKeyword) = LOWER(:keyword) OR :keyword IS NULL) " + // 키워드 필터링: minorKeyword -> MajorKeyword 수정
             "GROUP BY YEAR(t.transactionDate), MONTH(t.transactionDate) " +
             "ORDER BY YEAR(t.transactionDate), MONTH(t.transactionDate)")
 

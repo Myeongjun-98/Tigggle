@@ -49,6 +49,7 @@ public class InsiteController {
 
     private final InsiteService insiteService;
     @GetMapping("/api/insite/spending-summary")
+    @ResponseBody
     public InsiteReponseDto getSpendingSummary(
             Principal principal, @RequestParam(required = false) String keyword){
 

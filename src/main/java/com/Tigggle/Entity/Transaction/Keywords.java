@@ -16,6 +16,6 @@ public class Keywords {
     private Long id;                // 아이디
 
     @Column(nullable = false)
-    private String MajorKeyword;    // 대 카테고리
-    private String MinorKeyword;    // 소 카테고리
+    private String majorKeyword;    // 대 카테고리
+    private String minorKeyword;    // 소 카테고리
 }

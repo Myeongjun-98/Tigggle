@@ -3,99 +3,167 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/defaultLayout}">
 
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/insite/insite.css" /></th:block>
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/insite/insite.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</th:block>
 <th:block layout:fragment="script">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        const leftCtx = document.getElementById('barChartLeft').getContext('2d');
-        const rightCtx = document.getElementById('barChartRight').getContext('2d');
 
-        let leftChart;
-        let rightChart;
+        document.addEventListener('DOMContentLoaded', () => {
 
-        function renderLeftChart(months, amounts) {
-            if (leftChart) leftChart.destroy();
-            leftChart = new Chart(leftCtx, {
-                type: 'bar',
-                data: {
-                    labels: months.map(m => `${m}월`),
-                    datasets: [{
-                        label: '총 소비',
-                        data: amounts,
-                        backgroundColor: '#3340cb'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => `${ctx.raw.toLocaleString()}원`
+            const leftCtx = document.getElementById('barChartLeft').getContext('2d');
+            const rightCtx = document.getElementById('barChartRight').getContext('2d');
+
+            let leftChart;
+            let rightChart;
+
+            function renderLeftChart(months, amounts) {
+                if (leftChart) leftChart.destroy();
+                leftChart = new Chart(leftCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: months.map(m => `${m}월`),
+                        datasets: [{
+                            label: '총 소비',
+                            data: amounts,
+                            backgroundColor: '#3340cb'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => `${ctx.raw.toLocaleString()}원`
+                                }
                             }
                         }
                     }
-                }
-            });
-        }
-
-        function renderRightChart(keywords, amounts) {
-            if (rightChart) rightChart.destroy();
-            rightChart = new Chart(rightCtx, {
-                type: 'bar',
-                data: {
-                    labels: keywords,
-                    datasets: [{
-                        label: '키워드 소비',
-                        data: amounts,
-                        backgroundColor: '#3340cb'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => `${ctx.raw.toLocaleString()}원`
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // 초기 로딩
-        fetch("/api/insite/spending-summary")
-            .then(res => res.json())
-            .then(data => {
-                const months = data.monthlyDateDtoList.map(item => item.whatMonth);
-                const amounts = data.monthlyDateDtoList.map(item => item.totalAmount);
-                renderLeftChart(months, amounts);
-            });
-
-        // 오른쪽 그래프 로딩
-        fetch("/api/insite/keyword-monthly")
-            .then(res => res.json())
-            .then(data => {
-                const currentMonth = new Date().getMonth() + 1;
-                const keywords = data.map(item => item.keyword);
-                const amounts = data.map(item => item.monthlyAmount[currentMonth - 1]);
-                renderRightChart(keywords, amounts);
-
-                // 🔹 키워드 버튼 동적 생성
-                const box = document.querySelector('.keyword-btn-box');
-                data.forEach(item => {
-                    const btn = document.createElement("button");
-                    btn.textContent = item.keyword;
-                    btn.onclick = () => {
-                        renderLeftChart(
-                            ["2월", "3월", "4월", "5월", "6월", "7월"],
-                            item.monthlyAmount
-                        );
-                    };
-                    box.appendChild(btn);
                 });
+            }
+
+            function renderRightChart(keywords, amounts) {
+                if (rightChart) rightChart.destroy();
+                rightChart = new Chart(rightCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: keywords,
+                        datasets: [{
+                            label: '키워드 소비',
+                            data: amounts,
+                            backgroundColor: '#3340cb'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: ctx => `${ctx.raw.toLocaleString()}원`
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // 초기 로딩
+            fetch("/api/insite/spending-summary")
+                .then(res => res.json())
+                .then(data => {
+                    const months = data.monthlyDateDtoList.map(item => item.whatMonth);
+                    const amounts = data.monthlyDateDtoList.map(item => item.totalAmount);
+                    renderLeftChart(months, amounts);
+                });
+
+            // 오른쪽 그래프 로딩
+            fetch("/api/insite/keyword-monthly")
+                .then(res => res.json())
+                .then(data => {
+                    const currentMonth = new Date().getMonth() + 1;
+                    const keywords = data.map(item => item.keyword);
+                    const amounts = data.map(item => item.monthlyAmount[currentMonth - 1]);
+                    renderRightChart(keywords, amounts);
+
+                    // 🔹 키워드 버튼 동적 생성
+                    const box = document.querySelector('.keyword-btn-box');
+                    data.forEach(item => {
+                        const btn = document.createElement("button");
+                        btn.textContent = item.keyword;
+                        btn.onclick = () => {
+                            renderLeftChart(
+                                ["2월", "3월", "4월", "5월", "6월", "7월"],
+                                item.monthlyAmount
+                            );
+                        };
+                        box.appendChild(btn);
+                    });
+                });
+
+            const monthText = document.getElementById("monthText");
+            const calendarIcon = document.getElementById("calendarIcon");
+            const dateInput = document.getElementById("datepicker");
+            let currentDate = new Date(2025, 5); // 2025년 6월 (0-indexed)
+
+            // 데이터를 다시 로드하는 함수를 새로 만듦
+            function reloadDataForDate(date) {
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1;
+
+                // 왼쪽 그래프 데이터 다시 fetch
+                fetch(`/api/insite/spending-summary?year=${year}&month=${month}`) // <-- API가 연/월 파라미터를 받아야 함
+                    .then(res => res.json())
+                    .then(data => { /* ... 차트 다시 그리기 ... */
+                    });
+
+                // 오른쪽 그래프 데이터도 다시 fetch
+                fetch(`/api/insite/keyword-monthly?year=${year}&month=${month}`)
+                    .then(res => res.json())
+                    .then(data => { /* ... 차트 다시 그리기 ... */
+                    });
+            }
+
+            function updateMonthText() {
+                const year = currentDate.getFullYear();
+                const month = currentDate.getMonth() + 1;
+                monthText.textContent = `${year}년 ${month}월`;
+            }
+
+            document.getElementById("prevMonth").onclick = () => {
+                currentDate.setMonth(currentDate.getMonth() - 1);
+                updateMonthText();
+                reloadDataForDate(currentDate);
+            };
+
+            document.getElementById("nextMonth").onclick = () => {
+                currentDate.setMonth(currentDate.getMonth() + 1);
+                updateMonthText();
+                reloadDataForDate(currentDate);
+            };
+
+            flatpickr("#datepicker", {
+                dateFormat: "Y-m-d",
+                defaultDate: currentDate,
+                onChange: function (selectedDates) {
+                    if (selectedDates.length > 0) {
+                        currentDate = selectedDates[0];
+                        updateMonthText();
+                    }
+                },
             });
+
+            calendarIcon.onclick = () => {
+                dateInput._flatpickr.open();
+            };
+            updateMonthText();
+
+        });
+
     </script>
+
 </th:block>
 
 <div  layout:fragment="content">
@@ -124,9 +192,11 @@
                 <button class="export-button">내보내기</button>
             </div>
         </div>
+        <!-- 타이틀 -->
 
         <!-- 달력 팝업용 -->
         <input type="text" id="datepicker" />
+        <!-- 달력 팝업용 -->
 
         <!-- 소비내역 -->
         <div class="sub-contatiner">
@@ -135,13 +205,9 @@
                     <p>월간 소비내역 그래프</p>
                     <div class="consump-graph-box">
                         <span>1,200,000원</span>
-                        <canvas id="monthlyChart"></canvas>
+                        <canvas id="barChartLeft"></canvas>
                     </div>
                     <div class="keyword-btn-box">
-                        <button>키워드</button>
-                        <button>키워드</button>
-                        <button>키워드</button>
-                        <button>키워드</button>
                     </div>
                 </div>
                 <div class="right-consump">
@@ -172,44 +238,6 @@
             </div>
         </div>
     </div>
-    <script>
-        const monthText = document.getElementById("monthText");
-        const calendarIcon = document.getElementById("calendarIcon");
-        const dateInput = document.getElementById("datepicker");
-        let currentDate = new Date(2025, 5); // 2025년 6월 (0-indexed)
-
-        function updateMonthText() {
-          const year = currentDate.getFullYear();
-          const month = currentDate.getMonth() + 1;
-          monthText.textContent = `${year}년 ${month}월`;
-        }
-
-        document.getElementById("prevMonth").onclick = () => {
-          currentDate.setMonth(currentDate.getMonth() - 1);
-          updateMonthText();
-        };
-
-        document.getElementById("nextMonth").onclick = () => {
-          currentDate.setMonth(currentDate.getMonth() + 1);
-          updateMonthText();
-        };
-
-        flatpickr("#datepicker", {
-          dateFormat: "Y-m-d",
-          defaultDate: currentDate,
-          onChange: function (selectedDates) {
-            if (selectedDates.length > 0) {
-              currentDate = selectedDates[0];
-              updateMonthText();
-            }
-          },
-        });
-
-        calendarIcon.onclick = () => {
-          dateInput._flatpickr.open();
-        };
-
-        updateMonthText();
-    </script>
+</div>
 
 </html>

@@ -67,38 +67,54 @@ public class InsiteService {
 
 
     // 월간 키워드별 소비 요약
-    public List<KeywordMonthlySpendingDto> getKeywordMonthlyChart(Long memberId){
+    public List<KeywordMonthlySpendingDto> getKeywordMonthlyChart(Long memberId) {
 
         LocalDateTime end = LocalDateTime.now();
-        LocalDateTime start = end.minusMonths(5).withDayOfMonth(1);
+        // 6개월 전의 1일 00:00:00 시간을 시작점으로 설정
+        LocalDateTime start = end.minusMonths(5).withDayOfMonth(1).toLocalDate().atStartOfDay();
 
+        // Repository로부터 raw 데이터를 받아옵니다.
         List<Object[]> rawData = insiteRepository.getKeywordMonthlyChart(memberId, start, end);
 
-        Map<String, Map<Integer, Long>> KeywordToMonthMap = new HashMap<>();
+        // 1단계: 쿼리 결과를 Map으로 변환합니다.
+        // Key: 키워드(String), Value: <월(Integer), 금액(Long)>을 담은 내부 Map
+        Map<String, Map<Integer, Long>> keywordToMonthMap = new HashMap<>();
 
         for (Object[] row : rawData) {
             String keyword = (String) row[0];
-            Integer month = (Integer) row[1];
-            Long amount = (Long) row[2];
-            KeywordToMonthMap.computeIfAbsent(keyword, k -> new HashMap<>()).put(month, amount);
+
+            // ▼▼▼▼▼ 바로 이 부분이 핵심 수정사항입니다 ▼▼▼▼▼
+            // YEAR()의 결과도 Integer로 받지만, 현재는 사용되지 않습니다.
+            // Integer year = (Integer) row[1];
+            Integer month = (Integer) row[2]; // MONTH()의 결과는 Integer 입니다.
+            Long amount = (Long) row[3];      // SUM()의 결과는 Long 입니다.
+            // ▲▲▲▲▲ 바로 이 부분이 핵심 수정사항입니다 ▲▲▲▲▲
+
+            // Map에 데이터를 채워넣습니다.
+            keywordToMonthMap.computeIfAbsent(keyword, k -> new HashMap<>()).put(month, amount);
         }
 
+        // 2단계: 변환된 Map을 최종 DTO 리스트로 조립합니다.
         List<KeywordMonthlySpendingDto> result = new ArrayList<>();
-        for(Map.Entry<String, Map<Integer, Long>> entry : KeywordToMonthMap.entrySet()){
+        for (Map.Entry<String, Map<Integer, Long>> entry : keywordToMonthMap.entrySet()) {
             String keyword = entry.getKey();
             Map<Integer, Long> monthMap = entry.getValue();
 
-            List<Long> amounts = IntStream.rangeClosed(0,5)
+            // 현재로부터 6개월간의 월을 기준으로 금액 리스트를 생성합니다.
+            List<Long> amounts = IntStream.rangeClosed(0, 5)
                     .mapToObj(i -> {
-                        int m = end.minusMonths(5 - i ).getMonthValue();
+                        // end(현재)로부터 5-i 개월 전의 월을 계산합니다.
+                        // 예: i=0 -> 5개월 전, i=5 -> 0개월 전(현재 달)
+                        int m = end.minusMonths(5 - i).getMonthValue();
+                        // 해당 월의 데이터가 없으면 0L을 기본값으로 사용합니다.
                         return monthMap.getOrDefault(m, 0L);
-                    }).collect(Collectors.toList());
+                    })
+                    .collect(Collectors.toList());
 
             result.add(new KeywordMonthlySpendingDto(keyword, amounts));
         }
 
         return result;
-
     }
 
 
