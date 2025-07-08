@@ -23,6 +23,7 @@ public class CommunityWriteDto {
 
     private List<MultipartFile> images; // 이미지 업로드용
     private List<Long> deleteImageIds;
+    private List<CommunityImgDto> existingImages; // 기본이미지 정보
 
     private List<CommunityGraphDto> graphs; // 그래프 기간들
 
@@ -41,6 +42,7 @@ public class CommunityWriteDto {
 
         CommunityWriteDto communityWriteDto = new CommunityWriteDto();
 
+        communityWriteDto.setExistingImages(communityDetailDto.getImages());
         communityWriteDto.setTitle(communityDetailDto.getTitle());
         communityWriteDto.setContent(communityDetailDto.getContent());
         communityWriteDto.setCategory(communityDetailDto.getCategory());

@@ -283,6 +283,19 @@ public class CommunityBoardService {
         communityBoardRepository.save(communityBoard);
     }
 
+    // 수정 폼에 기존 글 정보 전달용 DTO 생성 메서드
+    public CommunityWriteDto getPostForEdit(Long postId, String accessId) {
+        CommunityBoard board = communityBoardRepository.findById(postId)
+                .orElseThrow(() -> new RuntimeException("게시글이 존재하지 않습니다."));
+
+        if (!board.getMember().getAccessId().equals(accessId)) {
+            throw new AccessDeniedException("수정 권한이 없습니다.");
+        }
+
+        CommunityDetailDto detailDto = getBoardDetail(postId);
+        return CommunityWriteDto.from(detailDto);
+    }
+
     public List<CommunityBoardListDto> getTipBoards() {
 
         return getCommunityBoards(CommunityCategory.TIP);

@@ -25,7 +25,7 @@
       <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">게시글 삭제</button>
     </form>
 
-    <form th:action="@{/community/EconomicMarketEdit/{id}(id=${DetailDto.id})}" method="get" style="display:inline">
+    <form th:action="@{/community/economicMarket/edit/{id}(id=${DetailDto.id})}" method="get" style="display:inline">
       <button type="submit" onclick="return confirm('수정 하시겠습니까?')">게시글 수정</button>
     </form>
   </div>

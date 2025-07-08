@@ -22,12 +22,15 @@
 
     <div>
       <label for="title">제목</label>
-      <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required />
+      <input type="text" id="title" name="title"
+             th:value="${communityWriteDto.title}" placeholder="제목을 입력하세요" required />
     </div>
 
     <div>
       <label for="tipContent">내용</label>
-      <textarea id="tipContent" name="content" rows="8" placeholder="내용을 입력하세요" required></textarea>
+      <textarea id="tipContent" name="content" rows="8"
+                placeholder="내용을 입력하세요" required
+                th:text="${communityWriteDto.content}"></textarea>
     </div>
 
     <div>
@@ -35,6 +38,14 @@
       <input type="file" id="images" name="images"
              multiple accept="image/*" onchange="handleFiles(this.files)"/>
       <div id="preview-container"></div>
+    </div>
+
+    <!-- 기존 이미지 데이터 내려주는 영역 -->
+    <div id="existing-images" style="display:none" th:if="${communityWriteDto.existingImages}">
+      <div th:each="img : ${communityWriteDto.existingImages}"
+           th:data-url="${img.imgUrl}"
+           th:data-id="${img.id}"
+           class="existing-image"></div>
     </div>
 
     <div>
