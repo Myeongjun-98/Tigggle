@@ -2,9 +2,14 @@ package com.Tigggle.Controller.Transaction;
 
 
 import java.security.Principal;
+import java.util.List;
 
+import com.Tigggle.DTO.Transaction.WalletPageDto;
 import com.Tigggle.Entity.Member;
+import com.Tigggle.Entity.Transaction.Keywords;
+import com.Tigggle.Repository.Transaction.KeywordsRepository;
 import com.Tigggle.Service.Transaction.AssetService;
+import com.Tigggle.Service.Transaction.WalletService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,32 +30,17 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/transaction")
 public class TransactionController {
     private final UserRepository memberRepository;
-
-    private final TransactionService transactionService;
-    private final AssetService assetService;
-    // 멤버 아이디 찾기
-    // public Long getMemberId(Principal principal){
-    //     return memberRepository.findByAccessId(principal.getName()).getId();+++
-    // }
+    private final WalletService walletService;
+    private final KeywordsRepository keywordsRepository;
 
     @GetMapping("/wallet")
     public String DefaultTransactionPage(Principal principal, Model model){
 
-        Member memberInfo = memberRepository.findByAccessId(principal.getName());
+        List<Keywords> keywords = keywordsRepository.findAll();
 
-        // 사용자의 계좌를 검색, OrdinaryAccount를 우선적으로 가져오나 혹 OrdinaryAccount가 없을 시 Cash를,
-        // 그래도 없다면 반환하지 않음.
-        Asset a = transactionService.determineDefaultWalletAsset(memberInfo.getId());
-        if(!(a == null)){
-            if(a instanceof OrdinaryAccount){
-                model.addAttribute("OrdinaryAccountDto", transactionService.getDefaultOrdinary(a));
-            }
-            if(a instanceof Cash){
-                model.addAttribute("CashDto", transactionService.getDefaultCash(a));
-            }
-        }
-        // 사용자 이름
+        Member memberInfo = memberRepository.findByAccessId(principal.getName());
         model.addAttribute("memberInfo", memberInfo);
+        model.addAttribute("keywords", keywords);
 
         return "transaction/wallet";
     }

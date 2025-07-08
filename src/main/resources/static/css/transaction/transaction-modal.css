@@ -1,0 +1,48 @@
+/* 모달 오버레이 (뒷배경) */
+.TR-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 모달 내용 */
+.TR-modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 400px;
+}
+
+/* 동적 표시를 위한 숨김 클래스 */
+.TR-hidden {
+    display: none;
+}
+
+/* --- 알림 모달 스타일 --- */
+.TR-alert-modal-content {
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.TR-alert-modal-content p {
+    margin: 0 0 20px 0; /* 메시지와 버튼 사이의 간격 */
+    font-size: 16px;
+}
+
+.TR-alert-modal-content button {
+    padding: 8px 25px;
+    border: none;
+    background-color: #007bff; /* 주조색 사용 */
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
