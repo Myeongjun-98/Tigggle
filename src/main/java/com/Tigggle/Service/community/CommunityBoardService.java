@@ -269,6 +269,32 @@ public class CommunityBoardService {
             }
         }
 
+        // ✅ 새 이미지 저장 로직 추가
+        if (communityWriteDto.getImages() != null) {
+            for (MultipartFile file : communityWriteDto.getImages()) {
+                if (!file.isEmpty()) {
+                    try {
+                        String originalName = file.getOriginalFilename();
+                        String uuid = UUID.randomUUID().toString();
+                        String extension = originalName.substring(originalName.lastIndexOf("."));
+                        String savedName = uuid + extension;
+                        String fullPath = uploadDir + savedName;
+
+                        file.transferTo(new File(fullPath));
+
+                        CommunityBoardImage image = new CommunityBoardImage();
+                        image.setCommunityBoard(communityBoard);
+                        image.setOriginalName(originalName);
+                        image.setImgName(savedName);
+                        image.setImgUrl("/uploads/" + savedName);
+                        communityBoardImageRepository.save(image);
+                    } catch (IOException e) {
+                        throw new RuntimeException("이미지 저장 실패", e);
+                    }
+                }
+            }
+        }
+
         // 기존 그래프 삭제
         communityBoardGraphRepository.deleteByCommunityBoardId(postId);
 

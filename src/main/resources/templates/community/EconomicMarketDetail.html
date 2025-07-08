@@ -16,8 +16,9 @@
     <span class="close" onclick="closeModal()">&times;</span>
     <img class="modal-content" id="modalImage">
   </div>
-
-  <h2>경제시장</h2>
+  <a th:href="@{/communityEconomicMarket}">
+    <h2>경제시장</h2>
+  </a>
 
   <!-- 게시글 수정/삭제 버튼 (작성자만 보임) -->
   <div th:if="${loginUserName == DetailDto.memberAccessId}">

@@ -17,7 +17,9 @@
     <img class="modal-content" id="modalImage">
   </div>
 
-  <h2>예/적금 분석 및 토론 게시판</h2>
+  <a th:href="@{/communityDiscussion}">
+    <h2>예/적금 분석 및 토론 게시판</h2>
+  </a>
 
   <!-- 게시글 수정/삭제 버튼 (작성자만 보임) -->
   <div th:if="${loginUserName == DetailDto.memberAccessId}">

@@ -11,7 +11,10 @@
 </th:block>
 
 <div layout:fragment="content">
-  <h2>지출/저축tip 게시판</h2>
+
+  <a th:href="@{/communityTip}">
+    <h2>지출/저축tip 게시판</h2>
+  </a>
 
   <!-- 이 줄에서 onsubmit 제거하고 id 추가 -->
   <form id="writeForm" enctype="multipart/form-data">
@@ -40,8 +43,7 @@
       <div id="preview-container"></div>
     </div>
 
-    <!-- 기존 이미지 데이터 내려주는 영역 -->
-    <div id="existing-images" style="display:none" th:if="${communityWriteDto.existingImages}">
+    <div>
       <div th:each="img : ${communityWriteDto.existingImages}"
            th:data-url="${img.imgUrl}"
            th:data-id="${img.id}"
