@@ -26,8 +26,8 @@ public class InsiteService {
 
 
         // 1. 6개월의 시작일과 종료일 계산
-        LocalDate endDate = LocalDate.now();
-        LocalDate startDate = endDate.minusMonths(5).withDayOfMonth(1);
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusMonths(5).withDayOfMonth(1);
 
         // 2. Repository를 호출하여 월별 지출 합계 목록을 가져옴
         List<MonthlyDateDto> monthlyDateDtoList = insiteRepository.findMonthlySpendingSummary(
@@ -69,8 +69,8 @@ public class InsiteService {
     // 월간 키워드별 소비 요약
     public List<KeywordMonthlySpendingDto> getKeywordMonthlyChart(Long memberId){
 
-        LocalDate end = LocalDate.now();
-        LocalDate start = end.minusMonths(5).withDayOfMonth(1);
+        LocalDateTime end = LocalDateTime.now();
+        LocalDateTime start = end.minusMonths(5).withDayOfMonth(1);
 
         List<Object[]> rawData = insiteRepository.getKeywordMonthlyChart(memberId, start, end);
 

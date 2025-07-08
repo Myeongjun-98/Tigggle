@@ -4,7 +4,99 @@
       layout:decorate="~{layout/defaultLayout}">
 
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/insite/insite.css" /></th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="script">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const leftCtx = document.getElementById('barChartLeft').getContext('2d');
+        const rightCtx = document.getElementById('barChartRight').getContext('2d');
+
+        let leftChart;
+        let rightChart;
+
+        function renderLeftChart(months, amounts) {
+            if (leftChart) leftChart.destroy();
+            leftChart = new Chart(leftCtx, {
+                type: 'bar',
+                data: {
+                    labels: months.map(m => `${m}월`),
+                    datasets: [{
+                        label: '총 소비',
+                        data: amounts,
+                        backgroundColor: '#3340cb'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.raw.toLocaleString()}원`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderRightChart(keywords, amounts) {
+            if (rightChart) rightChart.destroy();
+            rightChart = new Chart(rightCtx, {
+                type: 'bar',
+                data: {
+                    labels: keywords,
+                    datasets: [{
+                        label: '키워드 소비',
+                        data: amounts,
+                        backgroundColor: '#3340cb'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.raw.toLocaleString()}원`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 초기 로딩
+        fetch("/api/insite/spending-summary")
+            .then(res => res.json())
+            .then(data => {
+                const months = data.monthlyDateDtoList.map(item => item.whatMonth);
+                const amounts = data.monthlyDateDtoList.map(item => item.totalAmount);
+                renderLeftChart(months, amounts);
+            });
+
+        // 오른쪽 그래프 로딩
+        fetch("/api/insite/keyword-monthly")
+            .then(res => res.json())
+            .then(data => {
+                const currentMonth = new Date().getMonth() + 1;
+                const keywords = data.map(item => item.keyword);
+                const amounts = data.map(item => item.monthlyAmount[currentMonth - 1]);
+                renderRightChart(keywords, amounts);
+
+                // 🔹 키워드 버튼 동적 생성
+                const box = document.querySelector('.keyword-btn-box');
+                data.forEach(item => {
+                    const btn = document.createElement("button");
+                    btn.textContent = item.keyword;
+                    btn.onclick = () => {
+                        renderLeftChart(
+                            ["2월", "3월", "4월", "5월", "6월", "7월"],
+                            item.monthlyAmount
+                        );
+                    };
+                    box.appendChild(btn);
+                });
+            });
+    </script>
+</th:block>
 
 <div  layout:fragment="content">
     <div class="container">
@@ -43,6 +135,7 @@
                     <p>월간 소비내역 그래프</p>
                     <div class="consump-graph-box">
                         <span>1,200,000원</span>
+                        <canvas id="monthlyChart"></canvas>
                     </div>
                     <div class="keyword-btn-box">
                         <button>키워드</button>
@@ -53,7 +146,9 @@
                 </div>
                 <div class="right-consump">
                     <p>6월 소비내역</p>
-                    <div class="month-graph-box"></div>
+                    <div class="month-graph-box">
+                        <canvas id="barChartRight"></canvas>
+                    </div>
                 </div>
             </div>
         </div>

@@ -2,21 +2,26 @@ package com.Tigggle.Controller.insite;
 
 
 import com.Tigggle.DTO.insite.InsiteReponseDto;
+import com.Tigggle.DTO.insite.KeywordMonthlySpendingDto;
 import com.Tigggle.Repository.UserRepository;
 import com.Tigggle.Service.insite.InsiteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class InsiteController {
 
     private final UserRepository memberRepository;
@@ -50,6 +55,13 @@ public class InsiteController {
         Long memberId = memberRepository.findByAccessId(principal.getName()).getId();
 
         return insiteService.getSixMonthSpendingSummary(memberId, keyword);
+    }
+
+    @GetMapping("/api/insite/keyword-monthly")
+    @ResponseBody
+    public List<KeywordMonthlySpendingDto> getKeywordMonthlyChart(Principal principal) {
+        Long memberId = memberRepository.findByAccessId(principal.getName()).getId();
+        return insiteService.getKeywordMonthlyChart(memberId);
     }
 
 }
