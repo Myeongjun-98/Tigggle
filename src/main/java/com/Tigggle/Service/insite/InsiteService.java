@@ -1,15 +1,19 @@
 package com.Tigggle.Service.insite;
 
+import com.Tigggle.DTO.insite.AgeGroupAverageDto;
 import com.Tigggle.DTO.insite.InsiteReponseDto;
 import com.Tigggle.DTO.insite.KeywordMonthlySpendingDto;
 import com.Tigggle.DTO.insite.MonthlyDateDto;
+import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.Transaction.Transaction;
+import com.Tigggle.Repository.UserRepository;
 import com.Tigggle.Repository.insite.InsiteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.Period;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -21,6 +25,8 @@ import static java.time.YearMonth.now;
 public class InsiteService {
 
     private final InsiteRepository insiteRepository;
+    private final UserRepository userRepository;
+
     // *** 전체 소비 총합
     public InsiteReponseDto getSixMonthSpendingSummary(Long memberId, String keyword){
 
@@ -115,6 +121,44 @@ public class InsiteService {
         }
 
         return result;
+    }
+
+
+
+    // 🔹 생년월일로 연령대 문자열 반환
+    private String getAgeGroup(LocalDate birthDate) {
+        int age = Period.between(birthDate, LocalDate.now()).getYears();
+        if (age < 20) return "10대 이하";
+        else if (age < 30) return "20~30대";
+        else if (age < 40) return "30~40대";
+        else if (age < 50) return "40~50대";
+        else if (age < 60) return "50~60대";
+        else return "60대 이상";
+    }
+
+
+    // 나이대별 평균 소비 금액 측정
+    public List<AgeGroupAverageDto> getAgeGroupAverages() {
+        List<Member> allMembers = userRepository.findAll();
+        Map<String, List<Long>> groupToSpending = new HashMap<>();
+
+        for (Member member : allMembers) {
+            String group = getAgeGroup(member.getBirthday());
+            Long sum = insiteRepository.sumAmountByMemberId(member.getId());
+            groupToSpending
+                    .computeIfAbsent(group, k -> new ArrayList<>())
+                    .add(sum != null ? sum : 0L);
+        }
+
+        // 평균 구해서 DTO로 반환
+        return groupToSpending.entrySet().stream()
+                .map(entry -> {
+                    long total = entry.getValue().stream().mapToLong(Long::longValue).sum();
+                    long avg = total / entry.getValue().size();
+                    return new AgeGroupAverageDto(entry.getKey(), avg);
+                })
+                .sorted(Comparator.comparing(AgeGroupAverageDto::getAgeGroup)) // 정렬
+                .collect(Collectors.toList());
     }
 
 

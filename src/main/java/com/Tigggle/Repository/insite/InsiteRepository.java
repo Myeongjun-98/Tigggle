@@ -60,5 +60,9 @@ public interface InsiteRepository extends JpaRepository<Transaction, Long> {
                                           @Param("end") LocalDateTime end);
 
 
+    // 나이대별(6구간) 소비 습관 측정
+    @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.asset.member.id = :memberId AND t.isConsumption = true")
+    Long sumAmountByMemberId(@Param("memberId") Long memberId);
+
 
 }

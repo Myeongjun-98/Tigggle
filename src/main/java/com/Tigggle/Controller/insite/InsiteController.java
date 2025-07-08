@@ -1,8 +1,10 @@
 package com.Tigggle.Controller.insite;
 
 
+import com.Tigggle.DTO.insite.AgeGroupAverageDto;
 import com.Tigggle.DTO.insite.InsiteReponseDto;
 import com.Tigggle.DTO.insite.KeywordMonthlySpendingDto;
+import com.Tigggle.Entity.Member;
 import com.Tigggle.Repository.UserRepository;
 import com.Tigggle.Service.insite.InsiteService;
 import lombok.RequiredArgsConstructor;
@@ -63,6 +65,28 @@ public class InsiteController {
     public List<KeywordMonthlySpendingDto> getKeywordMonthlyChart(Principal principal) {
         Long memberId = memberRepository.findByAccessId(principal.getName()).getId();
         return insiteService.getKeywordMonthlyChart(memberId);
+    }
+
+    @GetMapping("/insite/age-average")
+    public String showAgeGroupAverages(Model model) {
+        List<AgeGroupAverageDto> avgList = insiteService.getAgeGroupAverages();
+        model.addAttribute("avgList", avgList);
+        return "insite/age-average"; // 해당 뷰 이름
+    }
+
+    @GetMapping("/insite")
+    public String showInsitePage(Model model, Principal principal) {
+        Member member = memberRepository.findByAccessId(principal.getName());
+        String ageGroup = calculateAgeGroup(member.getBirthday());
+        Long userSpending = insiteRepository.getThisMonthSpending(member.getId());
+        Long groupAvg = insiteService.getAgeGroupAverage(ageGroup); // 그룹별 평균만 반환
+
+        model.addAttribute("memberName", member.getName());
+        model.addAttribute("ageGroup", ageGroup);
+        model.addAttribute("userSpending", userSpending != null ? userSpending : 0L);
+        model.addAttribute("groupAverage", groupAvg != null ? groupAvg : 0L);
+
+        return "insite/insite";
     }
 
 }

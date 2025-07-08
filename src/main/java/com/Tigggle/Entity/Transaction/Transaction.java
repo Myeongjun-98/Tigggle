@@ -53,6 +53,4 @@ public class Transaction {
 
     @Column(nullable = false)
     private boolean reflectOnAsset = true;      // 자산 반영 여부
-
-    private int installment;                    // 할부 개월 수
 }

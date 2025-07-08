@@ -162,6 +162,80 @@
 
         });
 
+        // 총 소비내역 출력하기
+        function renderLeftChart(months, amounts) {
+            if (leftChart) leftChart.destroy();
+
+            // ✅ 합계 계산
+            const total = amounts.reduce((sum, val) => sum + val, 0);
+            // ✅ DOM에 반영
+            document.getElementById('leftTotalAmount').innerText = `${total.toLocaleString()}원`;
+
+            leftChart = new Chart(leftCtx, {
+                type: 'bar',
+                data: {
+                    labels: months.map(m => `${m}월`),
+                    datasets: [{
+                        label: '총 소비',
+                        data: amounts,
+                        backgroundColor: '#3340cb'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.raw.toLocaleString()}원`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 오른쪽 그래프 총 지출 출력
+        function renderRightChart(keywords, amounts) {
+            if (rightChart) rightChart.destroy();
+
+            // ✅ 합계 계산
+            const total = amounts.reduce((sum, val) => sum + val, 0);
+            // ✅ DOM에 반영
+            document.getElementById('rightTotalAmount').innerText = `${total.toLocaleString()}원`;
+
+            rightChart = new Chart(rightCtx, {
+                type: 'bar',
+                data: {
+                    labels: keywords,
+                    datasets: [{
+                        label: '키워드 소비',
+                        data: amounts,
+                        backgroundColor: '#3340cb'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: ctx => `${ctx.raw.toLocaleString()}원`
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // btn.onclick = () => {
+        //     renderLeftChart(
+        //         ["2월", "3월", "4월", "5월", "6월", "7월"],
+        //         item.monthlyAmount
+        //     );
+        // };
+
+
+
+
     </script>
 
 </th:block>
@@ -204,7 +278,7 @@
                 <div class="left-consump">
                     <p>월간 소비내역 그래프</p>
                     <div class="consump-graph-box">
-                        <span>1,200,000원</span>
+                        <span id="leftTotalAmount">1,200,000원</span>
                         <canvas id="barChartLeft"></canvas>
                     </div>
                     <div class="keyword-btn-box">
@@ -213,6 +287,7 @@
                 <div class="right-consump">
                     <p>6월 소비내역</p>
                     <div class="month-graph-box">
+                        <span id="rightTotalAmount">1,200,000원</span>
                         <canvas id="barChartRight"></canvas>
                     </div>
                 </div>
@@ -220,19 +295,35 @@
         </div>
         <div class="foot-consump-box">
             <div class="foot-box">
+                <!-- 왼쪽: 프로필 및 안내 문구 -->
                 <div class="foot-text-box">
                     <div class="profile-photo"></div>
                     <div class="foot-title">
-                        <p>신선우님</p>
-                        <p>20~30대들의</p>
-                        <p>한달 평균 사용소비내역 입니다.</p>
+                        <p th:text="${memberName} + '님,'"></p>
+                        <p th:text="${ageGroup} + '들의'"></p>
+                        <p>지난 달 평균 사용 소비금액입니다.</p>
                     </div>
                 </div>
+                <!-- 오른쪽: 숫자 영역 -->
                 <div class="foot-right-consump-box">
-                    <div class="top-consump-box"></div>
+                    <!-- 상단: 연령대 평균 표시 -->
+                    <div class="top-consump-box">
+                        <span th:text="'지난 달 ' + ${ageGroup} + ' 한 달 사용 소비금액  '"></span>
+                        <span style="color: #3340cb;" th:text="${#numbers.formatInteger(groupAverage, 0, 'COMMA')} + '원'"></span>
+                    </div>
+                    <!-- 하단: 본인 소비, 차이 -->
                     <div class="l-r-box">
-                        <div class="left-consump-box"></div>
-                        <div class="right-consump-box"></div>
+                        <div class="left-consump-box">
+                            <p style="font-weight: 600; margin-bottom: 10px;" th:text="${memberName} + '님의 이번 달 소비금액'"></p>
+                            <p style="font-size: 28px; font-weight: bold;" th:text="${#numbers.formatInteger(userSpending, 0, 'COMMA')} + '원'"></p>
+                            <button style="margin-top: 15px; padding: 10px 20px; border-radius: 10px; border: none; background-color: #f0f2fa; font-weight: bold;">가계부 바로가기</button>
+                        </div>
+                        <!-- 차이 -->
+                        <div class="right-consump-box">
+                            <div class="profile-photo" style="margin-bottom: 10px;"></div>
+                            <p style="font-weight: bold;" th:text="'또래보다 ' + ${#numbers.formatInteger(userSpending - groupAverage, 0, 'COMMA')} + '원'"></p>
+                            <p th:text="${userSpending > groupAverage ? '더 많이 씀' : '덜 씀'}"></p>
+                        </div>
                     </div>
                 </div>
             </div>
