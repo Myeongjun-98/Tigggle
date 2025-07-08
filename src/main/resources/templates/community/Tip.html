@@ -31,6 +31,9 @@
                    th:text="${board.title}">제목</a>
                 <span th:if="${board.hasImage}" style="margin-left:4px">🖼️</span>
                 <span th:if="${board.hasGraph}" style="margin-left:2px">📊</span>
+
+                <span th:if="${board.commentCount > 0}" style="margin-left:4px"
+                      th:text="'[' + ${board.commentCount} + ']'"></span>
             </td>
             <td th:text="${board.name}">작성자</td>
             <td th:text="${board.formattedWriteDate}">작성일</td>

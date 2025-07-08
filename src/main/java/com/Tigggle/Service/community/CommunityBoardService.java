@@ -11,6 +11,7 @@ import com.Tigggle.Repository.community.CommunityBoardGraphRepository;
 import com.Tigggle.Repository.community.CommunityBoardImageRepository;
 import com.Tigggle.Repository.community.CommunityBoardRepository;
 import com.Tigggle.Repository.community.CommunityCommentRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -201,6 +202,15 @@ public class CommunityBoardService {
         }
 
         return communityBoard.getId();
+    }
+
+    // 조회수 증가
+    @Transactional
+    public void incrementHit(Long id) {
+        CommunityBoard communityBoard = communityBoardRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("게시글이 존재하지 않습니다."));
+        communityBoard.setHit(communityBoard.getHit() + 1);
+
     }
 
     // 상세페이지

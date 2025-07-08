@@ -56,6 +56,12 @@ public class CommunityController {
     public String Detail(@PathVariable Long id, Model model, Principal principal) {
 
         CommunityDetailDto communityDetailDto = communityBoardService.getBoardDetail(id);
+
+        if(principal != null && !principal.getName()
+                .equals(communityDetailDto.getMemberAccessId())) {
+            communityBoardService.incrementHit(id);
+        }
+
         model.addAttribute("DetailDto", communityDetailDto);
 
         if (principal != null) {
