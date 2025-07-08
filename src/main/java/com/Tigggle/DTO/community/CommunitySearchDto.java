@@ -11,7 +11,7 @@ public class CommunitySearchDto {
 
     private SearchType searchType;
 
-    private String keyWord;
+    private String keyword;
 
     private CommunityCategory category;
 }

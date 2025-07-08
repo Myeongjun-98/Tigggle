@@ -3,8 +3,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/defaultLayout}">
 
-<th:block layout:fragment="css"></th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/community/Discussion.css}">
+</th:block>
+<th:block layout:fragment="script">
+    <script th:src="@{/javascript/community/Discussion.js}"></script>
+</th:block>
 
 <div  layout:fragment="content">
 
@@ -39,6 +43,20 @@
         </tr>
         </tbody>
     </table>
+
+<!--    검색 폼 시작-->
+    <form th:action="@{/communityDiscussion}" method="get" class="search-form">
+        <select name="searchType">
+            <option th:each="type : ${searchTypes}"
+                    th:value="${type}"
+                    th:text="${type.label}"
+                    th:selected="${type} == ${communitySearchDto.searchType}">제목</option>
+        </select>
+
+        <input type="text" name="keyword" placeholder="검색어를 입력하세요"
+                th:value="${communitySearchDto != null ? communitySearchDto.keyword : ''}">
+        <button type="submit">검색</button>
+    </form>
 
 </div>
 

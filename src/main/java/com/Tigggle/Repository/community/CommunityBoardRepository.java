@@ -14,4 +14,14 @@ public interface CommunityBoardRepository extends JpaRepository<CommunityBoard, 
     List<CommunityBoard> findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(CommunityCategory communityCategory);
 
     Optional<CommunityBoard> findByIdAndDeletedFalse(Long id);
+
+    // 제목 검색
+    List<CommunityBoard> findByCommunityCategoryAndTitleContainingAndDeletedIsFalseOrderByWriteDateDesc(
+            CommunityCategory category, String keyword);
+
+    // 작성자 검색
+    List<CommunityBoard> findByCommunityCategoryAndMemberAccessIdContainingAndDeletedIsFalseOrderByWriteDateDesc(
+            CommunityCategory category, String keyword);
+
+
 }

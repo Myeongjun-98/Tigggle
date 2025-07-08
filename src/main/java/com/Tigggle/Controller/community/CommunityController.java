@@ -1,12 +1,15 @@
 package com.Tigggle.Controller.community;
 
 import com.Tigggle.Constant.Community.CommunityCategory;
+import com.Tigggle.Constant.Community.SearchType;
 import com.Tigggle.DTO.community.CommunityBoardListDto;
 import com.Tigggle.DTO.community.CommunityDetailDto;
+import com.Tigggle.DTO.community.CommunitySearchDto;
 import com.Tigggle.DTO.community.CommunityWriteDto;
 import com.Tigggle.Service.community.CommunityBoardService;
 import com.Tigggle.Service.community.CommunityCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,14 +26,23 @@ public class CommunityController {
     private final CommunityBoardService communityBoardService;
     private final CommunityCommentService communityCommentService;
 
+    @ModelAttribute("communitySearchDto")
+    public CommunitySearchDto communitySearchDto() {
+        return new CommunitySearchDto();
+    }
+
     // tip 게시판
     @GetMapping("/communityTip")
+    public String communityTip(@ModelAttribute("communitySearchDto") CommunitySearchDto communitySearchDto,
+                               Model model) {
 
-    public String communityTip(Model model) {
+        communitySearchDto.setCategory(CommunityCategory.TIP);
 
         List<CommunityBoardListDto> communityBoardListDtos = communityBoardService
-                .getCommunityBoards(CommunityCategory.TIP);
+                .searchCommunityTip(communitySearchDto);
+
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
+        model.addAttribute("searchTypes", SearchType.values());
 
         return "community/Tip";
     }
@@ -109,11 +121,17 @@ public class CommunityController {
     // discussion 게시판
     @GetMapping("/communityDiscussion")
 
-    public String communityDiscussion(Model model) {
+    public String communityDiscussion(@ModelAttribute("communitySearchDto")
+                                      CommunitySearchDto communitySearchDto,
+                                      Model model) {
+
+        communitySearchDto.setCategory(CommunityCategory.DISCUSSION);
 
         List<CommunityBoardListDto> communityBoardListDtos = communityBoardService
-                .getCommunityBoards(CommunityCategory.DISCUSSION);
+                .searchCommunityDiscussion(communitySearchDto);
+
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
+        model.addAttribute("searchTypes", SearchType.values());
 
         return "community/Discussion";
 
@@ -153,11 +171,16 @@ public class CommunityController {
 
     // EconomicMarket 게시판
     @GetMapping("/communityEconomicMarket")
-    public String communityEconomicMarket(Model model) {
+    public String communityEconomicMarket(@ModelAttribute("communitySearchDto")
+                                            CommunitySearchDto communitySearchDto, Model model) {
+
+        communitySearchDto.setCategory(CommunityCategory.ECONOMIC_MARKET);
 
         List<CommunityBoardListDto> communityBoardListDtos = communityBoardService
-                .getCommunityBoards(CommunityCategory.ECONOMIC_MARKET);
+                .searchCommunityEconomicMarket(communitySearchDto);
+
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
+        model.addAttribute("searchTypes", SearchType.values());
 
         return "community/EconomicMarket";
     }
