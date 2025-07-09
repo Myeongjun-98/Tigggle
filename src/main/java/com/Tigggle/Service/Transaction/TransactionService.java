@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import com.Tigggle.Constant.Transaction.PayMethod;
 import com.Tigggle.DTO.Transaction.TransactionCreateRequestDto;
+import com.Tigggle.DTO.Transaction.TransactionDetailDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.Transaction.*;
 import com.Tigggle.Repository.Transaction.*;
@@ -97,7 +98,9 @@ public class TransactionService {
           tx.setKeyword(keywordsRepository.findById(dto.getKeywordId()).orElseThrow());
 
           transactionRepository.save(tx);
-          assetService.updateBalance(asset.getId(), dto.getAmount(), false); // 자산 잔액 증가
+
+          if(tx.isReflectOnAsset())
+               assetService.updateBalance(tx.getId(), dto.getAmount(), tx.isConsumption());
      }
 
      // ** 지출 처리 로직
@@ -105,7 +108,7 @@ public class TransactionService {
 
           // 사용자 검증
           Asset asset = (Asset) assetRepository.findByIdAndMember(dto.getSourceAssetId(), member).
-                  orElseThrow(() -> new SecurityException("자산에 대한 권한이 없습니다."));
+                  orElseThrow(() -> new SecurityException("올바른 자산을 선택해주세요."));
 
           // ** 결제 수단에 따라 다시 두 번째 로직 분기
           switch (dto.getPayMethod()) {
@@ -152,7 +155,7 @@ public class TransactionService {
           // *** 내 자산 안에서의 금액 이동인 경우, 해당 목적지에 입금처리
           if (payMethod == PayMethod.MYACCOUNT) {
 
-               String incomeDesciption = String.format("'%s'로부터 %s", sourceAsset.getAlias(), "자산 이동");
+               String incomeDesciption = String.format("[%s]로부터 %s", sourceAsset.getAlias(), "자산 이동");
 
                Asset destinationAsset = (Asset) assetRepository.findByIdAndMember(dto.getDestinationAssetId(), member)
                        .orElseThrow(() -> new SecurityException("목적지 자산에 대한 권한이 없습니다."));
@@ -166,6 +169,7 @@ public class TransactionService {
                incomeTx.setReflectOnAsset(false);
                incomeTx.setNote(dto.getNote());
                incomeTx.setKeyword(keyword);
+               incomeTx.setPayMethod(PayMethod.MYACCOUNT);
 
                transactionRepository.save(incomeTx);
           }
@@ -222,6 +226,43 @@ public class TransactionService {
 
                creditCardInstallmentPaymentRepository.save(installmentPayment);
           }
+     }
+
+     public TransactionDetailDto getTransactionDetail(Long transactionId, Member member) {
+          Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new IllegalArgumentException("거래내역을 찾을 수 없습니다."));
+
+          // * Null-Safe한 데이터 가공 로직
+
+          // 1. Keyword가 null일 경우를 대비하여 안전하게 처리
+          String keywordStr;
+          if (transaction.getKeyword() != null) {
+               Keywords keyword = transaction.getKeyword();
+               // 마이너 키워드가 없을 경우를 대비
+               keywordStr = keyword.getMinorKeyword() == null
+                       ? keyword.getMajorKeyword()
+                       : keyword.getMajorKeyword() + " > " + keyword.getMinorKeyword();
+          } else {
+               keywordStr = "분류 없음";
+          }
+
+          // 2. PayMethod가 null일 경우를 대비하여 안전하게 처리
+          String payMethodStr = (transaction.getPayMethod() != null)
+                  ? transaction.getPayMethod().toString()
+                  : "기타";
+
+          // 3. 자산 이름도 안전하게 가져오기
+          String sourceAssetName = (transaction.getAsset() != null)
+                  ? transaction.getAsset().getAlias()
+                  : "알 수 없는 자산";
+
+         return new TransactionDetailDto(
+                 transaction.isConsumption(),
+                 transaction.getDescription(),
+                 transaction.getAmount(),
+                 transaction.getTransactionDate(),
+                 keywordStr,
+                 payMethodStr,
+                 transaction.getNote());
      }
      //! 거래내역 저장
 

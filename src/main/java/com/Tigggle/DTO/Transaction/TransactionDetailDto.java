@@ -17,9 +17,8 @@ public class TransactionDetailDto {
     private String description;         // 내용
     private Long amount;                // 금액
     private LocalDateTime transactionDate;  // 내역 발생 일시
-    private Keywords keyword;           // 분류
-    private PayMethod payMethod;        // 결제 수단
+    private String keyword;           // 분류
+    private String payMethod;        // 결제 수단
     private String note;                // 메모
-    private int installment;            // 할부 개월
 }
 

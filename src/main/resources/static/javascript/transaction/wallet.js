@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         initializeWalletPage(currentYear, currentMonth);
     });
+
 });
 
 /*
@@ -88,9 +89,6 @@ function updateAssetInfo(assetData) {
 
     container.innerHTML = assetHtml;
     balanceSpan.innerText = assetData.balance.toLocaleString() + '원';
-    // !  ▼▼▼▼▼ 확인용 ▼▼▼▼▼
-    console.log("현재 자산 정보:", assetData);
-    // !  ▲▲▲▲▲ 확인용 ▲▲▲▲▲
 }
 
 /**
@@ -118,7 +116,7 @@ function renderTransactionList(dailyLedgers) {
 
     dailyLedgers.forEach(dailyLedger => {
         const transactionsHtml = dailyLedger.transactions.map(tx => `
-            <li class="TR-item">
+            <li class="TR-item" onclick="openDetailModal(${tx.id})">
                 <input type="checkbox">
                 <span class="TR-each-day-description">${tx.description}</span>
                 <span class="TR-each-day-amount ${tx.isConsumption ? 'expense' : 'income'}">
@@ -140,9 +138,43 @@ function renderTransactionList(dailyLedgers) {
     });
 }
 
-/**
- * 자산이 없을 때 메시지를 표시하는 함수
- */
+// * 거래내역 상세보기 모달을 열고 API를 통해 데이터를 채웁니다.
+// * @param {number} transactionId - 상세 조회할 거래내역의 ID
+async function openDetailModal(transactionId) {
+    const detailModal = document.getElementById('TR-detail-modal');
+    // 로딩 중에 내용을 비워줍니다.
+    document.getElementById('detail-description').innerText = '불러오는 중...';
+    detailModal.classList.remove('TR-hidden');
+
+    try {
+        // 1. 단일 거래내역 조회 API를 호출합니다.
+        const response = await fetch(`/api/transactions/${transactionId}`);
+        if (!response.ok) throw new Error('상세 내역을 불러오는데 실패했습니다.');
+
+        const detailData = await response.json();
+
+        // 2. 받아온 데이터로 상세보기 모달의 각 영역을 채웁니다.
+        document.getElementById('detail-type').innerText = detailData.isConsumption ? '-' : '+';
+        document.getElementById('detail-amount').innerText = detailData.amount.toLocaleString() + '원';
+        document.getElementById('detail-description').innerText = detailData.description;
+        document.getElementById('detail-date').innerText = new Date(detailData.transactionDate).toLocaleString('ko-KR');
+        document.getElementById('detail-keyword').innerText = detailData.keyword; // DTO 필드명에 맞게 수정 필요
+        document.getElementById('detail-payMethod').innerText = convertPaymethodKo(detailData.payMethod); // DTO 필드명에 맞게 수정 필요
+        document.getElementById('detail-note').innerText = detailData.note || '메모 없음';
+
+    } catch (error) {
+        // 실패 시 알림 모달을 재사용할 수 있습니다.
+        showAlert(error.message);
+        detailModal.classList.add('TR-hidden');
+    }
+
+    document.querySelector('.detail-close-button').addEventListener('click', () => {
+        detailModal.classList.add('TR-hidden');
+    });
+
+}
+
+// * 자산이 없을 때 메시지를 표시하는 함수
 function displayNoAssetMessage() {
     document.getElementById('TR-history-container').innerHTML = `
         <div class="TR-no-data">
@@ -156,14 +188,23 @@ function displayNoAssetMessage() {
     document.getElementById('TR-monthly-expense').innerText = '0원';
 }
 
-/**
- * LocalDateTime 문자열에서 시간(HH:mm)만 추출하는 헬퍼 함수
- * @param {string} dateTimeString - 예: "2025-07-27T14:30:00"
- */
+// * LocalDateTime 문자열에서 시간(HH:mm)만 추출하는 헬퍼 함수
+// * @param {string} dateTimeString - 예: "2025-07-27T14:30:00"
 function formatTime(dateTimeString) {
     if (!dateTimeString) return '';
     const date = new Date(dateTimeString);
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${hours}:${minutes}`;
+}
+
+function convertPaymethodKo(payMethod){
+    switch(payMethod){
+        case "MYACCOUNT":
+            return "내 자산 간 이체"
+        case "NORMAL":
+            return "보통거래"
+        case "CREDITCARD":
+            return "신용카드"
+    }
 }

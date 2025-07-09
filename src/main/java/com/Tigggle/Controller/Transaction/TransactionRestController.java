@@ -2,6 +2,7 @@ package com.Tigggle.Controller.Transaction;
 
 import com.Tigggle.DTO.Transaction.AssetListDto;
 import com.Tigggle.DTO.Transaction.TransactionCreateRequestDto;
+import com.Tigggle.DTO.Transaction.TransactionDetailDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Repository.Transaction.AssetRepository;
 import com.Tigggle.Repository.UserRepository;
@@ -48,6 +49,17 @@ public class TransactionRestController {
                 memberRepository.findByAccessId(principal.getName()));
 
         return ResponseEntity.ok(assets);
+    }
+
+    // * 거래내역 클릭 시 자세히보기
+    @GetMapping("/{transactionId}")
+    public ResponseEntity<TransactionDetailDto> getTransactionDetail(
+            @PathVariable Long transactionId,
+            Principal principal
+    ){
+        Member member = memberRepository.findByAccessId(principal.getName());
+        TransactionDetailDto transactionDetailDto = transactionService.getTransactionDetail(transactionId, member);
+        return ResponseEntity.ok(transactionDetailDto);
     }
 
 }

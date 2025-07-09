@@ -5,9 +5,16 @@
   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
   layout:decorate="~{layout/defaultLayout}"
 >
+
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
   <th:block layout:fragment="css">
   <link rel="stylesheet" th:href="@{/css/transaction/transaction-modal.css}">
   </th:block>
+</head>
+
 
 
   <div layout:fragment="content">
@@ -91,7 +98,6 @@
     <!-- 거래내역 추가 시 발생하는 모달창 -->
     <div id="transaction-modal" class="TR-modal-overlay TR-hidden">
       <div class="TR-modal-content">
-        <span class="close-button">&times;</span>
         <h2>새로운 거래내역 작성</h2>
 
         <form id="TR-create-form">
@@ -126,6 +132,12 @@
             </select>
           </div>
           <div class="TR-create-form-group">
+            <label for="TR-tx-income-asset">현금/카드/계좌</label>
+            <select id="TR-tx-income-asset">
+              <option value="" selected> == 선택 ==</option>
+            </select>
+          </div>
+          <div class="TR-create-form-group">
             <label for="TR-tx-note">메모</label>
             <textarea id="TR-tx-note" placeholder="메모를 입력하세요"></textarea>
           </div>
@@ -134,14 +146,16 @@
             <h4>거래 방식</h4>
             <div class="TR-create-form-group">
               <select id="TR-tx-pay-method">
+                <option value="" selected> == 거래 방식 선택 ==</option>
                 <option value="NORMAL">보통거래</option>
                 <option value="CREDIT_CARD">신용카드</option>
-                <option value="MY_ACCOUNT_TRANSFER">내 계좌간 이체</option>
+                <option value="MY_ACCOUNT_TRANSFER">내 자산 간 이체</option>
               </select>
             </div>
             <div class="TR-create-form-group">
               <label for="TR-tx-source-asset">현금/카드/계좌</label>
               <select id="TR-tx-source-asset">
+                <option value="" selected> == 선택 ==</option>
               </select>
             </div>
           </div>
@@ -159,11 +173,14 @@
             <div class="TR-create-form-group">
               <label for="TR-tx-destination-asset">현금/계좌</label>
               <select id="TR-tx-destination-asset">
+                <option value="" selected> == 선택 ==</option>
               </select>
             </div>
           </div>
 
           <button type="submit" class="submit-button">저장하기</button>
+          <button class="close-button">닫기</button>
+
         </form>
       </div>
     <!-- 거래내역 추가 시 발생하는 모달창 -->
@@ -177,6 +194,53 @@
       </div>
     </div>
     <!-- 알림 모달 -->
+
+    <!-- 거래내역 디테일 모달 -->
+    <div id="TR-detail-modal" class="TR-modal-overlay TR-hidden">
+      <div class="TR-modal-content">
+        <h2>거래내역 상세</h2>
+
+          <div class="detail-item">
+            <label>내용</label>
+            <span id="detail-description">GS25 편의점</span>
+          </div>
+
+        <div class="detail-section">
+          <div class="detail-item">
+            <label>금액</label>
+            <span id="detail-type">지출</span><span id="detail-amount" class="amount-expense">10,600원</span>
+          </div>
+
+          <div class="detail-item">
+            <label>거래일시</label>
+            <span id="detail-date">2025-06-28 14:30</span>
+          </div>
+
+          <div class="detail-item">
+            <label>분류</label>
+            <span id="detail-keyword">식비 > 간식</span>
+          </div>
+
+          <div id="detail-paymethod-section" class="detail-item">
+            <label>결제 수단</label>
+            <span id="detail-payMethod">현금</span>
+          </div>
+
+          <div class="detail-item note-item">
+            <label>메모</label>
+            <p id="detail-note">
+              친구랑 같이 먹을 아이스크림 구매
+            </p>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="detail-edit-btn" class="action-button-primary">수정</button>
+          <button class="detail-close-button">닫기</button>
+        </div>
+      </div>
+    </div>
+    <!-- 거래내역 디테일 모달 -->
 
   <th:block layout:fragment="script">
   <script th:src="@{/javascript/transaction/wallet.js}"></script>

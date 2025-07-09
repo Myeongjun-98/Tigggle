@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeAlertModal();
 });
 
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
+
 // * 알림 모달 관련 함수
 // 알림 모달의 요소들을 찾아 이벤트를 연결하는 함수
 function initializeAlertModal() {
@@ -37,6 +40,7 @@ function initializeCreateModal() {
     const installmentInput = document.getElementById('TR-tx-installment');
     const destinationAssetSelect = document.getElementById('TR-tx-destination-asset');
 
+    const incomeDetailSection = document.getElementById('TR-tx-income-asset');
     const expenseDetailsSection = document.getElementById('expense-details');
     const creditCardDetailsSection = document.getElementById('TR-credit-card-details');
     const myAccountTransferDetailsSection = document.getElementById('TR-my-account-transfer-details');
@@ -58,6 +62,17 @@ function initializeCreateModal() {
     // 3. '닫기(X)' 버튼 클릭 시 모달창 숨기기
     closeModalBtn.addEventListener('click', () => {
         modalOverlay.classList.add('TR-hidden');
+
+        form.reset();
+
+        // 동적으로 나타났던 섹션들도 모두 다시 숨깁니다.
+        document.getElementById('expense-details').classList.add('TR-hidden');
+        document.getElementById('TR-credit-card-details').classList.add('TR-hidden');
+        document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
+
+        // '구분' 라디오 버튼을 기본값('지출')으로 되돌립니다.
+        document.getElementById('TR-type-expense').checked = true;
+
     });
 
     // 4. '수입/지출' 라디오 버튼 변경 시
@@ -65,8 +80,10 @@ function initializeCreateModal() {
         radio.addEventListener('change', (event) => {
             if (event.target.value === 'EXPENSE') {
                 expenseDetailsSection.classList.remove('TR-hidden');
+                incomeDetailSection.classList.add('TR-hidden');
             } else { // INCOME 선택 시
                 expenseDetailsSection.classList.add('TR-hidden');
+                incomeDetailSection.classList.remove('TR-hidden');
 
                 // 지출 관련 세부 섹션을 모두 숨기고, 그 안의 값도 초기화/비활성화합니다.
                 creditCardDetailsSection.classList.add('TR-hidden');
@@ -78,7 +95,7 @@ function initializeCreateModal() {
         });
     });
 
-    // 5. '결제 수단' 선택 변경 시
+    // 5. '거래 방식' 선택 변경 시
     payMethodSelect.addEventListener('change', async (event) => {
         const selectedMethod = event.target.value;
 
@@ -111,6 +128,8 @@ function initializeCreateModal() {
 
                 sourceAssetSelect.innerHTML = ''; // 기존 옵션을 모두 비웁니다.
 
+                sourceAssetSelect.innerHTML = '<option value="">== 카드 선택 ==</option>>'
+
                 assets.forEach(asset => {
                     const option = document.createElement('option');
                     option.value = asset.id;
@@ -125,6 +144,8 @@ function initializeCreateModal() {
             return; // 아래 로직을 실행하지 않고 종료
         }
 
+        // 입금처 계좌를 불러옴!
+
         try {
             // 1. 백엔드 API를 호출하여 선택된 거래 방식에 맞는 자산 목록을 요청
             const response = await fetch(`/api/transactions/by-paymethod?payMethod=${selectedMethod}`);
@@ -138,12 +159,26 @@ function initializeCreateModal() {
             if (assets.length === 0) {
                 sourceAssetSelect.innerHTML = '<option value="">선택 가능한 자산이 없습니다.</option>';
             } else {
+                sourceAssetSelect.innerHTML = '<option value="">== 현금/계좌 선택 ==</option>>'
+                destinationAssetSelect.innerHTML = '<option value="">== 현금/계좌 선택 ==</option>>'
                 assets.forEach(asset => {
                     const option = document.createElement('option');
                     option.value = asset.id;
                     option.textContent = `[${asset.type}] ${asset.alias}`;
                     sourceAssetSelect.appendChild(option);
                 });
+
+                // MYACCOUNT일 시 입금처도 입력!
+                if(selectedMethod === 'MY_ACCOUNT_TRANSFER'){
+                    const destinationAssetSelect = document.getElementById('TR-tx-destination-asset')
+
+                    assets.forEach(asset => {
+                        const option = document.createElement('option');
+                        option.value = asset.id;
+                        option.textContent = `[${asset.type}] ${asset.alias}`;
+                        destinationAssetSelect.appendChild(option);
+                    })
+                }
             }
         } catch (error) {
             console.error('카드/계좌 목록을 불러오는 데 실패했습니다:', error);
@@ -175,8 +210,9 @@ function initializeCreateModal() {
         if (transactionType === 'EXPENSE') {
             const payMethod = document.getElementById('TR-tx-pay-method').value;
             createDto.payMethod = payMethod;
-            createDto.sourceAssetId = document.getElementById('TR-tx-source-asset').value;
-
+            const sourceId = document.getElementById('TR-tx-source-asset').value;
+            createDto.sourceAssetId = sourceId
+            const destinationId = document.getElementById('TR-tx-destination-asset').value;
             // 신용카드일 경우 할부 정보 수집
             if (payMethod === 'CREDIT_CARD') {
                 createDto.creditCardId = document.getElementById('TR-tx-source-asset').value;
@@ -184,7 +220,11 @@ function initializeCreateModal() {
             }
             // 내 계좌 이체일 경우 목적지 자산 정보 수집
             if (payMethod === 'MY_ACCOUNT_TRANSFER') {
-                createDto.destinationAssetId = document.getElementById('TR-tx-destination-asset').value;
+                createDto.destinationAssetId = destinationId;
+                if(sourceId && destinationId && sourceId === destinationId){
+                    showAlert("같은 계좌를 선택하셨습니다.")
+                    return;
+                }
             }
 
         } else { // 수입(INCOME)일 경우, 출금 자산 ID가 필요. (어느 자산으로 수입이 되었는지)
@@ -198,12 +238,18 @@ function initializeCreateModal() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    [header]: token
                 },
                 body: JSON.stringify(createDto), // JavaScript 객체를 JSON 문자열로 변환
             });
 
             if (response.ok) {
                 showAlert('거래내역이 성공적으로 저장되었습니다.');
+
+                // 저장 후 적었던 값들 초기화
+                document.getElementById('TR-create-form').reset();
+                document.getElementById('TR-credit-card-details').classList.add('TR-hidden');
+                document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
 
                 // 성공 시 내역 작성 모달은 닫고, 가계부 목록은 새로고침
                 document.getElementById('transaction-modal').classList.add('TR-hidden');

@@ -5,11 +5,14 @@ import com.Tigggle.DTO.Transaction.CashDto;
 import com.Tigggle.DTO.Transaction.OrdinaryAccountDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.Transaction.*;
+import com.Tigggle.Repository.Transaction.AssetRepository;
 import com.Tigggle.Repository.Transaction.CashRepository;
 import com.Tigggle.Repository.Transaction.CreditCardRepository;
 import com.Tigggle.Repository.Transaction.OrdinaryRepository;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,6 +26,7 @@ public class AssetService {
     private final CashRepository cashRepository;
     private final OrdinaryRepository ordinaryRepository;
     private final CreditCardRepository creditCardRepository;
+    private final AssetRepository assetRepository;
 
     //* 현금 정보 DTO에 담기
     public CashDto cashInfo(Long cashId){
@@ -53,9 +57,18 @@ public class AssetService {
         return accountDto;
     }
 
-    // TODO 잔액 계산 로직 구상해야 함!!
-    public void updateBalance(Long id, @NotNull Long amount, boolean b) {
+    @Transactional
+    public void updateBalance(Long assetId, Long amount, boolean isConsumption) {
+        Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 자산입니다."));
 
+        if (asset instanceof Cash) {
+            if (isConsumption) ((Cash) asset).setBalance(((Cash) asset).getBalance() - amount);
+            else ((Cash) asset).setBalance(((Cash) asset).getBalance() + amount);
+        }
+        if(asset instanceof BankAccount){
+            if (isConsumption) ((BankAccount) asset).setBalance(((BankAccount) asset).getBalance() - amount);
+            else ((BankAccount) asset).setBalance(((BankAccount) asset).getBalance() + amount);
+        }
     }
 
     public List<AssetListDto> getAssetsByPayMethod(String payMethod, Member member) {
