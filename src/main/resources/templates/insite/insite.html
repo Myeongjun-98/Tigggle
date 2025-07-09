@@ -78,6 +78,44 @@
                     const months = data.monthlyDateDtoList.map(item => item.whatMonth);
                     const amounts = data.monthlyDateDtoList.map(item => item.totalAmount);
                     renderLeftChart(months, amounts);
+
+                    // 1. 금액을 표시할 <p> 태그를 찾습니다.
+                    const totalAmountEl = document.getElementById("amount-of-this-month");
+
+                    // 2. amounts 배열에 데이터가 있는지 확인합니다.
+                    if (totalAmountEl && amounts && amounts.length > 0) {
+                        // 3. 배열의 마지막 값(이번 달 총 지출)을 가져옵니다.
+                        const lastAmount = amounts[amounts.length - 1];
+
+                        myAverageMonthAmount = lastAmount;
+                        // 4. p 태그의 텍스트를 포맷팅하여 변경합니다.
+                        totalAmountEl.textContent = lastAmount.toLocaleString() + '원';
+                    }
+
+                    // 1. 이번 달 지출액(userSpending)을 가져옵니다.
+                    const userSpending = amounts.length > 0 ? amounts[amounts.length - 1] : 0;
+
+                    // 2. HTML에 숨겨둔 '또래 평균' 값을 읽어옵니다.
+                    const averageAmountInput = document.getElementById('age-group-average-amount');
+                    const averageAmount = parseFloat(averageAmountInput.value);
+
+                    // 3. 결과를 표시할 <p> 태그를 찾습니다.
+                    const resultEl = document.getElementById('spending-comparison-result');
+
+                    const compareAmount = Math.abs(userSpending - averageAmount);
+
+                    // 4. 두 값을 비교하여 적절한 텍스트를 설정합니다.
+                    if (userSpending > averageAmount) {
+                        resultEl.textContent = `또래보다 ${compareAmount}원 더 많이 쓰고 있어요 💸`;
+                    }
+                    if (userSpending < averageAmount)
+                    {
+                        resultEl.textContent = `또래보다 ${compareAmount} 원 절약하고 있어요 👍`;
+                    }
+                    if (userSpending === averageAmount){
+                        resultEl.textContent = `또래들과 비슷하게 소비하고 있어요 👍`
+                    }
+
                 });
 
             // 오른쪽 그래프 로딩
@@ -326,8 +364,8 @@
                         <!-- 차이 -->
                         <div class="right-consump-box">
                             <div class="profile-photo" style="margin-bottom: 10px;"></div>
-                            <p style="font-weight: bold;" th:text="'또래보다 ' + ${memberName} + '원'"></p>
-                            <p th:text="${userSpending > ageGroupAverageDto.getAverageAmount() ? '더 많이 씀' : '덜 씀'}"></p>
+                            <input type="hidden" id="age-group-average-amount" th:value="${ageGroupAverageDto.getAverageAmount()}"/>
+                            <p id="spending-comparison-result" style="font-weight: bold;"></p>
                         </div>
                     </div>
                 </div>
