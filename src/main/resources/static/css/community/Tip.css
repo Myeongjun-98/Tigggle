@@ -41,9 +41,9 @@
 
 /* 게시판 전체 컨테이너 */
 #content {
-    max-width: 1500px;
+    max-width: 1800px;
     margin: 50px auto;
-    padding: 0 20px;
+    padding: 0 30px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     color: #333;
 }
