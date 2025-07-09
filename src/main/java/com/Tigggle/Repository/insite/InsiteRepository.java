@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Repository
 public interface InsiteRepository extends JpaRepository<Transaction, Long> {
 
@@ -63,5 +64,22 @@ public interface InsiteRepository extends JpaRepository<Transaction, Long> {
     // 나이대별(6구간) 소비 습관 측정
     @Query("SELECT SUM(t.amount) FROM Transaction t WHERE t.asset.member.id = :memberId AND t.isConsumption = true AND t.reflectOnAsset = true")
     Long sumAmountByMemberId(@Param("memberId") Long memberId);
+
+
+
+
+
+
+    // ** 자산관리 **
+    @Query("SELECT k.majorKeyword, SUM(t.amount) " +
+            "FROM Transaction t JOIN t.keyword k " +
+            "WHERE t.asset.member.id = :memberId " +
+            "AND t.isConsumption = true " +
+            "AND t.reflectOnAsset = true " +
+            "GROUP BY k.majorKeyword")
+    List<Object[]> getKeywordSumByMember(@Param("memberId") Long memberId);
+
+    // 결과는 Object[] 형식으로, row[0] = 키워드, row[1] = 합계입니다.
+
 
 }

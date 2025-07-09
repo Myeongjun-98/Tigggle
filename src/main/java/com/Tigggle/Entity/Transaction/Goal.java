@@ -28,7 +28,7 @@ public class Goal {
     @JoinColumn(nullable = false)
     private Keywords keyword;
 
-    private String description;
+    private String description; //설명
 
     @ColumnDefault("0")
     private Long amount;    // 금액

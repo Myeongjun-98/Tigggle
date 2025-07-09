@@ -1,11 +1,13 @@
 package com.Tigggle.Service.insite;
 
+import com.Tigggle.DTO.asset.GoalConsumDto;
 import com.Tigggle.DTO.insite.AgeGroupAverageDto;
 import com.Tigggle.DTO.insite.InsiteReponseDto;
 import com.Tigggle.DTO.insite.KeywordMonthlySpendingDto;
 import com.Tigggle.DTO.insite.MonthlyDateDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.Transaction.Transaction;
+import com.Tigggle.Repository.Transaction.AssetRepository;
 import com.Tigggle.Repository.UserRepository;
 import com.Tigggle.Repository.insite.InsiteRepository;
 import lombok.RequiredArgsConstructor;
@@ -188,6 +190,35 @@ public class InsiteService {
 
     }
 
-    // 
+    // ** 자산관리**
+
+    private final AssetRepository assetRepository;
+
+    //
+    public GoalConsumDto getKeywordSumByMember(Long memberId) {
+        // 키워드별로 소비금액을 합산함
+        List<Object[]> KeywordSum = insiteRepository.getKeywordSumByMember(memberId);
+
+        // 초기값 설정
+        Long food = 0L;
+        Long communication = 0L;
+        Long insurance = 0L;
+        Long etc = 0L;
+
+        // 3. 결과 순회하며 키워드 이름에 따라 분기
+        for (Object[] row : KeywordSum) {
+            String keyword = (String) row[0];
+            Long amount = (Long) row[1];
+
+            switch (keyword.toLowerCase()) {
+                case "식비" -> food += amount;
+                case "주거/통신" -> communication += amount;
+                case "보험" -> insurance += amount;
+                default -> etc += amount;
+            }
+        }
+
+        return new GoalConsumDto(food, communication, insurance, etc);
+    }
 
 }
