@@ -1,47 +1,205 @@
+/* ===== 공통 ===== */
+#content {
+  max-width: 1800px;
+  margin: 50px auto;
+  padding: 0 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
 
+#content > a > h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #222;
+  display: inline-block;
+  padding-bottom: 10px;
+}
 
-/* 상세페이지 이미지 크기*/
+#content .post-meta {
+  margin: 15px 0;
+  padding: 10px 15px;
+  background-color: #f9f9f9;
+  border-left: 4px solid #ccc;
+  font-size: 14px;
+  color: #555;
+  border-radius: 4px;
+}
+
+/* ===== 제목 ===== */
+#content h3 {
+  font-size: 24px;
+  margin: 30px 0 15px;
+  padding: 12px 20px;
+  background-color: #f0f4ff;
+  border-left: 6px solid #5152fc;
+  color: #222;
+  border-radius: 4px;
+}
+
+/* ===== 작성자 및 날짜 ===== */
+#content p {
+  font-size: 15px;
+  margin: 5px 0;
+}
+
+#content strong {
+  font-weight: 600;
+  color: #444;
+}
+
+#content .post-meta {
+  display: flex;
+  flex-direction: column; /* 줄바꿈 형태 유지 */
+  gap: 4px;
+  margin: 15px 0;
+  padding: 10px 15px;
+  background-color: #f9f9f9;
+  border-left: 4px solid #ccc;
+  font-size: 14px;
+  color: #555;
+  border-radius: 4px;
+}
+#content .post-meta p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+/* ===== 내용 ===== */
+#content > div > p {
+  margin: 20px 0;
+  line-height: 1.6;
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
+/* 내용 */
+#content .post-content {
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 6px;
+  line-height: 1.7;
+  font-size: 16px;
+  white-space: pre-wrap;
+  margin: 20px 0;
+}
+
+/* ===== 첨부 이미지 ===== */
 .detail-image {
   max-width: 150px;
   height: auto;
   border-radius: 8px;
-  margin-bottom: 10px;
-  display: block;
+  margin: 10px 10px 20px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.detail-image:hover {
+  transform: scale(1.05);
 }
 
-/* 모달 전체 화면 */
+.image-row {
+  display: flex;
+  flex-wrap: wrap; /* 줄바꿈 허용하려면 wrap, 한 줄 고정이면 nowrap */
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* ===== 첨부 그래프 ===== */
+#content ul {
+  list-style: none;
+  padding-left: 0;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+#content ul li {
+  margin-bottom: 8px;
+}
+
+/* ===== 버튼 ===== */
+#content button,
+#content form button {
+  padding: 8px 16px;
+  font-size: 14px;
+  margin-right: 8px;
+  margin-top: 10px;
+  background-color: #5152fc;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#content button:hover,
+#content form button:hover {
+  background-color: #3f40d8;
+}
+
+/* ===== 댓글 ===== */
+
+.comment-title {
+    margin-top: 40px;
+}
+
+#content textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+  margin: 10px 0;
+}
+
+#content form button[type="submit"] {
+  margin-top: 5px;
+}
+
+/* 댓글 블럭 */
+#content .comment-block {
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+  margin-top: 15px;
+}
+
+#content .comment-list {
+    margin-top: 40px;
+}
+
+#content .comment-block p {
+  margin: 6px 0;
+}
+
+/* ===== 모달 ===== */
 .modal {
   display: none;
   position: fixed;
   z-index: 1000;
-
-  /* 화면 중앙 배치 */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
-  width: auto;      /* 모달 가로 크기 고정 */
-  max-width: 90vw;   /* 화면 가로 90% 이하로 제한 */
-  max-height: 80vh;  /* 화면 세로 80% 이하로 제한 */
-
+  width: auto;
+  max-width: 90vw;
+  max-height: 80vh;
   background-color: rgba(0, 0, 0, 0.9);
   border-radius: 10px;
   overflow: auto;
-  padding: 20px;     /* 내부 여백 */
+  padding: 20px;
   box-sizing: border-box;
-
   text-align: center;
 }
 
-/* 모달 속 이미지 */
 .modal-content {
   display: inline-block;
-  max-width: 90%;      /* 이미지 가로 90% */
-  max-height: 70vh;    /* 이미지 최대 높이 */
+  max-width: 90%;
+  max-height: 70vh;
   border-radius: 8px;
 }
 
-/* 닫기 버튼 */
 .close {
   position: absolute;
   top: 15px;
@@ -52,4 +210,3 @@
   cursor: pointer;
   user-select: none;
 }
-

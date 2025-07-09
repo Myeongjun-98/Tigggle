@@ -12,7 +12,8 @@
 </th:block>
 
 <!-- Content -->
-<div layout:fragment="content">
+<div id="content" layout:fragment="content">
+
   <!-- 이미지 확대용 모달 -->
   <div id="imageModal" class="modal">
     <span class="close" onclick="closeModal()">&times;</span>
@@ -38,9 +39,13 @@
     <h3 th:text="${DetailDto.title}">게시글 제목</h3>
   </div>
 
-  <div>
-    <p><strong>작성자 :</strong> <span th:text="${DetailDto.name}">작성자</span></p>
-    <p><strong>작성일 :</strong>
+  <div class="post-meta">
+    <p>
+      <strong>작성자 :</strong>
+      <span th:text="${DetailDto.name}">작성자</span>
+    </p>
+    <p>
+      <strong>작성일 :</strong>
       <span th:text="${#temporals.format(DetailDto.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
       <span th:if="${DetailDto.updateDate != null and
       DetailDto.writeDate != DetailDto.updateDate}">(수정됨)</span>
@@ -48,15 +53,16 @@
   </div>
 
   <!--  게시글 내용-->
-  <div>
+  <div class="post-content">
     <p th:text="${DetailDto.content}">내용</p>
   </div>
 
   <!--  이미지 리스트-->
   <div th:if="${DetailDto.images != null}">
     <h4>첨부 이미지</h4>
-    <div th:each="image : ${DetailDto.images}">
-      <img class="detail-image"
+    <div class="image-row">
+      <img th:each="image : ${DetailDto.images}"
+           class="detail-image"
            th:src="${image.imgUrl}"
            th:alt="${image.originalName}"
            onclick="openModal(this.src)" />
@@ -75,24 +81,29 @@
   </div>
 
   <!-- 댓글 입력 -->
-  <h4>댓글</h4>
-  <form th:action="@{/community/detail/{id}/comment(id=${DetailDto.id})}" method="post">
+  <h4 class="comment-title">댓글</h4>
+  <form th:action="@{/community/detail/{id}/comment(id=${DetailDto.id})}"
+        method="post" id="commentForm">
     <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
     <button type="submit">댓글 등록</button>
   </form>
 
   <!-- 댓글 목록 -->
-  <div th:each="comment : ${DetailDto.comments}">
+  <div th:each="comment : ${DetailDto.comments}" class="comment-list">
+
+    <!-- ✅ 삭제된 댓글이면 -->
     <div th:if="${comment.deleted}">
       <p><i style="color: gray;">삭제된 댓글입니다.</i></p><br>
     </div>
+
+    <!-- ✅ 삭제되지 않은 댓글이면 -->
     <div th:unless="${comment.deleted}">
       <p>
         <strong th:text="${comment.name}">작성자</strong>
         <span th:text="${#temporals.format(comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
         <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
       </p>
-      <div th:if="${#strings.equals(comment.userAccessId, loginUserName)}">
+      <div class="comment-action-buttons" th:if="${#strings.equals(comment.userAccessId, loginUserName)}">
         <button type="button" th:onclick="|updateComment(${comment.id})|">수정</button>
         <form th:action="@{/community/comment/delete/{commentId}(commentId=${comment.id})}" method="post" style="display:inline">
           <button type="submit">삭제</button>

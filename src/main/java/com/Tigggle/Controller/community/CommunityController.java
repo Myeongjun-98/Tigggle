@@ -37,7 +37,7 @@ public class CommunityController {
     @GetMapping("/communityTip")
     public String communityTip(@ModelAttribute("communitySearchDto")
                                    CommunitySearchDto communitySearchDto,
-                               @PageableDefault(size = 10) Pageable pageable,
+                               @PageableDefault(size = 15) Pageable pageable,
                                Model model) {
 
         communitySearchDto.setCategory(CommunityCategory.TIP);
@@ -127,7 +127,7 @@ public class CommunityController {
 
     public String communityDiscussion(@ModelAttribute("communitySearchDto")
                                       CommunitySearchDto communitySearchDto,
-                                      Pageable pageable,
+                                      @PageableDefault(size = 15) Pageable pageable,
                                       Model model) {
 
         communitySearchDto.setCategory(CommunityCategory.DISCUSSION);
@@ -178,7 +178,7 @@ public class CommunityController {
     @GetMapping("/communityEconomicMarket")
     public String communityEconomicMarket(@ModelAttribute("communitySearchDto")
                                             CommunitySearchDto communitySearchDto,
-                                          Pageable pageable,
+                                          @PageableDefault(size = 15) Pageable pageable,
                                           Model model) {
 
         communitySearchDto.setCategory(CommunityCategory.ECONOMIC_MARKET);

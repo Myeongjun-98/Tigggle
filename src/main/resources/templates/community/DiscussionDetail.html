@@ -10,7 +10,7 @@
   <script th:src="@{/javascript/community/DiscussionDetail.js}"></script>
 </th:block>
 
-<div  layout:fragment="content">
+<div id="content" layout:fragment="content">
   <!-- 이미지 확대용 모달 -->
   <div id="imageModal" class="modal">
     <span class="close" onclick="closeModal()">&times;</span>
@@ -36,9 +36,12 @@
     <h3 th:text="${DetailDto.title}">게시글 제목</h3>
   </div>
 
-  <div>
-    <p><strong>작성자 :</strong> <span th:text="${DetailDto.name}">작성자</span></p>
-    <p><strong>작성일 :</strong>
+  <div class="post-meta">
+    <p>
+      <strong>작성자 :</strong> <span th:text="${DetailDto.name}">작성자</span>
+    </p>
+    <p>
+      <strong>작성일 :</strong>
       <span th:text="${#temporals.format(DetailDto.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
       <span th:if="${DetailDto.updateDate != null and
       DetailDto.writeDate != DetailDto.updateDate}">(수정됨)</span>
@@ -46,15 +49,16 @@
   </div>
 
 <!--  게시글 내용-->
-  <div>
+  <div class="post-content">
     <p th:text="${DetailDto.content}">내용</p>
   </div>
 
 <!--  이미지 리스트-->
   <div th:if="${DetailDto.images != null}">
     <h4>첨부 이미지</h4>
-    <div th:each="image : ${DetailDto.images}">
-      <img class="detail-image"
+    <div class="image-row">
+      <img th:each="image : ${DetailDto.images}"
+           class="detail-image"
            th:src="${image.imgUrl}"
            th:alt="${image.originalName}"
            onclick="openModal(this.src)" />
@@ -62,7 +66,7 @@
   </div>
 
 <!--  댓글 입력-->
-  <h4>댓글</h4>
+  <h4 class="comment-title">댓글</h4>
   <form th:action="@{/community/detail/{id}/comment(id=${DetailDto.id})}"
         method="post" id="commentForm">
   <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
@@ -70,7 +74,7 @@
   </form>
 
 <!--  댓글 목록-->
-  <div th:each="comment : ${DetailDto.comments}">
+  <div th:each="comment : ${DetailDto.comments}" class="comment-list">
 
 <!--    삭제된 댓글-->
     <div th:if="${comment.deleted}">
