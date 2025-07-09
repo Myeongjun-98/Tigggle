@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -23,19 +25,22 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
 
+    //마이페이지 이동
+    @GetMapping("/user/myPage")
+    public String myPage(Principal principal, Model model) {
+
+
+
+        return "User/myPage";
+    }
 
     // 아이디 찾기 페이지
-    @GetMapping("/user/forgetId")
-    public String forgetId(Model model) {
-        return "User/findId";
+    @GetMapping("/user/forget")
+    public String forgetId(@RequestParam String target, Model model) {
+        model.addAttribute("target", target);
+        return "User/findIdAndPassword";
     }
 
-
-    //비밀번호 찾기 페이지
-    @GetMapping("/user/forgetPw")
-    public String forgetPw(Model model) {
-        return "User/findPassword";
-    }
 
 
     //로그인 페이지
