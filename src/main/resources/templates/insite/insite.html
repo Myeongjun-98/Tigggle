@@ -21,6 +21,7 @@
             let rightChart;
 
             function renderLeftChart(months, amounts) {
+
                 if (leftChart) leftChart.destroy();
                 leftChart = new Chart(leftCtx, {
                     type: 'bar',
@@ -170,6 +171,7 @@
             const total = amounts.reduce((sum, val) => sum + val, 0);
             // ✅ DOM에 반영
             document.getElementById('leftTotalAmount').innerText = `${total.toLocaleString()}원`;
+            document.getElementById('amount-of-this-month').innerText = `${amounts[amounts.length - 1].toLocaleString()}원`;
 
             leftChart = new Chart(leftCtx, {
                 type: 'bar',
@@ -293,6 +295,7 @@
                 </div>
             </div>
         </div>
+        <!-- 나/평균 연령대 별 소비금액 비교 -->
         <div class="foot-consump-box">
             <div class="foot-box">
                 <!-- 왼쪽: 프로필 및 안내 문구 -->
@@ -300,7 +303,7 @@
                     <div class="profile-photo"></div>
                     <div class="foot-title">
                         <p th:text="${memberName} + '님,'"></p>
-                        <p th:text="${ageGroup} + '들의'"></p>
+                        <p th:text="${ageGroupAverageDto.getAgeGroup()} + '들의'"></p>
                         <p>지난 달 평균 사용 소비금액입니다.</p>
                     </div>
                 </div>
@@ -308,26 +311,29 @@
                 <div class="foot-right-consump-box">
                     <!-- 상단: 연령대 평균 표시 -->
                     <div class="top-consump-box">
-                        <span th:text="'지난 달 ' + ${ageGroup} + ' 한 달 사용 소비금액  '"></span>
-                        <span style="color: #3340cb;" th:text="${#numbers.formatInteger(groupAverage, 0, 'COMMA')} + '원'"></span>
+                        <span th:text="'지난 달 ' + ${ageGroupAverageDto.getAgeGroup()} + ' 한 달 사용 소비금액  '"></span>
+                        <span style="color: #3340cb;" th:text=
+                              "${ageGroupAverageDto.getAverageAmount()} + '원'"
+                        ></span>
                     </div>
                     <!-- 하단: 본인 소비, 차이 -->
                     <div class="l-r-box">
                         <div class="left-consump-box">
                             <p style="font-weight: 600; margin-bottom: 10px;" th:text="${memberName} + '님의 이번 달 소비금액'"></p>
-                            <p style="font-size: 28px; font-weight: bold;" th:text="${#numbers.formatInteger(userSpending, 0, 'COMMA')} + '원'"></p>
+                            <p id="amount-of-this-month" style="font-size: 28px; font-weight: bold;">원</p>
                             <button style="margin-top: 15px; padding: 10px 20px; border-radius: 10px; border: none; background-color: #f0f2fa; font-weight: bold;">가계부 바로가기</button>
                         </div>
                         <!-- 차이 -->
                         <div class="right-consump-box">
                             <div class="profile-photo" style="margin-bottom: 10px;"></div>
-                            <p style="font-weight: bold;" th:text="'또래보다 ' + ${#numbers.formatInteger(userSpending - groupAverage, 0, 'COMMA')} + '원'"></p>
-                            <p th:text="${userSpending > groupAverage ? '더 많이 씀' : '덜 씀'}"></p>
+                            <p style="font-weight: bold;" th:text="'또래보다 ' + ${memberName} + '원'"></p>
+                            <p th:text="${userSpending > ageGroupAverageDto.getAverageAmount() ? '더 많이 씀' : '덜 씀'}"></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- 나/평균 연령대 별 소비금액 비교 -->
     </div>
 </div>
 

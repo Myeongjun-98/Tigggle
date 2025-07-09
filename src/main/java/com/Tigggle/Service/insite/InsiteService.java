@@ -126,7 +126,7 @@ public class InsiteService {
 
 
     // 🔹 생년월일로 연령대 문자열 반환
-    private String getAgeGroup(LocalDate birthDate) {
+    public String getAgeGroup(LocalDate birthDate) {
         int age = Period.between(birthDate, LocalDate.now()).getYears();
         if (age < 20) return "10대 이하";
         else if (age < 30) return "20~30대";
@@ -137,8 +137,32 @@ public class InsiteService {
     }
 
 
-    // 나이대별 평균 소비 금액 측정
-    public List<AgeGroupAverageDto> getAgeGroupAverages() {
+//    // 나이대별 평균 소비 금액 측정
+//    public List<AgeGroupAverageDto> getAgeGroupAverages() {
+//        List<Member> allMembers = userRepository.findAll();
+//        Map<String, List<Long>> groupToSpending = new HashMap<>();
+//
+//        for (Member member : allMembers) {
+//            String group = getAgeGroup(member.getBirthday());
+//            Long sum = insiteRepository.sumAmountByMemberId(member.getId());
+//            groupToSpending
+//                    .computeIfAbsent(group, k -> new ArrayList<>())
+//                    .add(sum != null ? sum : 0L);
+//        }
+//
+//        // 평균 구해서 DTO로 반환
+//        return groupToSpending.entrySet().stream()
+//                .map(entry -> {
+//                    long total = entry.getValue().stream().mapToLong(Long::longValue).sum();
+//                    long avg = total / entry.getValue().size();
+//                    return new AgeGroupAverageDto(entry.getKey(), avg);
+//                })
+//                .sorted(Comparator.comparing(AgeGroupAverageDto::getAgeGroup)) // 정렬
+//                .collect(Collectors.toList());
+//    }
+
+    // 사용자 연령대
+    public AgeGroupAverageDto getAgeGroupAverages(String memberAgeRange) {
         List<Member> allMembers = userRepository.findAll();
         Map<String, List<Long>> groupToSpending = new HashMap<>();
 
@@ -151,16 +175,19 @@ public class InsiteService {
         }
 
         // 평균 구해서 DTO로 반환
-        return groupToSpending.entrySet().stream()
-                .map(entry -> {
-                    long total = entry.getValue().stream().mapToLong(Long::longValue).sum();
-                    long avg = total / entry.getValue().size();
-                    return new AgeGroupAverageDto(entry.getKey(), avg);
-                })
-                .sorted(Comparator.comparing(AgeGroupAverageDto::getAgeGroup)) // 정렬
-                .collect(Collectors.toList());
+        List<Long> targetGroupSpending = groupToSpending.getOrDefault(memberAgeRange, new ArrayList<>());
+
+        Long average = 0L;
+        if (!targetGroupSpending.isEmpty()) {
+            average = targetGroupSpending.stream()
+                    .mapToLong(Long::longValue)
+                    .sum() / targetGroupSpending.size();
+        }
+
+        return new AgeGroupAverageDto(memberAgeRange, average);
+
     }
 
-
+    // 
 
 }
