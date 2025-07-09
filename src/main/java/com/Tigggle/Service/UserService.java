@@ -1,8 +1,15 @@
 package com.Tigggle.Service;
 
 import com.Tigggle.DTO.MemberFormDto;
+import com.Tigggle.DTO.MyPageDto;
+import com.Tigggle.DTO.community.CommunityBoardListDto;
+import com.Tigggle.DTO.community.CommunityCommentDto;
 import com.Tigggle.Entity.Member;
+import com.Tigggle.Entity.community.CommunityBoard;
+import com.Tigggle.Entity.community.CommunityComment;
 import com.Tigggle.Repository.UserRepository;
+import com.Tigggle.Repository.community.CommunityBoardRepository;
+import com.Tigggle.Repository.community.CommunityCommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,11 +18,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-
+    private final CommunityBoardRepository communityBoardRepository;
+    private final CommunityCommentRepository communityCommentRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -38,5 +49,17 @@ public class UserService implements UserDetailsService {
     public boolean idCheck(String id) { // 아이디 중복 체크
 
         return false;
+    }
+
+    public MyPageDto userInfo(String name) {
+        Member member = userRepository.findByAccessId(name);
+        List<CommunityBoard> communityBoards = communityBoardRepository.findAll();
+        List<CommunityComment> communityComments = communityCommentRepository.findAll();
+
+        List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
+        List<CommunityCommentDto> communityCommentDtos = new ArrayList<>();
+        MyPageDto myPageDto = MyPageDto.createMyPageDto(member, communityBoardListDtos,communityCommentDtos);
+
+        return myPageDto;
     }
 }
