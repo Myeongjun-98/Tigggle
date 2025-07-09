@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/css/community/TipWrite.css}" />
+</th:block>
+<th:block layout:fragment="script">
+  <script th:src="@{/javascript/community/TipWrite.js}" defer></script>
+</th:block>
+
+<div layout:fragment="content">
+
+  <a th:href="@{/communityTip}">
+    <h2>지출/저축tip 게시판</h2>
+  </a>
+
+  <!-- 이 줄에서 onsubmit 제거하고 id 추가 -->
+  <form id="writeForm" enctype="multipart/form-data">
+
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+
+    <div>
+      <label for="title">제목</label>
+      <input type="text" id="title" name="title"
+             th:value="${communityWriteDto.title}" placeholder="제목을 입력하세요" required />
+    </div>
+
+    <div>
+      <label for="tipContent">내용</label>
+      <textarea id="tipContent" name="content" rows="8"
+                placeholder="내용을 입력하세요" required
+                th:text="${communityWriteDto.content}"></textarea>
+    </div>
+
+    <div>
+      <label for="images">이미지 첨부</label>
+      <input type="file" id="images" name="images"
+             multiple accept="image/*" onchange="handleFiles(this.files)"/>
+      <div id="preview-container"></div>
+    </div>
+
+    <div>
+      <div th:each="img : ${communityWriteDto.existingImages}"
+           th:data-url="${img.imgUrl}"
+           th:data-id="${img.id}"
+           class="existing-image"></div>
+    </div>
+
+    <div>
+      <button type="submit">작성 완료</button>
+      <a th:href="@{/communityTip}">취소</a>
+    </div>
+  </form>
+
+</div>
+
+</html>
