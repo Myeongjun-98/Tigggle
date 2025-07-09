@@ -1,4 +1,4 @@
-package com.Tigggle.Constant;
+package com.Tigggle.Constant.FinancialProduct;
 
 public enum ProductType {
     DEPOSIT("예금"), SAVINGS("적금");

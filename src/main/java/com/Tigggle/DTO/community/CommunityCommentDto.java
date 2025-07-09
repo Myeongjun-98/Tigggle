@@ -16,9 +16,10 @@ public class CommunityCommentDto {
     private Long id;
     private String content;
     private String name;
+    private String userAccessId;
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
-    private Boolean deleted;
+    private boolean deleted;
 
     public CommunityComment to (Member member, CommunityBoard communityBoard) {
 
@@ -38,12 +39,20 @@ public class CommunityCommentDto {
         CommunityCommentDto communityCommentDto = new CommunityCommentDto();
 
         communityCommentDto.setId(communityComment.getId());
-        communityCommentDto.setContent(communityComment.getContent());
         communityCommentDto.setName(communityComment.getMember().getName());
+        communityCommentDto.setUserAccessId(communityComment.getMember().getAccessId());
         communityCommentDto.setWriteDate(communityComment.getWriteDate());
         communityCommentDto.setUpdateDate(communityComment.getUpdateDate());
         communityCommentDto.setDeleted(communityComment.isDeleted());
+
+        if(communityComment.isDeleted()) {
+            communityCommentDto.setContent("삭제된 댓글입니다.");
+        } else {
+            communityCommentDto.setContent(communityComment.getContent());
+        }
+
         return communityCommentDto;
 
     }
+
 }
