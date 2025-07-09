@@ -98,16 +98,17 @@
 
     <!-- ✅ 삭제되지 않은 댓글이면 -->
     <div th:unless="${comment.deleted}">
-      <p>
+      <div class="comment-header">
         <strong th:text="${comment.name}">작성자</strong>
         <span th:text="${#temporals.format(comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
         <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
-      </p>
-      <div class="comment-action-buttons" th:if="${#strings.equals(comment.userAccessId, loginUserName)}">
-        <button type="button" th:onclick="|updateComment(${comment.id})|">수정</button>
-        <form th:action="@{/community/comment/delete/{commentId}(commentId=${comment.id})}" method="post" style="display:inline">
-          <button type="submit">삭제</button>
-        </form>
+
+        <div class="comment-action-buttons" th:if="${#strings.equals(comment.userAccessId, loginUserName)}">
+          <button type="button" th:onclick="|updateComment(${comment.id})|">수정</button>
+          <form th:action="@{/community/comment/delete/{commentId}(commentId=${comment.id})}" method="post" style="display:inline">
+            <button type="submit">삭제</button>
+          </form>
+        </div>
       </div>
       <p th:id="|comment-content-${comment.id}|" th:text="${comment.content}">댓글 내용</p><br>
       <div th:id="|update-form-${comment.id}|" style="display: none;">
