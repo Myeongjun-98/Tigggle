@@ -9,11 +9,13 @@ import com.Tigggle.DTO.community.CommunityWriteDto;
 import com.Tigggle.Service.community.CommunityBoardService;
 import com.Tigggle.Service.community.CommunityCommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.annotation.MergedAnnotations;
-import org.springframework.security.access.AccessDeniedException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.security.Principal;
 import java.util.List;
@@ -33,13 +35,15 @@ public class CommunityController {
 
     // tip 게시판
     @GetMapping("/communityTip")
-    public String communityTip(@ModelAttribute("communitySearchDto") CommunitySearchDto communitySearchDto,
+    public String communityTip(@ModelAttribute("communitySearchDto")
+                                   CommunitySearchDto communitySearchDto,
+                               @PageableDefault(size = 10) Pageable pageable,
                                Model model) {
 
         communitySearchDto.setCategory(CommunityCategory.TIP);
 
-        List<CommunityBoardListDto> communityBoardListDtos = communityBoardService
-                .searchCommunityTip(communitySearchDto);
+        Page<CommunityBoardListDto> communityBoardListDtos = communityBoardService
+                .searchCommunityTip(communitySearchDto, pageable);
 
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
         model.addAttribute("searchTypes", SearchType.values());
@@ -123,12 +127,13 @@ public class CommunityController {
 
     public String communityDiscussion(@ModelAttribute("communitySearchDto")
                                       CommunitySearchDto communitySearchDto,
+                                      Pageable pageable,
                                       Model model) {
 
         communitySearchDto.setCategory(CommunityCategory.DISCUSSION);
 
-        List<CommunityBoardListDto> communityBoardListDtos = communityBoardService
-                .searchCommunityDiscussion(communitySearchDto);
+        Page<CommunityBoardListDto> communityBoardListDtos = communityBoardService
+                .searchCommunityDiscussion(communitySearchDto, pageable);
 
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
         model.addAttribute("searchTypes", SearchType.values());
@@ -172,12 +177,14 @@ public class CommunityController {
     // EconomicMarket 게시판
     @GetMapping("/communityEconomicMarket")
     public String communityEconomicMarket(@ModelAttribute("communitySearchDto")
-                                            CommunitySearchDto communitySearchDto, Model model) {
+                                            CommunitySearchDto communitySearchDto,
+                                          Pageable pageable,
+                                          Model model) {
 
         communitySearchDto.setCategory(CommunityCategory.ECONOMIC_MARKET);
 
-        List<CommunityBoardListDto> communityBoardListDtos = communityBoardService
-                .searchCommunityEconomicMarket(communitySearchDto);
+        Page<CommunityBoardListDto> communityBoardListDtos = communityBoardService
+                .searchCommunityEconomicMarket(communitySearchDto, pageable);
 
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
         model.addAttribute("searchTypes", SearchType.values());

@@ -14,6 +14,9 @@ import com.Tigggle.Repository.community.CommunityBoardRepository;
 import com.Tigggle.Repository.community.CommunityCommentRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,12 +42,14 @@ public class CommunityBoardService {
 
     private final String uploadDir = "C:/community/";
 
-    public List<CommunityBoardListDto> getCommunityBoards(CommunityCategory communityCategory) {
+    public Page<CommunityBoardListDto> getCommunityBoards(CommunityCategory communityCategory,
+                                                          Pageable pageable) {
+
+        Page<CommunityBoard> communityBoards = communityBoardRepository.
+                findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(
+                        communityCategory, pageable);
 
         List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
-
-        List<CommunityBoard> communityBoards = communityBoardRepository.
-                findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(communityCategory);
 
         for (CommunityBoard communityBoard : communityBoards) {
 
@@ -62,7 +67,7 @@ public class CommunityBoardService {
             communityBoardListDtos.add(communityBoardListDto);
         }
 
-        return communityBoardListDtos;
+        return new PageImpl<>(communityBoardListDtos, pageable, communityBoards.getTotalElements());
 
     }
 
@@ -333,25 +338,61 @@ public class CommunityBoardService {
         return CommunityWriteDto.from(detailDto);
     }
 
-    public List<CommunityBoardListDto> getTipBoards() {
+    public Page<CommunityBoardListDto> getTipBoards(Pageable pageable) {
 
-        return getCommunityBoards(CommunityCategory.TIP);
+        return getCommunityBoards(CommunityCategory.TIP, pageable);
     }
 
-    public List<CommunityBoardListDto> getDiscussionBoards() {
+    public Page<CommunityBoardListDto> getDiscussionBoards(Pageable pageable) {
 
-        return getCommunityBoards(CommunityCategory.DISCUSSION);
+        return getCommunityBoards(CommunityCategory.DISCUSSION, pageable);
     }
 
-    public List<CommunityBoardListDto> getEconomicMarketBoards() {
+    public Page<CommunityBoardListDto> getEconomicMarketBoards(Pageable pageable) {
 
-        return getCommunityBoards(CommunityCategory.ECONOMIC_MARKET);
+        return getCommunityBoards(CommunityCategory.ECONOMIC_MARKET, pageable);
     }
 
     // Tip 게시판 검색 메서드
-    public List<CommunityBoardListDto> searchCommunityTip(CommunitySearchDto communitySearchDto) {
+    public Page<CommunityBoardListDto> searchCommunityTip(
+            CommunitySearchDto communitySearchDto, Pageable pageable) {
 
-        List<CommunityBoard> communityBoards;
+        Page<CommunityBoard> communityBoards;
+
+        // 검색 타임과 키워드에 따른 분기 처리
+        if (communitySearchDto.getKeyword() == null || communitySearchDto.getKeyword()
+                .trim().isEmpty()) {
+            // 키워드 없으면 해당 카테고리 게시글 전체 조회
+            communityBoards = communityBoardRepository
+                    .findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(
+                            communitySearchDto.getCategory(), pageable);
+        } else {
+            // 키워드 있을때
+            if (communitySearchDto.getSearchType() == SearchType.WRITER) {
+                communityBoards = communityBoardRepository
+                        .findByCommunityCategoryAndMemberNameContainingAndDeletedIsFalseOrderByWriteDateDesc(
+                                communitySearchDto.getCategory(), communitySearchDto.getKeyword(), pageable);
+            } else {
+                communityBoards = communityBoardRepository
+                        .findByCommunityCategoryAndTitleContainingAndDeletedIsFalseOrderByWriteDateDesc(
+                                communitySearchDto.getCategory(), communitySearchDto.getKeyword(), pageable);
+            }
+        }
+
+        return communityBoards.map(board -> {
+            int commentCount = communityCommentRepository.countByCommunityBoardIdAndDeletedFalse(board.getId());
+            boolean hasImage = communityBoardImageRepository.existsByCommunityBoardId(board.getId());
+            boolean hasGraph = communityBoardGraphRepository.existsByCommunityBoardId(board.getId());
+
+            return CommunityBoardListDto.from(board, commentCount, hasImage, hasGraph);
+        });
+    }
+
+    // Discussion 게시판 검색 메서드
+    public Page<CommunityBoardListDto> searchCommunityDiscussion(
+            CommunitySearchDto communitySearchDto, Pageable pageable) {
+
+        Page<CommunityBoard> communityBoards;
 
         // 검색 타임과 키워드에 따른 분기 처리
         if(communitySearchDto.getKeyword() == null || communitySearchDto.getKeyword()
@@ -359,23 +400,23 @@ public class CommunityBoardService {
             // 키워드 없으면 해당 카테고리 게시글 전체 조회
             communityBoards = communityBoardRepository
                     .findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(
-                            communitySearchDto.getCategory());
+                            communitySearchDto.getCategory(), pageable);
         } else {
             // 키워드 있을때
             if (communitySearchDto.getSearchType() == SearchType.WRITER) {
                 communityBoards = communityBoardRepository
-                        .findByCommunityCategoryAndMemberAccessIdContainingAndDeletedIsFalseOrderByWriteDateDesc(
-                                communitySearchDto.getCategory(), communitySearchDto.getKeyword());
+                        .findByCommunityCategoryAndMemberNameContainingAndDeletedIsFalseOrderByWriteDateDesc(
+                                communitySearchDto.getCategory(),
+                                communitySearchDto.getKeyword(), pageable);
             } else {
                 communityBoards = communityBoardRepository
                         .findByCommunityCategoryAndTitleContainingAndDeletedIsFalseOrderByWriteDateDesc(
-                                communitySearchDto.getCategory(), communitySearchDto.getKeyword());
+                                communitySearchDto.getCategory(),
+                                communitySearchDto.getKeyword(), pageable);
             }
         }
 
-        List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
-
-        for (CommunityBoard communityBoard : communityBoards) {
+        return communityBoards.map(communityBoard -> {
 
             int commentCount = communityCommentRepository
                     .countByCommunityBoardIdAndDeletedFalse(communityBoard.getId());
@@ -384,95 +425,49 @@ public class CommunityBoardService {
             boolean hasGraph = communityBoardGraphRepository
                     .existsByCommunityBoardId(communityBoard.getId());
 
-            communityBoardListDtos.add(CommunityBoardListDto.from(
-                    communityBoard, commentCount, hasImage, hasGraph));
-        }
-
-        return communityBoardListDtos;
+            return CommunityBoardListDto.from(communityBoard, commentCount, hasImage, hasGraph);
+        });
     }
 
-    // Discussion 게시판 검색 메서드
-    public List<CommunityBoardListDto> searchCommunityDiscussion(CommunitySearchDto communitySearchDto) {
+    // EconomicMarket 게시판 검색 메서드
+    public Page<CommunityBoardListDto> searchCommunityEconomicMarket(
+            CommunitySearchDto communitySearchDto, Pageable pageable) {
 
-        List<CommunityBoard> communityBoards;
+        Page<CommunityBoard> communityBoards;
 
         // 검색 타임과 키워드에 따른 분기 처리
-        if(communitySearchDto.getKeyword() == null || communitySearchDto.getKeyword()
+        if (communitySearchDto.getKeyword() == null || communitySearchDto.getKeyword()
                 .trim().isEmpty()) {
             // 키워드 없으면 해당 카테고리 게시글 전체 조회
             communityBoards = communityBoardRepository
                     .findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(
-                            communitySearchDto.getCategory());
+                            communitySearchDto.getCategory(), pageable);
         } else {
             // 키워드 있을때
             if (communitySearchDto.getSearchType() == SearchType.WRITER) {
                 communityBoards = communityBoardRepository
-                        .findByCommunityCategoryAndMemberAccessIdContainingAndDeletedIsFalseOrderByWriteDateDesc(
-                                communitySearchDto.getCategory(), communitySearchDto.getKeyword());
+                        .findByCommunityCategoryAndMemberNameContainingAndDeletedIsFalseOrderByWriteDateDesc(
+                                communitySearchDto.getCategory(),
+                                communitySearchDto.getKeyword(), pageable);
             } else {
                 communityBoards = communityBoardRepository
                         .findByCommunityCategoryAndTitleContainingAndDeletedIsFalseOrderByWriteDateDesc(
-                                communitySearchDto.getCategory(), communitySearchDto.getKeyword());
+                                communitySearchDto.getCategory(),
+                                communitySearchDto.getKeyword(), pageable);
             }
         }
 
-        List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
-
-        for (CommunityBoard communityBoard : communityBoards) {
+        return communityBoards.map(communityBoard -> {
 
             int commentCount = communityCommentRepository
                     .countByCommunityBoardIdAndDeletedFalse(communityBoard.getId());
             boolean hasImage = communityBoardImageRepository
                     .existsByCommunityBoardId(communityBoard.getId());
-            boolean hasGraph = false;
-
-            communityBoardListDtos.add(CommunityBoardListDto.from(
-                    communityBoard, commentCount, hasImage, hasGraph));
-        }
-
-        return communityBoardListDtos;
-    }
-
-    // Discussion 게시판 검색 메서드
-    public List<CommunityBoardListDto> searchCommunityEconomicMarket(CommunitySearchDto communitySearchDto) {
-
-        List<CommunityBoard> communityBoards;
-
-        // 검색 타임과 키워드에 따른 분기 처리
-        if(communitySearchDto.getKeyword() == null || communitySearchDto.getKeyword()
-                .trim().isEmpty()) {
-            // 키워드 없으면 해당 카테고리 게시글 전체 조회
-            communityBoards = communityBoardRepository
-                    .findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(
-                            communitySearchDto.getCategory());
-        } else {
-            // 키워드 있을때
-            if (communitySearchDto.getSearchType() == SearchType.WRITER) {
-                communityBoards = communityBoardRepository
-                        .findByCommunityCategoryAndMemberAccessIdContainingAndDeletedIsFalseOrderByWriteDateDesc(
-                                communitySearchDto.getCategory(), communitySearchDto.getKeyword());
-            } else {
-                communityBoards = communityBoardRepository
-                        .findByCommunityCategoryAndTitleContainingAndDeletedIsFalseOrderByWriteDateDesc(
-                                communitySearchDto.getCategory(), communitySearchDto.getKeyword());
-            }
-        }
-
-        List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
-
-        for (CommunityBoard communityBoard : communityBoards) {
-
-            int commentCount = communityCommentRepository
-                    .countByCommunityBoardIdAndDeletedFalse(communityBoard.getId());
-            boolean hasImage = communityBoardImageRepository
+            boolean hasGraph = communityBoardGraphRepository
                     .existsByCommunityBoardId(communityBoard.getId());
-            boolean hasGraph = false;
 
-            communityBoardListDtos.add(CommunityBoardListDto.from(
-                    communityBoard, commentCount, hasImage, hasGraph));
-        }
-
-        return communityBoardListDtos;
+            return CommunityBoardListDto.from(communityBoard, commentCount, hasImage, hasGraph);
+        });
     }
 }
 

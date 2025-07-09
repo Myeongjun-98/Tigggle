@@ -16,7 +16,7 @@
         <h2>예/적금 분석 및 토론 게시판</h2>
     </a>
 
-    <div>
+    <div class="write-button-container">
         <a th:href="@{/community/DiscussionWrite}" class="write-button">작성</a>
     </div>
     <table>
@@ -43,6 +43,30 @@
         </tr>
         </tbody>
     </table>
+
+    <!--    페이징 -->
+
+    <div class="pagination">
+        <!-- 이전 페이지 버튼 -->
+        <a th:if="${communityBoardListDto.hasPrevious()}"
+           th:href="@{/communityTip(page=${communityBoardListDto.number - 1}, keyword=${communitySearchDto.keyword}, searchType=${communitySearchDto.searchType})}">
+            이전
+        </a>
+
+        <!-- 페이지 번호 버튼 반복 -->
+        <span th:each="pageNum : ${#numbers.sequence(1, communityBoardListDto.totalPages)}">
+        <a th:href="@{/communityTip(page=${pageNum - 1}, keyword=${communitySearchDto.keyword}, searchType=${communitySearchDto.searchType})}"
+           th:text="${pageNum}"
+           th:classappend="${pageNum == communityBoardListDto.number + 1} ? 'current' : ''">
+        </a>
+    </span>
+
+        <!-- 다음 페이지 버튼 -->
+        <a th:if="${communityBoardListDto.hasNext()}"
+           th:href="@{/communityTip(page=${communityBoardListDto.number + 1}, keyword=${communitySearchDto.keyword}, searchType=${communitySearchDto.searchType})}">
+            다음
+        </a>
+    </div>
 
 <!--    검색 폼 시작-->
     <form th:action="@{/communityDiscussion}" method="get" class="search-form">
