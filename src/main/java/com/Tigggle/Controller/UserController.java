@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.security.Principal;
+
 @Controller
 @RequiredArgsConstructor
 public class UserController {
@@ -23,6 +25,14 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
 
 
+    //마이페이지 이동
+    @GetMapping("/user/myPage")
+    public String myPage(Principal principal, Model model) {
+
+
+
+        return "User/myPage";
+    }
 
     // 아이디 찾기 페이지
     @GetMapping("/user/forget")

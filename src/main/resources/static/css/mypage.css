@@ -1,0 +1,208 @@
+
+#content{
+    background-color: #efefef;
+}
+
+.wrapper {
+    max-width:1500px;
+    min-width: 1000px; /* 최대 너비를 1500px로 설정 */
+    margin: 0 auto;
+    padding: 20px;
+
+}
+.wrapper a {
+    padding: 10px 20px;
+    color: white;
+
+}
+
+.myp-wrap {
+    display: flex;
+    gap: 20px;
+}
+.myp-top a{
+    background: #3340CB;
+    border-radius: 5px;
+}
+.sidebar {
+    width: 280px;
+    flex-direction: column;
+    row-gap: 20px;
+}
+.sidebar a{
+    background: #3340CB;
+    border-radius: 5px;
+}
+.side-section{
+    border:1px solid #d9d9d9;
+    background: #fff;
+    padding: 30px 20px;
+    border-radius: 25px;
+}
+.side-section .cs-img{
+    text-align: center;
+    position:relative;
+}
+.cs-img .cs-count{
+    position:absolute;
+    right:50px;
+    bottom:0;
+    background-color: #3340CB;
+    padding:14px 20px;
+    color:#fff;
+    border-radius: 50%;
+}
+.sidebar img{
+    width:50%;
+}
+.side-text1{ font-size:14px;}
+.cs{
+    align-items: center;
+    row-gap:20px;
+}
+.cs a{ width:100%; border-radius: 20px; text-align: center;}
+.cs a:nth-child(3){background:#8a6eff;}
+
+.my-trans a{
+    background: #3340CB;
+    border-radius: 20px;
+    text-align: center;
+}
+.my-tans-list{
+    margin:30px 0;
+}
+.member-drar-bt{
+    margin-top:80px;
+    padding:20px;
+}
+.member-drar-bt a{
+    display:block;
+    background-color: #fff;
+    border:1px solid #bababa;
+    border-radius: 20px;
+    color:#bababa;
+    text-align: center;
+}
+.myp-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.card {
+    background: #fff;
+    padding: 90px;
+    border-radius: 25px;
+    border:1px solid #ddd;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom:50px;
+}
+
+.section-title::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: #3340CB;
+    border-radius: 50%;
+
+}
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    background: #ddd;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+.profile-pic.pic-big{
+    width:140px; height:140px;
+    margin-bottom:30px;
+}
+
+/* input, select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+} */
+.myp-info{margin-bottom:10px;}
+.myp-info input, .myp-info select{
+    flex:1;
+    border:1px solid #bababa;
+    padding:15px;
+    border-radius: 8px;
+}
+.myp-info label{
+    width:100px;
+}
+.card a{
+    background: #3340CB;
+    border-radius: 5px;
+}
+
+.profile-pic-box a{
+    background-color: #fff;
+    border:1px solid #bababa;
+    border-radius: 20px;
+    color:#bababa;
+}
+
+
+.myp-info-bt{
+    text-align: right;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+table th, table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.category {
+    background: #3340CB;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.pagination {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.pagination span {
+    display: inline-block;
+    margin: 0 5px;
+    cursor: pointer;
+    color: #333;
+}
+
+.pagination span.active {
+    color: #3340CB;
+    font-weight: bold;
+}
+
+/* 반응형: 브라우저 너비가 700px 이하일 때 */
+@media (max-width: 700px) {
+    .container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+    }
+}
