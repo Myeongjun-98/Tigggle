@@ -2,10 +2,7 @@ package com.Tigggle.Controller.community;
 
 import com.Tigggle.Constant.Community.CommunityCategory;
 import com.Tigggle.Constant.Community.SearchType;
-import com.Tigggle.DTO.community.CommunityBoardListDto;
-import com.Tigggle.DTO.community.CommunityDetailDto;
-import com.Tigggle.DTO.community.CommunitySearchDto;
-import com.Tigggle.DTO.community.CommunityWriteDto;
+import com.Tigggle.DTO.community.*;
 import com.Tigggle.Service.community.CommunityBoardService;
 import com.Tigggle.Service.community.CommunityCommentService;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +42,18 @@ public class CommunityController {
         Page<CommunityBoardListDto> communityBoardListDtos = communityBoardService
                 .searchCommunityTip(communitySearchDto, pageable);
 
+        int currentPage = communityBoardListDtos.getNumber();
+        int totalPages = communityBoardListDtos.getTotalPages();
+        int blockSize = 10;
+
+        if (communityBoardListDtos.isEmpty() && currentPage >= totalPages && totalPages > 0) {
+            totalPages--; // 페이지 수에서 하나 빼주기
+        }
+
+        PageInfoDto pageInfoDto = communityBoardService
+                .getPageInfo(currentPage, totalPages, blockSize);
+
+        model.addAttribute("pageInfoDto", pageInfoDto);
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
         model.addAttribute("searchTypes", SearchType.values());
 
@@ -94,14 +103,14 @@ public class CommunityController {
     }
 
     // 수정 처리
-    @GetMapping("/community/tip/edit/{id}")
+    @GetMapping("/community/Tip/edit/{id}")
     public String tipEditForm(@PathVariable Long id, Model model, Principal principal) {
         CommunityWriteDto dto = communityBoardService.getPostForEdit(id, principal.getName());
         model.addAttribute("communityWriteDto", dto);
         return "community/TipWrite"; // 작성 페이지 뷰 재활용
     }
 
-    @PostMapping("/community/tip/edit/{id}")
+    @PostMapping("/community/Tip/edit/{id}")
     public String tipEditPost(@PathVariable Long id,
                               @ModelAttribute CommunityWriteDto dto,
                               Principal principal) {
@@ -135,6 +144,18 @@ public class CommunityController {
         Page<CommunityBoardListDto> communityBoardListDtos = communityBoardService
                 .searchCommunityDiscussion(communitySearchDto, pageable);
 
+        int currentPage = communityBoardListDtos.getNumber();
+        int totalPages = communityBoardListDtos.getTotalPages();
+        int blockSize = 10;
+
+        if (communityBoardListDtos.isEmpty() && currentPage >= totalPages && totalPages > 0) {
+            totalPages--; // 페이지 수에서 하나 빼주기
+        }
+
+        PageInfoDto pageInfoDto = communityBoardService
+                .getPageInfo(currentPage, totalPages, blockSize);
+
+        model.addAttribute("pageInfoDto", pageInfoDto);
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
         model.addAttribute("searchTypes", SearchType.values());
 
@@ -159,7 +180,7 @@ public class CommunityController {
     }
 
     // discussion 게시판 수정 처리
-    @GetMapping("/community/discussion/edit/{id}")
+    @GetMapping("/community/Discussion/edit/{id}")
     public String discussionEditForm(@PathVariable Long id, Model model, Principal principal) {
         CommunityWriteDto dto = communityBoardService.getPostForEdit(id, principal.getName());
         model.addAttribute("communityWriteDto", dto);
@@ -186,6 +207,18 @@ public class CommunityController {
         Page<CommunityBoardListDto> communityBoardListDtos = communityBoardService
                 .searchCommunityEconomicMarket(communitySearchDto, pageable);
 
+        int currentPage = communityBoardListDtos.getNumber();
+        int totalPages = communityBoardListDtos.getTotalPages();
+        int blockSize = 10;
+
+        if (communityBoardListDtos.isEmpty() && currentPage >= totalPages && totalPages > 0) {
+            totalPages--; // 페이지 수에서 하나 빼주기
+        }
+
+        PageInfoDto pageInfoDto = communityBoardService
+                .getPageInfo(currentPage, totalPages, blockSize);
+
+        model.addAttribute("pageInfoDto", pageInfoDto);
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
         model.addAttribute("searchTypes", SearchType.values());
 
@@ -209,7 +242,7 @@ public class CommunityController {
     }
 
     // EconomicMarket 게시판 수정
-    @GetMapping("/community/economicMarket/edit/{id}")
+    @GetMapping("/community/EconomicMarket/edit/{id}")
     public String economicMarketEditForm(@PathVariable Long id, Model model, Principal principal) {
         CommunityWriteDto dto = communityBoardService.getPostForEdit(id, principal.getName());
         model.addAttribute("communityWriteDto", dto);

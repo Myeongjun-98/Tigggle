@@ -45,28 +45,22 @@
         </tbody>
     </table>
 
-    <!--    페이징 -->
-
     <div class="pagination">
-        <!-- 이전 페이지 버튼 -->
-        <a th:if="${communityBoardListDto.hasPrevious()}"
-           th:href="@{/communityTip(page=${communityBoardListDto.number - 1}, keyword=${communitySearchDto.keyword}, searchType=${communitySearchDto.searchType})}">
-            이전
-        </a>
+        <ul>
+            <li th:if="${pageInfoDto.hasPrev}">
+                <a th:href="@{/communityEconomicMarket(page=${pageInfoDto.startPage - 2})}">이전</a>
+            </li>
 
-        <!-- 페이지 번호 버튼 반복 -->
-        <span th:each="pageNum : ${#numbers.sequence(1, communityBoardListDto.totalPages)}">
-        <a th:href="@{/communityTip(page=${pageNum - 1}, keyword=${communitySearchDto.keyword}, searchType=${communitySearchDto.searchType})}"
-           th:text="${pageNum}"
-           th:classappend="${pageNum == communityBoardListDto.number + 1} ? 'current' : ''">
-        </a>
-    </span>
+            <li th:each="pageNum : ${#numbers.sequence(pageInfoDto.startPage,
+                            pageInfoDto.endPage)}"
+                th:classappend="${pageNum == pageInfoDto.currentPage} ? 'active'">
+                <a th:href="@{/communityEconomicMarket(page=${pageNum - 1})}" th:text="${pageNum}">1</a>
+            </li>
 
-        <!-- 다음 페이지 버튼 -->
-        <a th:if="${communityBoardListDto.hasNext()}"
-           th:href="@{/communityTip(page=${communityBoardListDto.number + 1}, keyword=${communitySearchDto.keyword}, searchType=${communitySearchDto.searchType})}">
-            다음
-        </a>
+            <li th:if="${pageInfoDto.hasNext}">
+                <a th:href="@{/communityEconomicMarket(page=${pageInfoDto.endPage})}">다음</a>
+            </li>
+        </ul>
     </div>
 
 <!--    검색 폼 시작-->

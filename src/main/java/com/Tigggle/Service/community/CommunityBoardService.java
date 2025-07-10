@@ -42,6 +42,29 @@ public class CommunityBoardService {
 
     private final String uploadDir = "C:/community/";
 
+    public PageInfoDto getPageInfo(int currentPage, int totalPages, int blockSize) {
+
+        PageInfoDto pageInfoDto = new PageInfoDto();
+
+        // currentPage 현재 페이지 번호 (1부터 시작)
+        // totalPages 전체 페이지 수
+        // blockSize 한번에 보여줄 페이지 블록 양 (예: 10이면 1~10, 11~20)
+
+        int blockNum = currentPage / blockSize;
+        int startPage = blockNum * blockSize + 1;
+        int endPage = Math.min(startPage + blockSize - 1, totalPages);
+
+        pageInfoDto.setStartPage(startPage);
+        pageInfoDto.setEndPage(endPage);
+        pageInfoDto.setCurrentPage(currentPage + 1);
+        pageInfoDto.setTotalPages(totalPages);
+
+        pageInfoDto.setHasPrev(startPage > 1);
+        pageInfoDto.setHasNext(endPage < totalPages);
+
+        return pageInfoDto;
+    }
+
     public Page<CommunityBoardListDto> getCommunityBoards(CommunityCategory communityCategory,
                                                           Pageable pageable) {
 
