@@ -40,7 +40,7 @@ function initializeCreateModal() {
     const installmentInput = document.getElementById('TR-tx-installment');
     const destinationAssetSelect = document.getElementById('TR-tx-destination-asset');
 
-    const incomeDetailSection = document.getElementById('TR-tx-income-asset');
+    const incomeDetailSection = document.getElementById('income-details');
     const expenseDetailsSection = document.getElementById('expense-details');
     const creditCardDetailsSection = document.getElementById('TR-credit-card-details');
     const myAccountTransferDetailsSection = document.getElementById('TR-my-account-transfer-details');
@@ -77,13 +77,51 @@ function initializeCreateModal() {
 
     // 4. '수입/지출' 라디오 버튼 변경 시
     transactionTypeRadios.forEach(radio => {
-        radio.addEventListener('change', (event) => {
+        radio.addEventListener('change', async(event) => {
             if (event.target.value === 'EXPENSE') {
                 expenseDetailsSection.classList.remove('TR-hidden');
                 incomeDetailSection.classList.add('TR-hidden');
+
+                // '지출' 선택 시, '거래 방식'의 change 이벤트를 강제로 발생시켜
+                // 기존 로직을 재활용합니다. (이 부분은 유지하는 것이 효율적입니다)
+                payMethodSelect.dispatchEvent(new Event('change'));
+
             } else { // INCOME 선택 시
                 expenseDetailsSection.classList.add('TR-hidden');
                 incomeDetailSection.classList.remove('TR-hidden');
+
+                const incomeAssetSelect = document.getElementById('TR-tx-income-asset');
+                incomeAssetSelect.innerHTML = '<option value="">불러오는 중...</option>'; // 로딩 표시
+
+                try {
+                    // 3. 컨트롤러에 정의된 API를 호출합니다.
+                    // isConsumption=false 파라미터를 반드시 포함해야 합니다.
+                    const response = await fetch('/api/transactions/when-income?isConsumption=false');
+                    if (!response.ok) {
+                        throw new Error('입금 계좌 목록을 불러오는 데 실패했습니다.');
+                    }
+
+                    const assets = await response.json();
+
+                    // 4. 받아온 데이터로 드롭다운을 새로 채웁니다.
+                    incomeAssetSelect.innerHTML = ''; // 로딩 메시지 제거
+
+                    const defaultOption = document.createElement('option');
+                    defaultOption.value = "";
+                    defaultOption.textContent = "== 입금 계좌 선택 ==";
+                    incomeAssetSelect.appendChild(defaultOption);
+
+                    assets.forEach(asset => {
+                        const option = document.createElement('option');
+                        option.value = asset.id;
+                        option.textContent = `[${asset.type}] ${asset.alias}`;
+                        incomeAssetSelect.appendChild(option);
+                    });
+
+                } catch (error) {
+                    console.error('수입 자산 목록 조회 중 오류:', error);
+                    incomeAssetSelect.innerHTML = '<option value="">목록을 불러올 수 없습니다.</option>';
+                }
 
                 // 지출 관련 세부 섹션을 모두 숨기고, 그 안의 값도 초기화/비활성화합니다.
                 creditCardDetailsSection.classList.add('TR-hidden');
@@ -228,7 +266,7 @@ function initializeCreateModal() {
             }
 
         } else { // 수입(INCOME)일 경우, 출금 자산 ID가 필요. (어느 자산으로 수입이 되었는지)
-            createDto.sourceAssetId = document.getElementById('TR-tx-source-asset').value;
+            createDto.sourceAssetId = document.getElementById('TR-tx-income-asset').value;
         }
 
 

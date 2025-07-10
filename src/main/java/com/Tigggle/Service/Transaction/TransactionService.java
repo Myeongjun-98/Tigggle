@@ -10,12 +10,11 @@ import com.Tigggle.DTO.Transaction.TransactionDetailDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.Transaction.*;
 import com.Tigggle.Repository.Transaction.*;
-import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 
-import com.Tigggle.Repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +22,10 @@ public class TransactionService {
 
      private final AssetRepository assetRepository;
      private final CashRepository cashRepository;
-     private final UserRepository memberRepository;
-     private final OrdinaryRepository ordinaryRepository;
      private final TransactionRepository transactionRepository;
      private final KeywordsRepository keywordsRepository;
      private final CardRepository cardRepository;
-     private final CheckCardRepository checkCardRepository;
-     private final CreditCardRepository creditCardRepository;
+     private final BankAccountRepository bankAccountRepository;
      private final CreditCardTransactionRepository creditCardTransactionRepository;
      private final CreditCardInstallmentPaymentRepository creditCardInstallmentPaymentRepository;
 
@@ -100,7 +96,7 @@ public class TransactionService {
           transactionRepository.save(tx);
 
           if(tx.isReflectOnAsset())
-               assetService.updateBalance(tx.getId(), dto.getAmount(), tx.isConsumption());
+               assetService.updateBalance(tx.getAsset().getId(), dto.getAmount(), tx.isConsumption());
      }
 
      // ** 지출 처리 로직
@@ -146,11 +142,10 @@ public class TransactionService {
           expenseTx.setPayMethod(payMethod);
           expenseTx.setKeyword(keyword);
           transactionRepository.save(expenseTx);
-
-          if (reflectOnAsset) {
-               assetService.updateBalance(sourceAsset.getId(), dto.getAmount(), true); // 자산 잔액 감소
-          }
-
+          // ! ▼▼▼▼▼ 로그 추가 ▼▼▼▼▼
+          System.out.println("\n>>> [TransactionService] processDirectExpense에서 updateBalance 호출 시도...");
+          // ! ▲▲▲▲▲ 로그 추가 ▲▲▲▲▲
+          assetService.updateBalance(sourceAsset.getId(), dto.getAmount(), true);
 
           // *** 내 자산 안에서의 금액 이동인 경우, 해당 목적지에 입금처리
           if (payMethod == PayMethod.MYACCOUNT) {
@@ -172,6 +167,8 @@ public class TransactionService {
                incomeTx.setPayMethod(PayMethod.MYACCOUNT);
 
                transactionRepository.save(incomeTx);
+
+               assetService.updateBalance(destinationAsset.getId(), dto.getAmount(), false);
           }
      }
 
@@ -227,11 +224,11 @@ public class TransactionService {
                creditCardInstallmentPaymentRepository.save(installmentPayment);
           }
      }
+     //! 거래내역 저장
 
+     // * 거래내역 자세히보기
      public TransactionDetailDto getTransactionDetail(Long transactionId, Member member) {
           Transaction transaction = transactionRepository.findById(transactionId).orElseThrow(() -> new IllegalArgumentException("거래내역을 찾을 수 없습니다."));
-
-          // * Null-Safe한 데이터 가공 로직
 
           // 1. Keyword가 null일 경우를 대비하여 안전하게 처리
           String keywordStr;
@@ -264,7 +261,37 @@ public class TransactionService {
                  payMethodStr,
                  transaction.getNote());
      }
-     //! 거래내역 저장
+
+     // * 거래내역 삭제
+     @Transactional
+     public void deleteTransaction(List<Long> transactionIds, Member member) {
+          // 1. 소유권 검증과 함께 삭제할 거래내역을 조회합니다.
+          for(Long transactionId : transactionIds){
+          Transaction transaction = transactionRepository.findByIdAndMember(transactionId, member)
+                  .orElseThrow(() -> new SecurityException("삭제할 권한이 없는 거래내역이 포함되어 있습니다. ID: " + transactionId));
+
+               Asset assetToUpdate = transaction.getAsset();
+               Long a = assetRepository.findBalanceById(assetToUpdate.getId());
+               
+               // 결과 변수 저장!
+               Long res;
+
+               if(transaction.isConsumption())
+               // 지울 거래내역이 지출이었을 경우, 지출했던 값을 더함
+                    res = a + transaction.getAmount();
+               // 수익이었으면 다시 뺴야함
+               else res = a - transaction.getAmount();
+
+               assetRepository.updateBalance(res, assetToUpdate.getId());
+               try {
+                    transactionRepository.delete(transaction);
+               } catch (Exception e) {
+                    System.err.println("  -> [오류!] Transaction 삭제 중 예외 발생: " + e.getMessage());
+                    // 이 예외가 트랜잭션 롤백의 원인일 가능성이 매우 높습니다.
+               }
+          }
+     }
+
 
 
 }

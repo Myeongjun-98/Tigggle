@@ -55,7 +55,7 @@
       <div class="summary-section">
         <div class="TR-date-navigator">
           <button id="TR-previous-month-btn" class="arrow-button">◀</button>
-          <h2 id="TR-current-month-display">📅 2025년 6월</h2>
+          <h2 id="TR-current-month-display">📅 2025년 7월</h2>
           <button id="TR-next-month-btn" class="arrow-button">▶</button>
         </div>
         <div class="TR-summary-cards">
@@ -64,11 +64,11 @@
             <span id="TR-asset-balance" class="amount">2,407,010원</span>
           </div>
           <div class="TR-card">
-            <label>6월 지출액</label>
+            <label>7월 지출액</label>
             <span id="TR-monthly-expense" class="amount">1,200,200원</span>
           </div>
           <div class="TR-card">
-            <label>6월 수익</label>
+            <label>7월 수익</label>
             <span id="TR-monthly-income" class="amount">5,000,000원</span>
           </div>
         </div>
@@ -83,7 +83,7 @@
               <button class="TR-controls-by-keyword">키워드</button>
           </div>
           <div class="TR-actions">
-              <button class="TR-actions-delete">내역 삭제</button>
+              <button class="TR-delete-selected-btn">내역 삭제</button>
               <button class="TR-actions-save">내역 입력</button>
           </div>
         </div>
@@ -131,12 +131,15 @@
               >식비</option>
             </select>
           </div>
-          <div class="TR-create-form-group">
-            <label for="TR-tx-income-asset">현금/카드/계좌</label>
-            <select id="TR-tx-income-asset">
-              <option value="" selected> == 선택 ==</option>
-            </select>
+          <div id="income-details">
+            <div class="TR-create-form-group">
+              <label for="TR-tx-income-asset">현금/카드/계좌</label>
+              <select id="TR-tx-income-asset">
+                <option value="" selected> == 선택 ==</option>
+              </select>
+            </div>
           </div>
+
           <div class="TR-create-form-group">
             <label for="TR-tx-note">메모</label>
             <textarea id="TR-tx-note" placeholder="메모를 입력하세요"></textarea>

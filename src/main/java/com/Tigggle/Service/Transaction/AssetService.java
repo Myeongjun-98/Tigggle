@@ -5,15 +5,12 @@ import com.Tigggle.DTO.Transaction.CashDto;
 import com.Tigggle.DTO.Transaction.OrdinaryAccountDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.Transaction.*;
-import com.Tigggle.Repository.Transaction.AssetRepository;
-import com.Tigggle.Repository.Transaction.CashRepository;
-import com.Tigggle.Repository.Transaction.CreditCardRepository;
-import com.Tigggle.Repository.Transaction.OrdinaryRepository;
-import jakarta.transaction.Transactional;
+import com.Tigggle.Repository.Transaction.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,53 +24,75 @@ public class AssetService {
     private final OrdinaryRepository ordinaryRepository;
     private final CreditCardRepository creditCardRepository;
     private final AssetRepository assetRepository;
+    private final BankAccountRepository bankAccountRepository;
 
-    //* 현금 정보 DTO에 담기
-    public CashDto cashInfo(Long cashId){
-        Optional<Cash> cash = cashRepository.findById(cashId);
-
-        CashDto cashDto = new CashDto();
-        cashDto.setAlias(cash.get().getAlias());
-        cashDto.setBalance(cash.get().getBalance());
-
-        return cashDto;
-    }
-
-    //* 보통예금 정보 DTO에 담기
-    public OrdinaryAccountDto ordinaryAccountInfo(Long OrdinaryAccountId){
-        Optional<OrdinaryAccount> ordinary = ordinaryRepository.findById(OrdinaryAccountId);
-
-        OrdinaryAccountDto accountDto = new OrdinaryAccountDto();
-        accountDto.setAccountNumber(ordinary.get().getAccountNumber());
-        accountDto.setAlias(ordinary.get().getAlias());
-        accountDto.setBalance(ordinary.get().getBalance());
-        accountDto.setBankLogo(ordinary.get().getBank().getLogoUrl());
-        accountDto.setBankName(ordinary.get().getBank().getName());
-        accountDto.setCompound(ordinary.get().isCompound());
-        accountDto.setExpenseLimit(ordinary.get().getExpenseLimit());
-        accountDto.setInterest(ordinary.get().getInterest());
-        accountDto.setLimitType(ordinary.get().getLimitType());
-
-        return accountDto;
-    }
-
+    // * 잔액 계산 메서드
     @Transactional
     public void updateBalance(Long assetId, Long amount, boolean isConsumption) {
+
+        // ! ▼▼▼▼▼ 로그 추가 ▼▼▼▼▼
+        System.out.println("==================================================");
+        System.out.println("[AssetService] updateBalance 호출됨!");
+        System.out.println("  - Asset ID: " + assetId);
+        System.out.println("  - Amount: " + amount);
+        System.out.println("  - Is Consumption (지출 여부): " + isConsumption);
+        // ! ▲▲▲▲▲ 로그 추가 ▲▲▲▲▲
+
+
         Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 자산입니다."));
 
         if (asset instanceof Cash) {
-            if (isConsumption) ((Cash) asset).setBalance(((Cash) asset).getBalance() - amount);
-            else ((Cash) asset).setBalance(((Cash) asset).getBalance() + amount);
-        }
-        if(asset instanceof BankAccount){
-            if (isConsumption) ((BankAccount) asset).setBalance(((BankAccount) asset).getBalance() - amount);
-            else ((BankAccount) asset).setBalance(((BankAccount) asset).getBalance() + amount);
+            Cash cash = (Cash) asset;
+            long originalBalance = cash.getBalance();
+            if (isConsumption) {
+                cash.setBalance(originalBalance - amount);
+            } else {
+                cash.setBalance(originalBalance + amount);
+            }
+            //! ▼▼▼▼▼ 로그 추가 ▼▼▼▼▼
+            System.out.println("  - [Cash] 잔액 변경: " + originalBalance + " -> " + cash.getBalance());
+            System.out.println("==================================================");
+            //! ▲▲▲▲▲  로그 추가 ▲▲▲▲▲
+            cashRepository.saveAndFlush(cash);
+
+        } else if (asset instanceof BankAccount) {
+            BankAccount bankAccount = (BankAccount) asset;
+            long originalBalance = bankAccount.getBalance();
+            if (isConsumption) {
+                bankAccount.setBalance(originalBalance - amount);
+            } else {
+                bankAccount.setBalance(originalBalance + amount);
+            }
+            //! ▼▼▼▼▼ 로그 추가 ▼▼▼▼▼
+            System.out.println("  - [BankAccount] 잔액 변경: " + originalBalance + " -> " + bankAccount.getBalance());
+            System.out.println("==================================================");
+            //! ▲▲▲▲▲ 로그 추가 ▲▲▲▲▲
+            bankAccountRepository.saveAndFlush(bankAccount);
         }
     }
 
+    // * 수입내역 작성 시 계좌리스트 불러오기
+    public List<AssetListDto> getIncomeAssets(boolean isConsumption, Member member) {
+        List<AssetListDto> assetListDtos;
+
+        List<OrdinaryAccount> ordinaryAccounts = ordinaryRepository
+                .findByMember(member);
+        List<Cash> cashList = cashRepository.findByMember(member);
+
+        List<Asset> combinedList = new ArrayList<>();
+        combinedList.addAll(ordinaryAccounts);
+        combinedList.addAll(cashList);
+
+        assetListDtos = combinedList.stream().map(this::convertToAssetListDto)
+                .toList();
+
+        return assetListDtos;
+    }
+
+    // * 지출내역 작성 시 계좌리스트 불러오기
     public List<AssetListDto> getAssetsByPayMethod(String payMethod, Member member) {
 
-        List<AssetListDto> assetListDtos = new ArrayList<>();
+        List<AssetListDto> assetListDtos;
 
         switch (payMethod) {
             case "NORMAL":
@@ -120,6 +139,7 @@ public class AssetService {
 
         return new AssetListDto(asset.getId(), name, type);
     }
+
 
 
 }

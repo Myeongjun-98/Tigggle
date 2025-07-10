@@ -37,7 +37,20 @@ public class TransactionRestController {
         return ResponseEntity.ok().build();
     }
 
-    // * 거래내역 저장 모달에서 paymethod에 따라 option값 표현
+    // * 거래내역 (입금) 모달에서 option값 표현
+    @GetMapping("/when-income")
+    public ResponseEntity<List<AssetListDto>> getAssetsWhenIncome(
+            @RequestParam boolean isConsumption,
+            Principal principal
+    ){
+        // 서비스에 지출이 false인지 여부와 사용자 정보를 넘겨 자산 목록을 조회
+        List<AssetListDto> assets = assetService.getIncomeAssets(isConsumption,
+                memberRepository.findByAccessId(principal.getName()));
+
+        return ResponseEntity.ok(assets);
+    }
+
+    // * 거래내역 저장(지출) 모달에서 paymethod에 따라 option값 표현
     @GetMapping("/by-paymethod")
     public ResponseEntity<List<AssetListDto>> getAssetsByPayMethod(
         @RequestParam String payMethod,
@@ -62,4 +75,16 @@ public class TransactionRestController {
         return ResponseEntity.ok(transactionDetailDto);
     }
 
+    @DeleteMapping("") // URL에서 ID를 제거
+    public ResponseEntity<Void> deleteTransactions(
+            @RequestBody List<Long> transactionIds, // Request Body에서 ID 리스트를 받음
+            Principal principal) {
+
+        Member member = memberRepository.findByAccessId(principal.getName());
+
+        // 수정된 서비스 메소드 호출
+        transactionService.deleteTransaction(transactionIds, member);
+
+        return ResponseEntity.ok().build();
+    }
 }

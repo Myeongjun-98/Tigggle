@@ -3,6 +3,10 @@
 let currentYear;
 let currentMonth;
 
+// csrf 토큰
+var token = $("meta[name='_csrf']").attr("content");
+var header = $("meta[name='_csrf_header']").attr("content");
+
 // 페이지의 모든 HTML 요소가 로드되면 이 스크립트를 실행합니다.
 document.addEventListener('DOMContentLoaded', () => {
     // 1. 페이지가 로드될 때, 현재 날짜를 기준으로 초기화 함수를 호출합니다.
@@ -30,6 +34,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         initializeWalletPage(currentYear, currentMonth);
     });
+
+    // * 일괄삭제 리스너
+    const deleteSelectedBtn = document.querySelector('.TR-delete-selected-btn');
+    if (deleteSelectedBtn) {
+        deleteSelectedBtn.addEventListener('click', () => {
+            // 1. 현재 화면에 있는 모든 체크박스 중, 체크된 것만 찾습니다.
+            const checkedItems = document.querySelectorAll('.TR-item-checkbox:checked');
+
+            if (checkedItems.length === 0) {
+                showAlert("삭제할 항목을 선택해주세요.");
+                return;
+            }
+
+            // 2. 체크된 항목들의 value(transactionId)를 모아 배열로 만듭니다.
+            const idsToDelete = Array.from(checkedItems).map(checkbox => checkbox.value);
+
+            // 3. 사용자에게 최종 확인을 받습니다.
+            if (confirm(`${idsToDelete.length}개의 항목을 정말 삭제하시겠습니까?`)) {
+                // 4. 백엔드 API를 호출합니다.
+                deleteSelectedTransactions(idsToDelete);
+            }
+        });
+    }
 
 });
 
@@ -71,8 +98,6 @@ async function initializeWalletPage(year, month) {
  * @param {object} assetData - AssetSummaryDto에 해당하는 데이터
  */
 function updateAssetInfo(assetData) {
-    // TODO: HTML에 자산 별칭, 계좌번호 등을 표시할 요소의 ID를 지정하고 아래 코드를 완성해야 합니다.
-    // document.getElementById('TR-asset-alias').innerText = assetData.alias;
     const container = document.getElementById('TR-asset-info-container');
     const balanceSpan = document.getElementById('TR-asset-balance');
 
@@ -91,20 +116,16 @@ function updateAssetInfo(assetData) {
     balanceSpan.innerText = assetData.balance.toLocaleString() + '원';
 }
 
-/**
- * 월별 요약 정보(총수입, 총지출)를 업데이트하는 함수
- * @param {object} ledgerData - MonthlyLedgerDto에 해당하는 데이터
- */
+// * 월별 요약 정보(총수입, 총지출)를 업데이트하는 함수
+// * @param {object} ledgerData - MonthlyLedgerDto에 해당하는 데이터
 function updateMonthlySummary(ledgerData) {
     document.getElementById('TR-current-month-display').innerText = `📅 ${ledgerData.year}년 ${ledgerData.month}월`;
     document.getElementById('TR-monthly-income').innerText = ledgerData.monthlyTotalIncome.toLocaleString() + '원';
     document.getElementById('TR-monthly-expense').innerText = ledgerData.monthlyTotalExpense.toLocaleString() + '원';
 }
 
-/**
- * 일별로 그룹핑된 거래 내역 리스트를 그리는 함수
- * @param {Array} dailyLedgers - DailyLedgerDto 배열
- */
+// * 일별로 그룹핑된 거래 내역 리스트를 그리는 함수
+// * @param {Array} dailyLedgers - DailyLedgerDto 배열
 function renderTransactionList(dailyLedgers) {
     const container = document.getElementById('TR-history-container');
     container.innerHTML = ''; // 기존 내용을 모두 비웁니다.
@@ -116,13 +137,15 @@ function renderTransactionList(dailyLedgers) {
 
     dailyLedgers.forEach(dailyLedger => {
         const transactionsHtml = dailyLedger.transactions.map(tx => `
-            <li class="TR-item" onclick="openDetailModal(${tx.id})">
-                <input type="checkbox">
-                <span class="TR-each-day-description">${tx.description}</span>
-                <span class="TR-each-day-amount ${tx.isConsumption ? 'expense' : 'income'}">
-                    ${tx.amount.toLocaleString()}원
-                </span>
-                <span class="TR-each-day-date">${formatTime(tx.transactionDate)}</span>
+            <li class="TR-item">
+                <input type="checkbox" class="TR-item-checkbox" value="${tx.id}">
+                <div onclick="openDetailModal(${tx.id})">
+                    <span class="TR-each-day-description">${tx.description}</span>
+                    <span class="TR-each-day-amount ${tx.isConsumption ? 'expense' : 'income'}">
+                        ${tx.amount.toLocaleString()}원
+                    </span>
+                    <span class="TR-each-day-date">${formatTime(tx.transactionDate)}</span>
+                </div>
             </li>
         `).join('');
 
@@ -206,5 +229,31 @@ function convertPaymethodKo(payMethod){
             return "보통거래"
         case "CREDITCARD":
             return "신용카드"
+    }
+}
+
+// 일괄 삭제 API를 호출하는 새로운 함수
+async function deleteSelectedTransactions(ids) {
+
+    try {
+        const response = await fetch('/api/transactions', { // URL에서 ID 제거
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json', // Body가 JSON임을 명시
+                [header]: token
+            },
+            body: JSON.stringify(ids) // ID 배열을 JSON 문자열로 변환하여 Body에 담아 전송
+        });
+
+        if (response.ok) {
+            showAlert("선택한 항목이 성공적으로 삭제되었습니다.");
+            initializeWalletPage(currentYear, currentMonth); // 목록 새로고침
+        } else {
+            const errorText = await response.text();
+            showAlert(`삭제에 실패했습니다: ${errorText}`);
+        }
+    } catch (error) {
+        console.error("일괄 삭제 중 오류:", error);
+        showAlert("삭제 중 오류가 발생했습니다.");
     }
 }
