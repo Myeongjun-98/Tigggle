@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity @Getter @Setter @DiscriminatorValue("CREDIT")
-public class CreditDard extends Card{
+public class CreditCard extends Card{
 
     private int expenseDay;             // 정산일
 

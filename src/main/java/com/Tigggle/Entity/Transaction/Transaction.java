@@ -32,7 +32,7 @@ public class Transaction {
     private String description;                 // 내용
 
     @Column(nullable=false)
-    private LocalDateTime transactionDate;          // 내역 발생 일시
+    private LocalDateTime transactionDate;      // 내역 발생 일시
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
@@ -44,7 +44,7 @@ public class Transaction {
     @Column(nullable = false)
     private Long amount = 0L;                   // 금액
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     @Enumerated(EnumType.STRING)
     private PayMethod payMethod;                // 결제 수단
 
@@ -53,6 +53,4 @@ public class Transaction {
 
     @Column(nullable = false)
     private boolean reflectOnAsset = true;      // 자산 반영 여부
-
-    private int installment;                    // 할부 개월 수
 }
