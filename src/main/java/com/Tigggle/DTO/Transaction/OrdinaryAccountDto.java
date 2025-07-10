@@ -11,7 +11,7 @@ import lombok.Setter;
 public class OrdinaryAccountDto {
     private String alias;           // 보통예금 별칭
     private Long balance;           // 보통예금 잔액
-    private String accoutNumber;    // 계좌번호
+    private String accountNumber;    // 계좌번호
     private String bankName;        // 은행 이름
     private String bankLogo;        // 은행 로고
     private float interest;         // 이자율
