@@ -68,7 +68,7 @@ public interface InsiteRepository extends JpaRepository<Transaction, Long> {
 
 
 
-
+//---------------------------------------------------------------------------------------
 
     // ** 자산관리 **
     @Query("SELECT k.majorKeyword, SUM(t.amount) " +

@@ -1,10 +1,122 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
 
-</body>
+<th:block layout:fragment="css">
+    <link rel="stylesheet" href="/css/insite/asset.css" />
+</th:block>
+<th:block layout:fragment="script"></th:block>
+
+<div  layout:fragment="content">
+
+    <div class="container">
+        <!-- 타이틀 -->
+        <div class="asset-header">
+            <!-- 좌측 타이틀 -->
+            <div class="asset-title">
+                <div class="dot"></div>
+                <span>자산관리</span>
+            </div>
+        </div>
+
+        <!-- 목표 소비금액 -->
+        <div class="con-container-1">
+            <div class="consump">
+                <div class="con-title">신선우님의 목표 소비금액</div>
+                <div class="consump-box">
+                    <div class="food-expense-box">
+                        <div class="food-expense">
+                            <p class="c-title">식비</p>
+                            <p class="c-content">10,000원</p>
+                        </div>
+                        <div class="foot-food-box">
+                            <div class="warning-box">
+                                ☆★  이상 소비 탐지 ☆★
+                            </div>
+                            <div class="text-box">
+                            <p>현재 사용금액</p>
+                            <div class="now-consump">
+                                100,000원
+                            </div>
+                            <div class="over-amount">
+                                2,000원 초과!
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="communication-box">
+                        <div class="communication">
+                            <p class="c-title">주거/통신</p>
+<!--                            <p class="c-content" th:text="${goalConsumDto.foodExpense} + '원'"></p>-->
+                        </div>
+                    </div>
+                    <div class="insurance-box">
+                        <div class="insurance">
+                            <p class="c-title">보험</p>
+                            <p class="c-content">50,000원</p>
+                        </div>
+                    </div>
+                    <div class="etc-box">
+                        <div class="etc">
+                            <p class="c-title">기타</p>
+                            <p class="c-content">100,000원</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="con-container-2">
+            <div class="fixed-summary-box">
+                <!-- 프로그레스 바 -->
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill"
+                             th:style="'width:' + ${saveRate} + '%'"></div>
+                    </div>
+                </div>
+                <!-- 텍스트 정보 -->
+                <div class="asset-text-box">
+                    <div>
+                        <p th:text="${memberName} + '님의 고정수익'"></p>
+                        <h2 th:text="${#numbers.formatInteger(income, 3, 'COMMA')} + '원'"></h2>
+                    </div>
+                    <div>
+                        <p th:text="${memberName} + '님의 고정저축'"></p>
+                        <h2 th:text="${#numbers.formatInteger(saving, 3, 'COMMA')} + '원'"></h2>
+                    </div>
+                    <div>
+                        <p>저축률</p>
+                        <h2 th:text="${#numbers.formatDecimal(saveRate, 1, 1)} + '%'"></h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="total-consump-box">
+                <div class="saving-box">
+                    <div class="saving-title">
+                        <div class="square"></div>
+                        <span><b>이정훈</b>님의 예적금</span>
+                    </div>
+                    <div class="saving-list-box">
+                        <div class="saving-list">
+                            <div class="saving-header">적금</div>
+                            <span>청년내일 저축 계좌</span><span>100,000,000원</span>
+                            <span>14개월 후 예상 금액</span><span>1,000,000,000원</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="total-box">
+                    <div class="saving-title">
+                        <div class="square"></div>
+                        <span><b>7월</b>total</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
 </html>

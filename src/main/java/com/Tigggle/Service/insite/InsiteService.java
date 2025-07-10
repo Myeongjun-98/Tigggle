@@ -1,14 +1,13 @@
 package com.Tigggle.Service.insite;
 
 import com.Tigggle.DTO.asset.GoalConsumDto;
-import com.Tigggle.DTO.insite.AgeGroupAverageDto;
-import com.Tigggle.DTO.insite.InsiteReponseDto;
-import com.Tigggle.DTO.insite.KeywordMonthlySpendingDto;
-import com.Tigggle.DTO.insite.MonthlyDateDto;
+import com.Tigggle.DTO.insite.*;
 import com.Tigggle.Entity.Member;
+import com.Tigggle.Entity.Transaction.Goal;
 import com.Tigggle.Entity.Transaction.Transaction;
 import com.Tigggle.Repository.Transaction.AssetRepository;
 import com.Tigggle.Repository.UserRepository;
+import com.Tigggle.Repository.insite.GoalRepository;
 import com.Tigggle.Repository.insite.InsiteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,7 @@ public class InsiteService {
 
     private final InsiteRepository insiteRepository;
     private final UserRepository userRepository;
+    private final GoalRepository goalRepository;
 
     // *** 전체 소비 총합
     public InsiteReponseDto getSixMonthSpendingSummary(Long memberId, String keyword){
@@ -220,5 +220,32 @@ public class InsiteService {
 
         return new GoalConsumDto(food, communication, insurance, etc);
     }
+
+    // 자산관리 고정 수익 대비 고정 저축
+    public FixedAmountDto getFixedAmountDto(Long memberId) {
+        List<Goal> goals = goalRepository.findByMemberId(memberId);
+
+        // 초기화
+        long incomeSum = 0L;
+        long savingSum = 0L;
+
+        for (Goal goal : goals) {
+            String major = goal.getKeyword().getMajorKeyword();
+            Long amount = goal.getAmount() != null ? goal.getAmount() : 0L;
+
+            if ("급여".equals(major)) {
+                incomeSum += amount;
+            } else if ("주거/통신비".equals(major) || "저축/보험".equals(major)) {
+                savingSum += amount;
+            }
+        }
+
+        double saveRate = (incomeSum == 0) ? 0.0 : ((incomeSum - savingSum) * 100.0 / incomeSum);
+
+        return new FixedAmountDto(incomeSum, savingSum, saveRate);
+    }
+
+
+
 
 }
