@@ -2,20 +2,12 @@ package com.Tigggle.Entity.Transaction;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.Tigggle.Constant.Transaction.Frequency;
 import com.Tigggle.Constant.Transaction.PayMethod;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,6 +35,7 @@ public class ScheduledTransaction {
     private Long amount;                    // 금액
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private PayMethod payMethod;            // 지불 방식
 
     @Lob
@@ -55,7 +48,7 @@ public class ScheduledTransaction {
     private Frequency frequency;            // 정기 입/출금 주기
 
     @Column(nullable = false)
-    private LocalDate dayOfExcution;        // 실행 기준일(월 반복시 '일', 주 반복시 '요일')
+    private int dayOfExcution;        // 실행 기준일(월 반복시 '일', 주 반복시 '요일')
 
     @Column(nullable = false)           
     private LocalDate startDate;            // 시작일
