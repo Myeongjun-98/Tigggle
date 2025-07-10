@@ -51,17 +51,17 @@
     <div class="pagination">
         <ul>
             <li th:if="${pageInfoDto.hasPrev}">
-                <a th:href="@{/communityEconomicMarket(page=${pageInfoDto.startPage - 2})}">이전</a>
+                <a th:href="@{/communityTip(page=${pageInfoDto.startPage - 2})}">이전</a>
             </li>
 
             <li th:each="pageNum : ${#numbers.sequence(pageInfoDto.startPage,
                             pageInfoDto.endPage)}"
                 th:classappend="${pageNum == pageInfoDto.currentPage} ? 'active'">
-                <a th:href="@{/communityEconomicMarket(page=${pageNum - 1})}" th:text="${pageNum}">1</a>
+                <a th:href="@{/communityTip(page=${pageNum - 1})}" th:text="${pageNum}">1</a>
             </li>
 
             <li th:if="${pageInfoDto.hasNext}">
-                <a th:href="@{/communityEconomicMarket(page=${pageInfoDto.endPage})}">다음</a>
+                <a th:href="@{/communityTip(page=${pageInfoDto.endPage})}">다음</a>
             </li>
         </ul>
     </div>
