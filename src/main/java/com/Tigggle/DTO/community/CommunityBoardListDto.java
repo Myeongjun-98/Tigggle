@@ -53,4 +53,14 @@ public class CommunityBoardListDto {
 
         return communityBoardListDto;
     }
+
+    public static CommunityBoardListDto createCommunityBoardListDto(CommunityBoard communityBoard) {
+        CommunityBoardListDto communityBoardListDto = new CommunityBoardListDto();
+        communityBoardListDto.setId(communityBoard.getId());
+        communityBoardListDto.setTitle(communityBoard.getTitle());
+        communityBoardListDto.setCategory(communityBoard.getCommunityCategory());
+        communityBoardListDto.setName(communityBoard.getMember().getName());
+        communityBoardListDto.setWriteDate(communityBoard.getWriteDate());
+        return communityBoardListDto;
+    }
 }

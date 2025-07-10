@@ -11,11 +11,11 @@
     <div class="wrapper">
         <div class="myp-top flex flex-item-center flex-js-between mb-3">
             <div class="flex flex-item-center column-gap-30">
-                <div class="profile-pic" style="background:url(/images/default_profile.jpg) no-repeat center; background-size: contain;"></div>
-                <h3>신선우님</h3>
+                <div class="profile-pic" th:style="|background: url(@{${myPageDto.profileUrl}}) no-repeat center; background-size: contain;|"></div>
+                <h3 th:text="${myPageDto.name}">신선우님</h3>
             </div>
             <div class="flex flex-item-center column-gap-20">
-                <span>상담사 사용 횟수 : <span>2</span></span>
+                <span>상담사 사용 횟수 : <span th:text="${myPageDto.counselingTokken}">2</span></span>
             </div>
         </div>
         <div class="myp-wrap">
@@ -25,10 +25,10 @@
                     <p class="side-text1">전문 상담사의 도움이 필요하신가요?</p>
                     <div class="cs-img">
                         <img src="/images/commentator.png">
-                        <div class="cs-count">2</div>
+                        <div class="cs-count" th:text="${myPageDto.counselingTokken}">2</div>
                     </div>
-                    <a>초기화</a>
-                    <a>멤버십 전환</a>
+                    <a href="">초기화</a>
+                    <a href="">멤버십 전환</a>
                 </div>
 
                 <div class="side-section my-trans flex flex-col">
@@ -50,35 +50,36 @@
                     <div class="section-title">내 정보 변경</div>
                     <div class="flex flex-js-between">
                         <div class="profile-pic-box">
-                            <div class="profile-pic pic-big" style="background:url(/images/default_profile.jpg) no-repeat center; background-size: contain;"></div>
-                            <a>프로필 사진 변경</a>
+                            <div class="profile-pic pic-big" th:style="|background: url(@{${myPageDto.profileUrl}}) no-repeat center; background-size: contain;|"></div>
+                            <label for="profile">프로필 사진 변경</label>
+                            <input type="file" name="profile" id="profile">
                         </div>
                         <div class="flex flex-col w-70">
                             <div class="myp-info flex flex-item-center">
                                 <label for="">아이디</label>
-                                <input type="text" placeholder="아이디" value="kimstickkat1234" disabled>
+                                <input type="text" placeholder="아이디" th:value="${myPageDto.accessId}" disabled>
                             </div>
                             <div class="myp-info flex flex-item-center">
                                 <label for="">휴대전화</label>
-                                <input type="text" placeholder="휴대전화">
+                                <input type="text" placeholder="휴대전화" th:value="${myPageDto.tel}">
                             </div>
                             <div class="myp-info flex flex-item-center">
                                 <label for="">이메일</label>
-                                <input type="email" placeholder="example@naver.com">
+                                <input type="email" placeholder="example@naver.com" th:value="${myPageDto.email}">
                             </div>
 
                             <div style="display: flex; gap: 30px; margin-bottom:30px;">
                                 <div class="flex w-30 myp-info flex-item-center">
                                     <label>성별</label>
                                     <select>
-                                        <option>여성</option>
-                                        <option>남성</option>
+                                        <option th:selected="${myPageDto.gender}==false"   value="0">여성</option>
+                                        <option th:selected="${myPageDto.gender}==true" value="1">남성</option>
                                     </select>
                                 </div>
 
                                 <div class="flex w-70 myp-info flex-item-center">
                                     <label>생년월일</label>
-                                    <input type="date">
+                                    <input type="date" th:value="${myPageDto.birthday}">
                                 </div>
 
                             </div>
@@ -94,14 +95,13 @@
                     <div class="section-title">내가 작성한 글</div>
                     <table>
                         <tbody>
-                        <tr>
+                        <tr th:each="row,stat : ${myPageDto.communityBoardList}">
                             <td> <input type="checkbox"> </td>
-                            <td>1</td>
-                            <td><span class="category">커뮤니티글</span></td>
-                            <td style="text-align:left">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</td>
-                            <td>username</td>
-                            <td>2025.07.07</td>
-                            <td>댓글3</td>
+                            <td th:text="${stat.count}">1</td>
+                            <td><span class="category" th:text="${row.category}">커뮤니티글</span></td>
+                            <td style="text-align:left" th:text="${row.title}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</td>
+                            <td th:text="${row.writeDate}">2025.07.07</td>
+                            <td>댓글<span th:text="${row.commentCount}"></span></td>
                         </tr>
 
                         </tbody>

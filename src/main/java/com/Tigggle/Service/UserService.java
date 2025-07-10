@@ -53,11 +53,22 @@ public class UserService implements UserDetailsService {
 
     public MyPageDto userInfo(String name) {
         Member member = userRepository.findByAccessId(name);
-        List<CommunityBoard> communityBoards = communityBoardRepository.findAll();
-        List<CommunityComment> communityComments = communityCommentRepository.findAll();
+        List<CommunityBoard> communityBoards = communityBoardRepository.findByMember(member);
+        List<CommunityComment> communityComments = communityCommentRepository.findByMember(member);
 
         List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
         List<CommunityCommentDto> communityCommentDtos = new ArrayList<>();
+
+        for(CommunityBoard communityBoard : communityBoards) {
+            CommunityBoardListDto communityBoardListDto =  CommunityBoardListDto.createCommunityBoardListDto(communityBoard);
+            communityBoardListDto.setCommentCount(communityCommentRepository.countByCommunityBoardIdAndDeletedFalse(communityBoard.getId()));
+            communityBoardListDtos.add(communityBoardListDto);
+        }
+        for(CommunityComment communityComment : communityComments) {
+            communityCommentDtos.add( CommunityCommentDto.from(communityComment) );
+        }
+
+
         MyPageDto myPageDto = MyPageDto.createMyPageDto(member, communityBoardListDtos,communityCommentDtos);
 
         return myPageDto;

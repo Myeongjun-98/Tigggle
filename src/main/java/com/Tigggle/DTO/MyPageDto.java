@@ -13,11 +13,12 @@ import java.util.List;
 public class MyPageDto {
     private String accessId;  // 로그인 아이디
     private String tel;  //연락처
-
+    private String name;
     private String email;
     private boolean gender; //성별
-
+    private String profileUrl;
     private LocalDate birthday;   //생년월일
+    private byte counselingTokken;
 
     private List<CommunityBoardListDto> communityBoardList;
     private List<CommunityCommentDto> communityCommentDtoList;
@@ -28,7 +29,10 @@ public class MyPageDto {
         myPageDto.accessId = member.getAccessId();
         myPageDto.tel = member.getTel();
         myPageDto.email = member.getEmail();
+        myPageDto.name = member.getName();
+        myPageDto.profileUrl=member.getProfileImage();
         myPageDto.setGender(member.isGender());
+        myPageDto.counselingTokken=member.getCounselingTokken();
         myPageDto.birthday = member.getBirthday();
         myPageDto.communityBoardList = communityBoardList;
         myPageDto.communityCommentDtoList = communityCommentDtoList;
