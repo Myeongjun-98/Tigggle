@@ -85,37 +85,35 @@
 
     <!-- ✅ 삭제되지 않은 댓글이면 -->
     <div th:unless="${comment.deleted}">
-      <p>
+      <div>
         <strong th:text="${comment.name}">작성자</strong>
         <span th:text="${#temporals.format(
-        comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                          comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
         <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
-      </p>
-
-      <!-- 로그인한 사용자와 작성자가 같을 경우 수정/삭제 가능 -->
-      <div th:if="${#strings.equals(comment.userAccessId, loginUserName)}">
-        <button type="button" th:onclick="|updateComment(${comment.id})|">수정</button>
-        <form th:action="@{/community/comment/delete/{commentId}(commentId=${comment.id})}"
-              method="post" style="display:inline">
-          <button type="submit">삭제</button>
-        </form>
       </div>
 
-
-      <!-- 댓글 내용 -->
+      <!--      댓글 내용-->
       <p th:id="|comment-content-${comment.id}|" th:text="${comment.content}">댓글 내용</p><br>
+
+      <!--      수정 삭제 버튼-->
+      <div th:if="${#strings.equals(comment.userAccessId, loginUserName)}"
+           th:id="'action-buttons-' + ${comment.id}">
+        <button type="button" th:onclick="|updateComment(${comment.id})|">수정</button>
+        <form th:action="@{/community/comment/delete/{commentId}(commentId=${comment.id})}"
+              method="post" style="display: inline;">
+          <button type="submit" onclick="return confirm('삭제 하시겠습니까?')">삭제</button>
+        </form>
+      </div>
 
       <!-- 인라인 수정 폼 -->
       <div th:id="|update-form-${comment.id}|" style="display: none;">
         <form th:action="@{/community/comment/update/{commentId}(commentId=${comment.id})}" method="post">
           <textarea name="content" th:text="${comment.content}"></textarea>
           <button type="submit">저장</button>
+          <button type="button" th:onclick="|cancelUpdate(${comment.id})|">취소</button>
         </form>
       </div>
     </div>
-
   </div>
-
 </div>
-
 </html>
