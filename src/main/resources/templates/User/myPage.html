@@ -2,7 +2,8 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/defaultLayout}">
-
+<meta name="_csrf" content="${_csrf.token}">
+<meta name="_csrf_header" content="${_csrf.headerName}">
 <th:block layout:fragment="css"><link rel="stylesheet" href="/css/mypage.css"></th:block>
 <th:block layout:fragment="script"></th:block>
 
@@ -50,7 +51,7 @@
                     <div class="section-title">내 정보 변경</div>
                     <div class="flex flex-js-between">
                         <div class="profile-pic-box">
-                            <div class="profile-pic pic-big" th:style="|background: url(@{${myPageDto.profileUrl}}) no-repeat center; background-size: contain;|"></div>
+                            <div class="profile-pic pic-big" id="profilePic" th:style="|background: url(@{${myPageDto.profileUrl}}) no-repeat center; background-size: contain;|"></div>
                             <label for="profile">프로필 사진 변경</label>
                             <input type="file" name="profile" id="profile">
                         </div>
