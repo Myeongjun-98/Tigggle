@@ -3,6 +3,7 @@ package com.Tigggle.Controller.Transaction;
 import com.Tigggle.DTO.Transaction.AssetListDto;
 import com.Tigggle.DTO.Transaction.TransactionCreateRequestDto;
 import com.Tigggle.DTO.Transaction.TransactionDetailDto;
+import com.Tigggle.DTO.Transaction.TransactionUpdateDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Repository.Transaction.AssetRepository;
 import com.Tigggle.Repository.UserRepository;
@@ -75,6 +76,7 @@ public class TransactionRestController {
         return ResponseEntity.ok(transactionDetailDto);
     }
 
+    // * 내역 삭제 매핑
     @DeleteMapping("") // URL에서 ID를 제거
     public ResponseEntity<Void> deleteTransactions(
             @RequestBody List<Long> transactionIds, // Request Body에서 ID 리스트를 받음
@@ -85,6 +87,18 @@ public class TransactionRestController {
         // 수정된 서비스 메소드 호출
         transactionService.deleteTransaction(transactionIds, member);
 
+        return ResponseEntity.ok().build();
+    }
+
+    // * 내역 수정 매핑
+    @PatchMapping("/{transactionId}")
+    public ResponseEntity<Void> updateTransaction(
+            @PathVariable Long transactionId,
+            @RequestBody TransactionUpdateDto transactionUpdateDto,
+            Principal principal){
+
+        Member member = memberRepository.findByAccessId(principal.getName());
+        transactionService.updateTransaction(transactionId, transactionUpdateDto, member);
         return ResponseEntity.ok().build();
     }
 }

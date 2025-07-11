@@ -48,6 +48,7 @@ function initializeCreateModal() {
     // openModalBtn이 null이 아닐 때만 이벤트 리스너를 등록 (오류 방지)
     if (openModalBtn) {
         openModalBtn.addEventListener('click', () => {
+            resetCreateModalToDefault();
             document.getElementById('transaction-modal').classList.remove('TR-hidden');
         });
     }
@@ -63,15 +64,17 @@ function initializeCreateModal() {
     closeModalBtn.addEventListener('click', () => {
         modalOverlay.classList.add('TR-hidden');
 
-        form.reset();
+        // form.reset();
+        //
+        // // 동적으로 나타났던 섹션들도 모두 다시 숨깁니다.
+        // document.getElementById('expense-details').classList.add('TR-hidden');
+        // document.getElementById('TR-credit-card-details').classList.add('TR-hidden');
+        // document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
+        //
+        // // '구분' 라디오 버튼을 기본값('지출')으로 되돌립니다.
+        // document.getElementById('TR-type-expense').checked = true;
 
-        // 동적으로 나타났던 섹션들도 모두 다시 숨깁니다.
-        document.getElementById('expense-details').classList.add('TR-hidden');
-        document.getElementById('TR-credit-card-details').classList.add('TR-hidden');
-        document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
-
-        // '구분' 라디오 버튼을 기본값('지출')으로 되돌립니다.
-        document.getElementById('TR-type-expense').checked = true;
+        resetCreateModalToDefault();
 
     });
 
@@ -228,79 +231,134 @@ function initializeCreateModal() {
     const form = document.getElementById('TR-create-form')
 
     form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // 폼의 기본 제출 동작(새로고침)을 막습니다.
+        event.preventDefault();
 
-        // 1. DTO에 담을 데이터 객체 생성
-        const createDto = {};
+        console.log('[SUBMIT] 저장 버튼 클릭됨. 현재 currentEditingTransactionId:', currentEditingTransactionId);
 
-        // 2. 현재 선택된 값을 기준으로 DTO 객체를 채웁니다.
-        const transactionType = form.querySelector('input[name="transactionType"]:checked').value;
-        createDto.transactionType = transactionType;
+        const isEditMode = currentEditingTransactionId !== null;
+        const dto = {}; // 서버로 보낼 DTO 객체
 
-        // 공통 필드 값 가져오기
-        createDto.transactionDate = document.getElementById('TR-tx-date').value;
-        createDto.amount = document.getElementById('TR-tx-amount').value;
-        createDto.description = document.getElementById('TR-tx-description').value;
-        createDto.keywordId = document.getElementById('TR-tx-keyword').value;
-        createDto.note = document.getElementById('TR-tx-note').value;
+        // --- 1. DTO 객체 채우기 ---
 
-        // 지출(EXPENSE)일 경우에만 추가 정보 수집
-        if (transactionType === 'EXPENSE') {
-            const payMethod = document.getElementById('TR-tx-pay-method').value;
-            createDto.payMethod = payMethod;
-            const sourceId = document.getElementById('TR-tx-source-asset').value;
-            createDto.sourceAssetId = sourceId
-            const destinationId = document.getElementById('TR-tx-destination-asset').value;
-            // 신용카드일 경우 할부 정보 수집
-            if (payMethod === 'CREDIT_CARD') {
-                createDto.creditCardId = document.getElementById('TR-tx-source-asset').value;
-                createDto.installment = document.getElementById('TR-tx-installment').value;
-            }
-            // 내 계좌 이체일 경우 목적지 자산 정보 수집
-            if (payMethod === 'MY_ACCOUNT_TRANSFER') {
-                createDto.destinationAssetId = destinationId;
-                if(sourceId && destinationId && sourceId === destinationId){
-                    showAlert("같은 계좌를 선택하셨습니다.")
-                    return;
+        if (isEditMode) {
+            // [수정 모드] TransactionUpdateDto에 맞는 필드만 채웁니다.
+            dto.description = document.getElementById('TR-tx-description').value;
+            dto.amount = document.getElementById('TR-tx-amount').value;
+            dto.transactionDate = document.getElementById('TR-tx-date').value;
+            dto.note = document.getElementById('TR-tx-note').value;
+            dto.keywordId = document.getElementById('TR-tx-keyword').value;
+            // isConsumption은 UpdateDto에 추가하기로 했습니다.
+            dto.isConsumption = document.querySelector('input[name="transactionType"]:checked').value === 'EXPENSE';
+        } else {
+            // [생성 모드] TransactionCreateRequestDto에 맞는 모든 필드를 채웁니다.
+            const transactionType = form.querySelector('input[name="transactionType"]:checked').value;
+            dto.transactionType = transactionType;
+
+            dto.transactionDate = document.getElementById('TR-tx-date').value;
+            dto.amount = document.getElementById('TR-tx-amount').value;
+            dto.description = document.getElementById('TR-tx-description').value;
+            dto.keywordId = document.getElementById('TR-tx-keyword').value;
+            dto.note = document.getElementById('TR-tx-note').value;
+
+            if (transactionType === 'EXPENSE') {
+                const payMethod = document.getElementById('TR-tx-pay-method').value;
+                dto.payMethod = payMethod;
+
+                const sourceId = document.getElementById('TR-tx-source-asset').value;
+                if (payMethod === 'CREDIT_CARD') {
+                    dto.creditCardId = sourceId;
+                } else {
+                    dto.sourceAssetId = sourceId;
                 }
-            }
 
-        } else { // 수입(INCOME)일 경우, 출금 자산 ID가 필요. (어느 자산으로 수입이 되었는지)
-            createDto.sourceAssetId = document.getElementById('TR-tx-income-asset').value;
+                if (payMethod === 'MY_ACCOUNT_TRANSFER') {
+                    const destinationId = document.getElementById('TR-tx-destination-asset').value;
+                    dto.destinationAssetId = destinationId;
+                    if (sourceId && destinationId && sourceId === destinationId) {
+                        showAlert("출금과 입금 계좌는 같을 수 없습니다.");
+                        return;
+                    }
+                }
+            } else { // INCOME
+                dto.sourceAssetId = document.getElementById('TR-tx-income-asset').value;
+            }
         }
 
+        // --- 2. API 호출 및 결과 처리 (수정 없음) ---
 
-        // 3. fetch API를 사용하여 백엔드로 데이터 전송
+        const url = isEditMode ? `/api/transactions/${currentEditingTransactionId}` : '/api/transactions';
+        const method = isEditMode ? 'PATCH' : 'POST';
+
+        // 디버깅을 위해 전송 직전의 DTO를 콘솔에 출력해봅니다.
+        console.log(`[${method}] 요청 전송:`, url);
+        console.log('전송할 DTO 데이터:', dto);
+
         try {
-            const response = await fetch('/api/transactions', {
-                method: 'POST',
+            const response = await fetch(url, {
+                method: method,
                 headers: {
                     'Content-Type': 'application/json',
                     [header]: token
                 },
-                body: JSON.stringify(createDto), // JavaScript 객체를 JSON 문자열로 변환
+                body: JSON.stringify(dto),
             });
 
             if (response.ok) {
-                showAlert('거래내역이 성공적으로 저장되었습니다.');
-
-                // 저장 후 적었던 값들 초기화
-                document.getElementById('TR-create-form').reset();
-                document.getElementById('TR-credit-card-details').classList.add('TR-hidden');
-                document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
-
-                // 성공 시 내역 작성 모달은 닫고, 가계부 목록은 새로고침
-                document.getElementById('transaction-modal').classList.add('TR-hidden');
-                initializeWalletPage(currentYear, currentMonth);
+                const successMessage = isEditMode ? '성공적으로 수정되었습니다.' : '성공적으로 저장되었습니다.';
+                showAlert(successMessage);
+                resetAndCloseModal();
             } else {
-                const errorData = await response.json();
-                showAlert(`저장에 실패했습니다: ${errorData.message || '알 수 없는 오류'}`);
+                const errorText = await response.text();
+                showAlert(`저장에 실패했습니다: ${errorText}`);
             }
-
         } catch (error) {
             console.error('API 호출 중 오류 발생:', error);
-            alert('저장 중 오류가 발생했습니다.');
+            showAlert('저장 중 오류가 발생했습니다.');
         }
-
     });
+}
+
+// 폼을 닫고 모든 상태를 초기화하는 헬퍼 함수
+function resetAndCloseModal() {
+    currentEditingTransactionId = null; // 수정 모드 종료
+    document.getElementById('TR-create-form').reset();
+
+    // 비활성화 했던 필드들을 다시 활성화
+    document.querySelectorAll('input[name="transactionType"]').forEach(radio => radio.disabled = false);
+    document.getElementById('TR-tx-pay-method').disabled = false;
+    // ...
+
+    document.getElementById('transaction-modal').classList.add('TR-hidden');
+    initializeWalletPage(currentYear, currentMonth); // 목록 새로고침
+}
+
+function resetCreateModalToDefault() {
+
+    console.log('[RESET] 리셋 함수 호출됨. currentEditingTransactionId를 null로 초기화합니다.');
+
+    currentEditingTransactionId = null;
+
+    // 1. 폼의 모든 입력 값을 HTML 기본값으로 리셋
+    document.getElementById('TR-create-form').reset();
+
+    // 2. '지출'이 기본 선택이 되도록 설정
+    document.getElementById('TR-type-expense').checked = true;
+
+    // 3. UI 상태를 '지출' 기본 상태로 강제 변경
+    document.getElementById('expense-details').classList.remove('TR-hidden');
+    document.getElementById('income-details').classList.add('TR-hidden');
+    document.getElementById('TR-credit-card-details').classList.add('TR-hidden');
+    document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
+
+    // 4. '거래 방식' 드롭다운의 change 이벤트를 강제로 발생시켜,
+    //    '보통거래'에 해당하는 자산 목록을 미리 불러오게 함
+    document.getElementById('TR-tx-pay-method').dispatchEvent(new Event('change'));
+
+    // 5. 수정 모드였다면, 비활성화했던 필드들을 다시 활성화
+    document.querySelectorAll('#TR-create-form select, #TR-create-form input[type="radio"]')
+        .forEach(el => el.disabled = false);
+
+    // 6. 모달 제목과 버튼 텍스트를 '생성 모드'로 되돌림
+    document.querySelector('#transaction-modal h2').innerText = '새로운 거래내역 작성';
+    document.querySelector('#transaction-modal .submit-button').innerText = '저장하기';
 }
