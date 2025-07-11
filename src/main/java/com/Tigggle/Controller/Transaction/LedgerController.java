@@ -24,11 +24,12 @@ public class LedgerController {
     public ResponseEntity<WalletPageDto> getWalletPage(
             Principal principal,
             @RequestParam int year,
-            @RequestParam int month) {
+            @RequestParam int month,
+            @RequestParam(required = false) Long assetId) {
 
         Long memberId = memberRepository.findByAccessId(principal.getName()).getId();
 
-        WalletPageDto pageData = walletService.getWalletPageData(memberId, year, month);
+        WalletPageDto pageData = walletService.getWalletPageData(memberId, year, month, assetId);
 
         return ResponseEntity.ok(pageData);
     }

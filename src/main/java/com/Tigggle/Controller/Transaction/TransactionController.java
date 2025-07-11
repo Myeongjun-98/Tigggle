@@ -4,6 +4,7 @@ package com.Tigggle.Controller.Transaction;
 import java.security.Principal;
 import java.util.List;
 
+import com.Tigggle.DTO.Transaction.AssetListDto;
 import com.Tigggle.DTO.Transaction.WalletPageDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.Transaction.Keywords;
@@ -36,15 +37,35 @@ public class TransactionController {
     @GetMapping("/wallet")
     public String DefaultTransactionPage(Principal principal, Model model){
 
+        //! 구현 안할 것 같음! 최신순 필터링
         List<Keywords> keywords = keywordsRepository.findAll();
+        model.addAttribute("keywords", keywords);
+        //! 구현 안할 것 같음! 최신순 필터링
 
         Member memberInfo = memberRepository.findByAccessId(principal.getName());
         model.addAttribute("memberInfo", memberInfo);
-        model.addAttribute("keywords", keywords);
+
+        List<AssetListDto> assetListDtos = walletService.loadWalletList(memberInfo);
+        model.addAttribute("AssetList", assetListDtos);
 
         return "transaction/wallet";
     }
 
+    @GetMapping("/wallet/{assetId}")
+    public String SpecificTransactionPage(Principal principal, Model model){
 
+        //! 구현 안할 것 같음! 최신순 필터링
+        List<Keywords> keywords = keywordsRepository.findAll();
+        model.addAttribute("keywords", keywords);
+        //! 구현 안할 것 같음! 최신순 필터링
+
+        Member memberInfo = memberRepository.findByAccessId(principal.getName());
+        model.addAttribute("memberInfo", memberInfo);
+
+        List<AssetListDto> assetListDtos = walletService.loadWalletList(memberInfo);
+        model.addAttribute("AssetList", assetListDtos);
+
+        return "transaction/wallet";
+    }
 
 }
