@@ -147,7 +147,7 @@ function updateAssetInfo(assetData) {
     container.innerHTML = assetHtml;
     if(assetData.balance)
     balanceSpan.innerText = assetData.balance.toLocaleString() + '원';
-    else balanceSpan.innerText = " 이번 달 거래내역이 없습니다. "
+    else balanceSpan.innerText = " 0원 "
 }
 
 // * 월별 요약 정보(총수입, 총지출)를 업데이트하는 함수
