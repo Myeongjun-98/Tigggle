@@ -91,7 +91,20 @@ async function initializeWalletPage(year, month) {
 
     try {
         // 단 한 번의 API 호출로 페이지에 필요한 모든 정보를 가져옵니다.
-        const response = await fetch(`/api/wallet/page?year=${year}&month=${month}`);
+
+        // 1. 현재 페이지의 경로(pathname)에서 assetId를 추출합니다.
+        const pathParts = window.location.pathname.split('/');
+        const assetId = pathParts[pathParts.length - 1]; // 예: /transaction/wallet/5 -> "5"
+
+        // 2. 기본 API URL을 만듭니다.
+        let apiUrl = `/api/wallet/page?year=${year}&month=${month}`;
+
+        // 3. assetId가 숫자 형태일 경우에만 파라미터로 추가합니다.
+        if (!isNaN(assetId) && assetId.trim() !== '') {
+            apiUrl += `&assetId=${assetId}`;
+        }
+
+        const response = await fetch(apiUrl);
         if (!response.ok) {
             throw new Error('데이터를 불러오는 데 실패했습니다.');
         }
@@ -117,7 +130,7 @@ async function initializeWalletPage(year, month) {
 // * 페이지 상단의 현재 자산 정보를 업데이트하는 함수
 // * @param {object} assetData - AssetSummaryDto에 해당하는 데이터
 function updateAssetInfo(assetData) {
-    const container = document.getElementById('TR-asset-info-container');
+    const container = document.getElementById('TR-ordinary-account-info');
     const balanceSpan = document.getElementById('TR-asset-balance');
 
     let assetHtml = '';
@@ -132,7 +145,9 @@ function updateAssetInfo(assetData) {
     }
 
     container.innerHTML = assetHtml;
+    if(assetData.balance)
     balanceSpan.innerText = assetData.balance.toLocaleString() + '원';
+    else balanceSpan.innerText = " 이번 달 거래내역이 없습니다. "
 }
 
 // * 월별 요약 정보(총수입, 총지출)를 업데이트하는 함수

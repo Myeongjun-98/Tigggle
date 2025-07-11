@@ -40,15 +40,21 @@
     <!-- 사용자 자산들 관련 종합 정보 표시 및 핸들링하는 공간 -->
       <div id="TR-asset-info-container" class="TR-wallet-list">
         <ul>
-        <p>여기엔 사용자의 지갑자산들의 아이디로 연결되는 가계부페이지 링크<li>가 들어갈 예정</p>
-        <!--     지갑자산들을 th:each로 li태그 만들 예정     -->
-        </ul>
+          <li th:each="asset : ${AssetList}" th:if="${asset.type == 'ORDINARY'}">
+            <a th:href="@{/transaction/wallet/{id}(id=${asset.id})}" th:text="${asset.alias}">
+              보통예금 계좌 별칭
+            </a>
+          </li>
 
+          <li th:each="asset : ${AssetList}" th:if="${asset.type == 'CASH'}">
+            <a th:href="@{/transaction/wallet/{id}(id=${asset.id})}" th:text="${asset.alias}">
+              현금 자산 별칭
+            </a>
+          </li>
+        </ul>
         <br>
-      <!-- 보통예금일 시 표현 -->
         <div id="TR-ordinary-account-info">
         </div>
-      <!-- 보통예금일 시 표현 -->
       </div>
 
       <!-- 일단.. 나중에 수정 시 아이디 및 클래스 확인할 것-->
@@ -61,15 +67,15 @@
         <div class="TR-summary-cards">
           <div class="TR-card">
             <label th:text = "|${memberInfo.getName()}님의 잔액|"></label>
-            <span id="TR-asset-balance" class="amount">2,407,010원</span>
+            <span id="TR-asset-balance" class="amount">???원</span>
           </div>
           <div class="TR-card">
             <label>7월 지출액</label>
-            <span id="TR-monthly-expense" class="amount">1,200,200원</span>
+            <span id="TR-monthly-expense" class="amount">???원</span>
           </div>
           <div class="TR-card">
             <label>7월 수익</label>
-            <span id="TR-monthly-income" class="amount">5,000,000원</span>
+            <span id="TR-monthly-income" class="amount">???원</span>
           </div>
         </div>
       </div>
