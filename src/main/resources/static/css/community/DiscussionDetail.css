@@ -18,8 +18,8 @@
 #content .post-meta {
   margin: 15px 0;
   padding: 10px 15px;
-  background-color: #f9f9f9;
-  border-left: 4px solid #ccc;
+  background-color: #f0f4ff;
+  border-left: 4px solid #0D5BD3;
   font-size: 14px;
   color: #555;
   border-radius: 4px;
@@ -47,18 +47,6 @@
   color: #444;
 }
 
-#content .post-meta {
-  display: flex;
-  flex-direction: column; /* 줄바꿈 형태 유지 */
-  gap: 4px;
-  margin: 15px 0;
-  padding: 10px 15px;
-  background-color: #f9f9f9;
-  border-left: 4px solid #ccc;
-  font-size: 14px;
-  color: #555;
-  border-radius: 4px;
-}
 #content .post-meta p {
   display: flex;
   align-items: center;
@@ -75,7 +63,7 @@
 
 /* 내용 */
 #content .post-content {
-  background-color: #fafafa;
+  background-color: #f0f4ff;
   border: 1px solid #ddd;
   padding: 20px;
   border-radius: 6px;
@@ -105,18 +93,6 @@
   flex-wrap: wrap; /* 줄바꿈 허용하려면 wrap, 한 줄 고정이면 nowrap */
   gap: 12px;
   margin-top: 10px;
-}
-
-/* ===== 첨부 그래프 ===== */
-#content ul {
-  list-style: none;
-  padding-left: 0;
-  font-size: 15px;
-  margin-top: 10px;
-}
-
-#content ul li {
-  margin-bottom: 8px;
 }
 
 /* ===== 버튼 ===== */
