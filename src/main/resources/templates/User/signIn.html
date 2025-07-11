@@ -24,6 +24,10 @@
                 <p  th:if="${fieldError}" class="error">
                     아이디 혹은 비밀번호가 잘못되었습니다.
                 </p>
+                <div>
+                    <input type="checkbox" id="idSave">아이디 저장
+                    <input type="checkbox" id="loginKeep"> 로그인 유지
+                </div>
                 <div class="form-bt">
                     <button type="button" id="loginBt" class="btn">로그인</button>
                 </div>
@@ -58,6 +62,21 @@
                 $("#password").focus();
             }else{
                 $("#loginFm").submit();
+            }
+        });
+        $("#idSave").change(function(){
+            if(this.checked){
+               localStorage.setItem("tigggleid",$("#accessId").val());
+            }else{
+                localStorage.removeItem("tigggleid");
+            }
+        });
+
+        $("#loginKeep").change(function(){
+            if(this.checked){
+                localStorage.setItem("tigggleid",$("#accessId").val());
+            }else{
+                localStorage.removeItem("tigggleid");
             }
         });
     </script>

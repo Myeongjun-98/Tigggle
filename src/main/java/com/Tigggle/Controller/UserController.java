@@ -5,6 +5,8 @@ import com.Tigggle.DTO.MyPageDto;
 import com.Tigggle.Service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.security.Principal;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -28,9 +31,10 @@ public class UserController {
 
     //마이페이지 이동
     @GetMapping("/user/myPage")
-    public String myPage(Principal principal, Model model) {
+    public String myPage(Principal principal, Optional<Integer> page ,Model model) {
 
-        MyPageDto myPageDto = userService.userInfo(principal.getName());
+        Pageable pageable = PageRequest.of(page.orElse(0), 10);
+        MyPageDto myPageDto = userService.userInfo(principal.getName(), pageable);
 
         model.addAttribute("myPageDto", myPageDto);
 

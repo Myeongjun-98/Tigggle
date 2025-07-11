@@ -11,6 +11,7 @@ import com.Tigggle.Repository.UserRepository;
 import com.Tigggle.Repository.community.CommunityBoardRepository;
 import com.Tigggle.Repository.community.CommunityCommentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -51,10 +52,12 @@ public class UserService implements UserDetailsService {
         return false;
     }
 
-    public MyPageDto userInfo(String name) {
+
+    //  사용처 - 마이페이지 정보 주기( userController)
+    public MyPageDto userInfo(String name, Pageable pageable) {
         Member member = userRepository.findByAccessId(name);
-        List<CommunityBoard> communityBoards = communityBoardRepository.findByMember(member);
-        List<CommunityComment> communityComments = communityCommentRepository.findByMember(member);
+        List<CommunityBoard> communityBoards = communityBoardRepository.findByMember(member,pageable);
+        List<CommunityComment> communityComments = communityCommentRepository.findByMember(member,pageable);
 
         List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();
         List<CommunityCommentDto> communityCommentDtos = new ArrayList<>();

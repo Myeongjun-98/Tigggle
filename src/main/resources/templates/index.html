@@ -4,16 +4,16 @@
       layout:decorate="~{layout/defaultLayout}">
 
 <div  layout:fragment="content">
-    <div id="intro">
+    <div id="intro" class="main-section">
         <div class="intro-box">
             <div class="intro-top">
                 <div class="intro-top-left">
-                    <h1 class="intro-title">●<span style="font-style: italic;">TIGGGLE</span></h1>
-                    <div class="intro-desc">
+                    <h1 class="intro-title hide700">●<span style="font-style: italic;">TIGGGLE</span></h1>
+                    <div class="intro-desc hide700">
                         <h2>내손안의 모든일정..</h2>
                         <h2>대충 사이트 첫입장 멘트 자리</h2>
                     </div>
-                    <p class="intro-desc2">우리 사이트는 이렇게 멋있고 개쩌는 사이트입니다 굿굿</p>
+                    <p class="intro-desc2 hide700">우리 사이트는 이렇게 멋있고 개쩌는 사이트입니다 굿굿</p>
                     <div class="intro-search-wrap">
                         <div class="intro-search-box">
                             <input type="text" class="search-keyword" placeholder="Find the results you want">
@@ -30,7 +30,7 @@
 
                         </div>
                     </div>
-                    <div class="intro-card2 intro-card">
+                    <div class="intro-card2 intro-card hide700">
                         <div class="intro-card-inner">
 
                         </div>
@@ -48,8 +48,8 @@
             </div>
         </div>
     </div>
-    <div id="section1">
-        <div class="section1-top">
+    <div id="section1" class="main-section section-low">
+        <div class="section1-top hide700">
             <div>
                 <p class="fade-in">통장에 먼지만 쌓이던 그 시절, 이젠 티끌 대신 습관을 쌓자! </p>
                 <p> <strong>Tigggle</strong>은 당신의 재정 생활을 똑똑하게 변화 시켜 줄 저축 파트너입니다.</p>
@@ -60,11 +60,11 @@
             <div class="sec1-text">
                 <h2 class="text-30">티끌의 장점 1.</h2>
                 <h1 class="text-50 pd-tb-20">흩어진 자산, 하나로 모아보세요</h1>
-                <p class="text-30 pd-tb-50">계좌와 소비 내역 통합<br>
+                <p class="text-30 pd-tb-50 hide700">계좌와 소비 내역 통합<br>
                     자산 흐름을 자동 연동과 분석으로 한눈에 파악<br>
                     슬기로운 자산 운영</p>
                 <div class="sec1-link">
-                    <a href="/transaction/wallet">자산관리 바로가기</a>
+                    <a href="/asset">자산관리 바로가기</a>
                 </div>
             </div>
             <div class="sec1-card reveal right-view delay-1">
@@ -78,7 +78,7 @@
             <div class="sec1-text">
                 <h2 class="text-30">티끌의 장점 2.</h2>
                 <h1 class="text-50 pd-tb-20">보이는 만큼 바뀝니다.</h1>
-                <p class="text-30 pd-tb-50">소비 습관 및 저축 패턴 분석<br>
+                <p class="text-30 pd-tb-50 hide700">소비 습관 및 저축 패턴 분석<br>
                     개인 맞춤형 인사이트 제공을 위한 데이터 기반 해석<br>
                     실질적인 재정 개선</p>
                 <div class="sec1-link">
@@ -88,14 +88,14 @@
 
         </div>
     </div>
-    <div id="section2">
+    <div id="section2" class="main-section section-low">
         <div class="section2-top">
             <div class="">
                 <h1 class="text-50 pd-tb-20">맹선훈님의 자산</h1>
                 <p class="text-30">준훈우님의 자산은 이만큼이 됩니다.</p>
             </div>
             <div class="my-asset-link">
-                <a href="">여기??</a>
+                <a href="/asset">나의 자산</a>
             </div>
         </div>
         <div class="section2-middle">
@@ -151,20 +151,19 @@
                     </li>
                 </ul>
             </div>
-            <div class="my-1">
-                <div class="my-q1">
+            <div class="my-1 reveal up delay-3 hide700">
+                <div class="my-q1 ">
                     <div></div>
                 </div>
                 <div class="my-q1"><div></div></div>
                 <div class="my-q1"><div></div></div>
-                <div class="my-q1-up"></div>
             </div>
         </div>
     </div>
-    <div id="section3">
+    <div id="section3" class="main-section section-low">
         <div class="section3-title">
             <h1 class="sec3-title text-50 pd-tb-20">금융늬우스</h1>
-            <h2 class="sec3-desc text-30 pd-tb-20">금융뉴스에는 이런내용을 이런거저런거 보여줄 예정임.</h2>
+            <h2 class="sec3-desc text-30 pd-tb-20 hide700">금융뉴스에는 이런내용을 이런거저런거 보여줄 예정임.</h2>
         </div>
         <div class="slider-wrap">
             <div class="slider-box">
@@ -209,7 +208,7 @@
             </div>
         </div>
     </div>
-    <div id="section4">
+    <div id="section4" class="main-section">
 
     </div>
     <script>
@@ -233,7 +232,10 @@
                     $(this).addClass('show');
                 }
             });
+
         });
+
+
     </script>
 </div>
 

@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public interface CommunityBoardRepository extends JpaRepository<CommunityBoard, Long> {
 
-    List<CommunityBoard> findByMember(Member member); // 로그인 유저의 게시글 만 가져오기
+    List<CommunityBoard> findByMember(Member member, Pageable pageable); // 로그인 유저의 게시글 만 가져오기
 
 
 

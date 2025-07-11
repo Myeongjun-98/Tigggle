@@ -99,7 +99,9 @@
                             <td> <input type="checkbox"> </td>
                             <td th:text="${stat.count}">1</td>
                             <td><span class="category" th:text="${row.category}">커뮤니티글</span></td>
-                            <td style="text-align:left" th:text="${row.title}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</td>
+                            <td style="text-align:left" >
+                                <a th:href="'/community/detail/'+${row.id}" th:text="${row.title}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</a>
+                            </td>
                             <td th:text="${row.writeDate}">2025.07.07</td>
                             <td>댓글<span th:text="${row.commentCount}"></span></td>
                         </tr>
@@ -115,13 +117,14 @@
                     <div class="section-title">내가 작성한 댓글</div>
                     <table>
                         <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td><span class="category">커뮤니티글</span></td>
-                            <td style="text-align:left">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</td>
-                            <td>username</td>
-                            <td>2025.07.07</td>
-                            <td>댓글3</td>
+                        <tr th:each="row,stat : ${myPageDto.communityCommentDtoList}">
+                            <td> <input type="checkbox"> </td>
+                            <td th:text="${stat.count}">1</td>
+                            <td style="text-align:left" >
+                                <a th:href="'/community/detail/'+${row.boardId}" th:text="${row.content}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</a>
+                            </td>
+                            <td th:text="${row.name}">username</td>
+                            <td th:text="${row.writeDate}">2025.07.07</td>
                         </tr>
                         </tbody>
                     </table>
@@ -132,7 +135,7 @@
             </div>
         </div>
     </div>
-
+    <script src="/javascript/mypage.js"></script>
 </div>
 
 </html>
