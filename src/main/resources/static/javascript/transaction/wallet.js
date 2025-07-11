@@ -3,6 +3,9 @@
 let currentYear;
 let currentMonth;
 
+let currentTransactionIdForModal = null; // 상세보기 모달에 표시된 거래 ID
+let currentEditingTransactionId = null;  // 현재 '수정 중인' 거래 ID
+
 // csrf 토큰
 var token = $("meta[name='_csrf']").attr("content");
 var header = $("meta[name='_csrf_header']").attr("content");
@@ -34,6 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         initializeWalletPage(currentYear, currentMonth);
     });
+
+    // 상세보기 모달의 '수정' 버튼
+    const editBtn = document.getElementById('detail-edit-btn');
+    if (editBtn) {
+        editBtn.addEventListener('click', () => {
+            // '수정' 버튼을 누르면, 현재 보고 있는 거래내역의 ID로
+            // '수정 모드'로 내역 작성 모달을 엽니다.
+            openCreateModalInEditMode(currentTransactionIdForModal);
+        });
+    }
+
+    const detailCloseBtn = document.querySelector('.detail-close-button');
+    if(detailCloseBtn) {
+        detailCloseBtn.addEventListener('click', () => {
+            document.getElementById('TR-detail-modal').classList.add('TR-hidden');
+        });
+    }
 
     // * 일괄삭제 리스너
     const deleteSelectedBtn = document.querySelector('.TR-delete-selected-btn');
@@ -93,10 +113,9 @@ async function initializeWalletPage(year, month) {
     }
 }
 
-/**
- * 페이지 상단의 현재 자산 정보를 업데이트하는 함수
- * @param {object} assetData - AssetSummaryDto에 해당하는 데이터
- */
+
+// * 페이지 상단의 현재 자산 정보를 업데이트하는 함수
+// * @param {object} assetData - AssetSummaryDto에 해당하는 데이터
 function updateAssetInfo(assetData) {
     const container = document.getElementById('TR-asset-info-container');
     const balanceSpan = document.getElementById('TR-asset-balance');
@@ -162,39 +181,36 @@ function renderTransactionList(dailyLedgers) {
 }
 
 // * 거래내역 상세보기 모달을 열고 API를 통해 데이터를 채웁니다.
+// * 이 함수는 renderTransactionList에서 생성된 <li>의 onclick에 의해 호출됩니다.
 // * @param {number} transactionId - 상세 조회할 거래내역의 ID
 async function openDetailModal(transactionId) {
+    // 전역 변수에 현재 보고 있는 거래 ID를 저장하여 '수정' 버튼이 사용할 수 있도록 합니다.
+    currentTransactionIdForModal = transactionId;
+
     const detailModal = document.getElementById('TR-detail-modal');
-    // 로딩 중에 내용을 비워줍니다.
     document.getElementById('detail-description').innerText = '불러오는 중...';
     detailModal.classList.remove('TR-hidden');
 
     try {
-        // 1. 단일 거래내역 조회 API를 호출합니다.
         const response = await fetch(`/api/transactions/${transactionId}`);
         if (!response.ok) throw new Error('상세 내역을 불러오는데 실패했습니다.');
 
         const detailData = await response.json();
 
-        // 2. 받아온 데이터로 상세보기 모달의 각 영역을 채웁니다.
-        document.getElementById('detail-type').innerText = detailData.isConsumption ? '-' : '+';
-        document.getElementById('detail-amount').innerText = detailData.amount.toLocaleString() + '원';
+        const sign = detailData.consumption ? '-' : '+';
+        const formattedAmount = detailData.amount.toLocaleString() + '원';
+        // 받아온 데이터로 상세보기 모달의 각 영역을 채웁니다.
+        document.getElementById('detail-amount').innerText = `${sign} ${formattedAmount}`;
         document.getElementById('detail-description').innerText = detailData.description;
         document.getElementById('detail-date').innerText = new Date(detailData.transactionDate).toLocaleString('ko-KR');
-        document.getElementById('detail-keyword').innerText = detailData.keyword; // DTO 필드명에 맞게 수정 필요
-        document.getElementById('detail-payMethod').innerText = convertPaymethodKo(detailData.payMethod); // DTO 필드명에 맞게 수정 필요
+        document.getElementById('detail-keyword').innerText = detailData.keyword;
+        document.getElementById('detail-payMethod').innerText = convertPaymethodKo(detailData.payMethod);
         document.getElementById('detail-note').innerText = detailData.note || '메모 없음';
 
     } catch (error) {
-        // 실패 시 알림 모달을 재사용할 수 있습니다.
         showAlert(error.message);
         detailModal.classList.add('TR-hidden');
     }
-
-    document.querySelector('.detail-close-button').addEventListener('click', () => {
-        detailModal.classList.add('TR-hidden');
-    });
-
 }
 
 // * 자산이 없을 때 메시지를 표시하는 함수
@@ -256,4 +272,53 @@ async function deleteSelectedTransactions(ids) {
         console.error("일괄 삭제 중 오류:", error);
         showAlert("삭제 중 오류가 발생했습니다.");
     }
+}
+
+
+ // * '수정' 버튼 클릭 시, 특정 거래내역의 데이터로 '내역 작성 모달'을 채워서 열어줍니다.
+ // * @param {number} transactionId - 수정할 거래내역의 ID
+async function openCreateModalInEditMode(transactionId) {
+    if (!transactionId) return;
+
+    try {
+        const response = await fetch(`/api/transactions/${transactionId}`);
+        if (!response.ok) throw new Error('수정할 내역을 불러오는 데 실패했습니다.');
+        const detailData = await response.json();
+
+        document.getElementById('TR-detail-modal').classList.add('TR-hidden');
+        const createModal = document.getElementById('transaction-modal');
+        createModal.classList.remove('TR-hidden');
+
+
+        console.log('[EDIT MODE] 수정 모드 진입. currentEditingTransactionId를', transactionId, '로 설정합니다.');
+
+
+        currentEditingTransactionId = transactionId; // '수정 모드'로 전환
+
+        createModal.querySelector('h2').innerText = '거래내역 수정';
+        createModal.querySelector('.submit-button').innerText = '수정하기';
+
+        // 가져온 데이터로 폼 필드를 채웁니다.
+        document.getElementById('TR-tx-date').value = detailData.transactionDate.substring(0, 16);
+        document.getElementById('TR-tx-amount').value = detailData.amount;
+        document.getElementById('TR-tx-description').value = detailData.description;
+        document.getElementById('TR-tx-note').value = detailData.note;
+        document.getElementById('TR-tx-keyword').value = detailData.keywordId;
+
+        const typeRadio = detailData.isConsumption ? 'TR-type-expense' : 'TR-type-income';
+        document.getElementById(typeRadio).checked = true;
+
+        // 수입/지출 및 거래방식에 맞는 하위 드롭다운을 표시하고 채웁니다.
+        document.querySelector(`input[name="transactionType"]:checked`).dispatchEvent(new Event('change'));
+
+    } catch (error) {
+        showAlert('수정 정보를 불러오는 중 오류가 발생했습니다.');
+    }
+    document.querySelectorAll('input[name="transactionType"]').forEach(radio => {
+        radio.disabled = true;
+    });
+    document.getElementById('TR-tx-pay-method').disabled = true;
+    document.getElementById('TR-tx-source-asset').disabled = true;
+    document.getElementById('TR-tx-income-asset').disabled = true;
+    document.getElementById('TR-tx-destination-asset').disabled = true;
 }
