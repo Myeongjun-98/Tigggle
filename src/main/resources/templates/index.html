@@ -27,12 +27,12 @@
                 <div class="intro-top-right">
                     <div class="intro-card1 intro-card">
                         <div class="intro-card-inner">
-
+                            수입
                         </div>
                     </div>
                     <div class="intro-card2 intro-card hide700">
                         <div class="intro-card-inner">
-
+                            지출
                         </div>
                     </div>
                 </div>
@@ -212,6 +212,37 @@
 
     </div>
     <script>
+        $(function() {
+            let isIncomeFront = true;
+
+            $(".intro-card").on("click", function() {
+                if (isIncomeFront) {
+                    $(".intro-card1").removeClass("card-front").addClass("card-back");
+                    $(".intro-card2").removeClass("card-back").addClass("card-front");
+                } else {
+                    $(".intro-card1").removeClass("card-back").addClass("card-front");
+                    $(".intro-card2").removeClass("card-front").addClass("card-back");
+                }
+                isIncomeFront = !isIncomeFront;
+            });
+
+            // 예시: 최근 10일 수입/지출 내역
+            const incomeList = [20000, 30000, 25000, 22000, 18000, 27000, 31000, 33000, 29000, 24000];
+            const expenseList = [15000, 12000, 17000, 13000, 11000, 10000, 16000, 19000, 14000, 15000];
+
+            let incomeHtml = "<h4>최근 10일 수입</h4><ul>";
+            incomeList.forEach(val => incomeHtml += `<li>${val.toLocaleString()}원</li>`);
+            incomeHtml += "</ul>";
+
+            let expenseHtml = "<h4>최근 10일 지출</h4><ul>";
+            expenseList.forEach(val => expenseHtml += `<li>${val.toLocaleString()}원</li>`);
+            expenseHtml += "</ul>";
+
+            $(".intro-card1 .intro-card-inner").html(incomeHtml);
+            $(".intro-card2 .intro-card-inner").html(expenseHtml);
+        });
+
+
         $(window).on("scroll", function () {
             $(".fade-in").each(function () {
                 const top = $(this).offset().top;
