@@ -1,0 +1,31 @@
+@import "transaction-modal.css";
+
+*{
+    padding:0;
+    margin:0;
+    box-sizing: border-box;
+}
+
+/* 테이블 전체에 카운터 초기화 */
+.schedule-table {
+    counter-reset: row-num;
+}
+
+/* 테이블의 tbody 안에 있는 각 tr 요소에 대해 (가상 요소 ::before 사용) */
+.schedule-table tbody tr::before {
+    display: table-cell; /* td처럼 보이게 함 */
+    counter-increment: row-num; /* 카운터 숫자를 1씩 증가 */
+    content: counter(row-num); /* 증가된 카운터 숫자를 내용으로 표시 */
+    text-align: center;
+    padding: 8px; /* 다른 td와 간격을 맞추기 위해 필요할 수 있음 */
+}
+
+td.expense {
+    color: red; /* 지출일 경우 빨간색 */
+    font-weight: bold;
+}
+
+td.income {
+    color: #3340CBFF; /* 수입일 경우 파란색 */
+    font-weight: bold;
+}

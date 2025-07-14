@@ -68,4 +68,16 @@ public class TransactionController {
         return "transaction/wallet";
     }
 
+    @GetMapping("/scheduled-transaction")
+    public String openPopUpScheduledTransactionPage(Model model, Principal principal){
+
+        Member memberInfo = memberRepository.findByAccessId(principal.getName());
+        model.addAttribute("memberInfo", memberInfo);
+
+        List<Keywords> keywords = keywordsRepository.findAll();
+        model.addAttribute("keywords", keywords);
+
+        return "transaction/scheduled-transaction";
+    }
+
 }

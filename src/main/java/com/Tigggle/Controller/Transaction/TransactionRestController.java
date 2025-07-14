@@ -101,4 +101,14 @@ public class TransactionRestController {
         transactionService.updateTransaction(transactionId, transactionUpdateDto, member);
         return ResponseEntity.ok().build();
     }
+
+    // * 정기 거래내역에서 자산 불러오기
+    @GetMapping("/assets-for-schedule") // URL을 더 명확하게 변경
+    public ResponseEntity<List<AssetListDto>> getAssetsForSchedule(Principal principal) {
+        Member member = memberRepository.findByAccessId(principal.getName());
+
+        List<AssetListDto> assets = assetService.getAssetsForScheduling(member);
+
+        return ResponseEntity.ok(assets);
+    }
 }

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -30,15 +31,6 @@ public class AssetService {
     @Transactional
     public void updateBalance(Long assetId, Long amount, boolean isConsumption) {
 
-        // ! ▼▼▼▼▼ 로그 추가 ▼▼▼▼▼
-        System.out.println("==================================================");
-        System.out.println("[AssetService] updateBalance 호출됨!");
-        System.out.println("  - Asset ID: " + assetId);
-        System.out.println("  - Amount: " + amount);
-        System.out.println("  - Is Consumption (지출 여부): " + isConsumption);
-        // ! ▲▲▲▲▲ 로그 추가 ▲▲▲▲▲
-
-
         Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 자산입니다."));
 
         if (asset instanceof Cash) {
@@ -49,10 +41,6 @@ public class AssetService {
             } else {
                 cash.setBalance(originalBalance + amount);
             }
-            //! ▼▼▼▼▼ 로그 추가 ▼▼▼▼▼
-            System.out.println("  - [Cash] 잔액 변경: " + originalBalance + " -> " + cash.getBalance());
-            System.out.println("==================================================");
-            //! ▲▲▲▲▲  로그 추가 ▲▲▲▲▲
             cashRepository.saveAndFlush(cash);
 
         } else if (asset instanceof BankAccount) {
@@ -63,10 +51,6 @@ public class AssetService {
             } else {
                 bankAccount.setBalance(originalBalance + amount);
             }
-            //! ▼▼▼▼▼ 로그 추가 ▼▼▼▼▼
-            System.out.println("  - [BankAccount] 잔액 변경: " + originalBalance + " -> " + bankAccount.getBalance());
-            System.out.println("==================================================");
-            //! ▲▲▲▲▲ 로그 추가 ▲▲▲▲▲
             bankAccountRepository.saveAndFlush(bankAccount);
         }
     }
@@ -140,6 +124,24 @@ public class AssetService {
         return new AssetListDto(asset.getId(), name, type);
     }
 
+    // * 정기 거래 등록 시 사용할 자산 목록(모든 은행 계좌 + 현금)을 반환합니다.
+    public List<AssetListDto> getAssetsForScheduling(Member member) {
 
+        // 1. 모든 종류의 은행 계좌를 조회합니다.
+        List<BankAccount> bankAccounts = bankAccountRepository.findByMember(member);
+        // 2. 모든 현금 자산을 조회합니다.
+        List<Cash> cashAssets = cashRepository.findByMember(member);
+        // 3. 두 리스트를 모두 담을 수 있는 부모 타입(Asset)의 리스트를 새로 만듭니다.
+        List<Asset> combinedList = new ArrayList<>();
+
+        // 4. addAll()을 사용하여 두 리스트의 내용을 모두 합칩니다.
+        combinedList.addAll(bankAccounts);
+        combinedList.addAll(cashAssets);
+
+        // 5. 합쳐진 리스트를 DTO 리스트로 변환하여 반환합니다.
+        return combinedList.stream()
+                .map(this::convertToAssetListDto)
+                .collect(Collectors.toList());
+    }
 
 }

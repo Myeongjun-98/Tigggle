@@ -78,6 +78,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const schedulePopupBtn = document.getElementById('open-schedule-popup-btn');
+    if (schedulePopupBtn) {
+        schedulePopupBtn.addEventListener('click', (event) => {
+            // a 태그의 기본 동작을 한 번 더 확실하게 막아줍니다.
+            event.preventDefault();
+
+            // 팝업을 여는 함수를 여기서 직접 호출합니다.
+            openPopup('/transaction/scheduled-transaction', '정기 입/출금 관리', 900, 700);
+        });
+    }
+
 });
 
 /*
@@ -260,6 +271,8 @@ function convertPaymethodKo(payMethod){
             return "보통거래"
         case "CREDITCARD":
             return "신용카드"
+        case "SCHEDULED":
+            return "정기결제"
     }
 }
 
@@ -336,4 +349,19 @@ async function openCreateModalInEditMode(transactionId) {
     document.getElementById('TR-tx-source-asset').disabled = true;
     document.getElementById('TR-tx-income-asset').disabled = true;
     document.getElementById('TR-tx-destination-asset').disabled = true;
+}
+
+/*
+ * 지정된 URL을 정해진 크기의 팝업 창으로 엽니다.
+ * @param {string} url - 팝업으로 열 페이지의 URL
+ * @param {string} windowName - 팝업 창의 이름
+ * @param {number} width - 팝업 창의 너비
+ * @param {number} height - 팝업 창의 높이
+ */
+function openPopup(url, windowName, width, height) {
+    const left = (window.screen.width / 2) - (width / 2);
+    const top = (window.screen.height / 2) - (height / 2);
+    const options = `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`;
+
+    window.open(url, windowName, options);
 }

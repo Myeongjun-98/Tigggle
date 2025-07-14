@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeAlertModal();
 });
 
-var token = $("meta[name='_csrf']").attr("content");
-var header = $("meta[name='_csrf_header']").attr("content");
+const token = $("meta[name='_csrf']").attr("content");
+const header = $("meta[name='_csrf_header']").attr("content");
 
 // * 알림 모달 관련 함수
 // 알림 모달의 요소들을 찾아 이벤트를 연결하는 함수
