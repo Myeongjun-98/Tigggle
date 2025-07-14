@@ -2,6 +2,7 @@ package com.Tigggle.Repository.insite;
 
 
 import com.Tigggle.DTO.insite.MonthlyDateDto;
+import com.Tigggle.Entity.Transaction.Keywords;
 import com.Tigggle.Entity.Transaction.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,22 +15,6 @@ import java.util.List;
 
 @Repository
 public interface InsiteRepository extends JpaRepository<Transaction, Long> {
-
-//    // transacion에서 사용자의 "is_consumption =true, reflect_on_asset=true" 인것 가져오기
-//    List<Transaction> findByTransactionDateBetween(LocalDate startDate, LocalDate endDate);
-
-    // 소비내역 (월) 다더하기
-
-//    @Query(value = """
-//    SELECT MONTH(t.transaction_date) AS month, SUM(t.amount) AS total_amount
-//    FROM transaction t
-//    WHERE t.is_consumption = true
-//      AND t.reflect_on_asset = true
-//    GROUP BY MONTH(t.transaction_date)
-//    ORDER BY month
-//    """, nativeQuery = true)
-//    List<Object[]> getMonthlyTotalAmount();
-
 
     // JPQL의 new 키워드와 GROUP BY를 사용하여 월별 지출 합계를 바로 DTO로 조회
     @Query("SELECT new com.Tigggle.DTO.insite.MonthlyDateDto(MONTH(t.transactionDate), SUM(t.amount)) " + // DTO 패키지명 수정
@@ -80,6 +65,53 @@ public interface InsiteRepository extends JpaRepository<Transaction, Long> {
     List<Object[]> getKeywordSumByMember(@Param("memberId") Long memberId);
 
     // 결과는 Object[] 형식으로, row[0] = 키워드, row[1] = 합계입니다.
+
+    @Query(value = """
+SELECT  SUM(t.amount) FROM transaction t, keywords k WHERE t.keyword_id = k.id AND k.major_keyword = :keyword and month(transaction_date)= :mon
+""", nativeQuery = true)
+    Long getMonthlySpendingGroupedByMajorKeyword(
+            @Param("memberId") Long memberId,
+            @Param("keyword") String keyword,
+            @Param("mon") int month
+    );
+
+    // 이번 달 total 금액 구하기
+    @Query(value = """
+    SELECT SUM(t.amount)
+    FROM transaction t
+    JOIN asset a ON t.asset_id = a.id
+    WHERE a.member_id = :memberId
+      AND t.is_consumption = true
+      AND t.reflect_on_asset = true
+      AND MONTH(t.transaction_date) = MONTH(CURRENT_DATE())
+      AND YEAR(t.transaction_date) = YEAR(CURRENT_DATE())
+    """, nativeQuery = true)
+    Long getMonthlySpent(@Param("memberId") Long memberId);
+
+    // 누적 total 금액 구하기
+    @Query(value = """
+    SELECT SUM(t.amount)
+    FROM transaction t
+    JOIN asset a ON t.asset_id = a.id
+    WHERE a.member_id = :memberId
+      AND t.is_consumption = true
+      AND t.reflect_on_asset = true
+    """, nativeQuery = true)
+    Long getTotalSpent(@Param("memberId") Long memberId);
+
+    // 1일 total 금액 구하기
+    @Query(value = """
+    SELECT SUM(t.amount)
+    FROM transaction t
+    JOIN asset a ON t.asset_id = a.id
+    WHERE a.member_id = :memberId
+      AND t.is_consumption = true
+      AND t.reflect_on_asset = true
+      AND DATE(t.transaction_date) = CURRENT_DATE()
+    """, nativeQuery = true)
+    Long getDailySpent(@Param("memberId") Long memberId);
+
+
 
 
 }

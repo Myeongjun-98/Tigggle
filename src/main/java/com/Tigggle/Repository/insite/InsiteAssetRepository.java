@@ -12,7 +12,5 @@ import java.util.List;
 @Repository
 public interface InsiteAssetRepository extends JpaRepository<Asset,Long> {
 
-    @Query("SELECT a FROM Asset a WHERE a.member = :memberId AND TYPE(a) IN (InstallmentSaving , Deposit)")
-    List<Asset> findInstallmentSavingsAndDepositsByMemberId(@Param("member") Member member);
 
 }

@@ -266,6 +266,10 @@
             });
         }
 
+        document.querySelector(".export-button").addEventListener("click", () => {
+            window.location.href = "/insite/export-pdf";
+        });
+
         // btn.onclick = () => {
         //     renderLeftChart(
         //         ["2월", "3월", "4월", "5월", "6월", "7월"],
@@ -303,7 +307,7 @@
                 </div>
 
                 <!-- 내보내기 -->
-                <button class="export-button">내보내기</button>
+                <button class="export-button" onclick="window.location.href='/insite/export-pdf'">내보내기</button>
             </div>
         </div>
         <!-- 타이틀 -->

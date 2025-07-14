@@ -8,11 +8,17 @@ import com.Tigggle.DTO.insite.MonthlyDateDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Repository.UserRepository;
 import com.Tigggle.Repository.insite.InsiteRepository;
+import com.Tigggle.Service.insite.InsiteExportService;
 import com.Tigggle.Service.insite.InsiteService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,6 +36,7 @@ public class InsiteController {
 
     private final InsiteService insiteService;
     private final UserRepository memberRepository;
+    private final InsiteExportService insiteExportService;
 
     @GetMapping("/insite")
     public String showInsitePage(Model model, Principal principal) {
@@ -44,22 +51,6 @@ public class InsiteController {
 
         return "insite/insite";
     }
-
-
-//    // 월간 소비내역 차트
-//    private final InsiteService insiteService;
-//
-//    @GetMapping("/insite")
-//    public String showMonthlyConsumptionChart(Model model){
-//        LocalDate now = LocalDate.now();
-//        Map<Integer, Long> monthlyData = insiteService.getMonthlyConsumption(now);
-//
-//        // key(월) value(소비액)을 모델에 넘김
-//        model.addAttribute("months", monthlyData.keySet());
-//        model.addAttribute("amount", monthlyData.values());
-//
-//        return "insite";
-//    }
 
     @GetMapping("/api/insite/spending-summary")
     @ResponseBody
@@ -78,13 +69,31 @@ public class InsiteController {
         return insiteService.getKeywordMonthlyChart(memberId);
     }
 
-//    @GetMapping("/insite/age-average")
-//    public String showAgeGroupAverages(Model model) {
-//        List<AgeGroupAverageDto> avgList = insiteService.getAgeGroupAverages();
-//        model.addAttribute("avgList", avgList);
-//        return "insite/age-average"; // 해당 뷰 이름
-//    }
 
+    // pdf 변환하기
+    @GetMapping("/insite/export-pdf")
+    public ResponseEntity<byte[]> exportInsiteToPdf(Principal principal) throws Exception {
+        Long memberId = memberRepository.findByAccessId(principal.getName()).getId();
+        Member member = memberRepository.findById(memberId).orElseThrow();
+
+        ModelMap model = new ModelMap();
+
+        // 기존 인사이트 데이터 불러오기
+        InsiteReponseDto responseDto = insiteService.getSixMonthSpendingSummary(memberId, null);
+        List<KeywordMonthlySpendingDto> keywordData = insiteService.getKeywordMonthlyChart(memberId);
+
+        model.addAttribute("memberName", member.getName());
+        model.addAttribute("responseDto", responseDto);
+        model.addAttribute("keywordData", keywordData);
+
+        byte[] pdfBytes = insiteExportService.generatePdf(model);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "insite-report.pdf");
+
+        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
+    }
 
 
 
