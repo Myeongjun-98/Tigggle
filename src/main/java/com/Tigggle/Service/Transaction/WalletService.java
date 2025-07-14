@@ -32,8 +32,7 @@ public class WalletService {
     public WalletPageDto getWalletPageData(Long memberId, int year, int month, Long assetId) {
 
         Asset currentAsset;
-
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findById(Math.toIntExact(memberId)).orElseThrow();
 
         // 1. assetId가 URL을 통해 전달된 경우 (링크를 클릭했을 때)
         if (assetId != null) {

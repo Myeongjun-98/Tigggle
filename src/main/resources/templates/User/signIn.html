@@ -42,6 +42,11 @@
     <script>
         $(function(){
             $(".wrapTitle").addClass("visible");
+            const savedId = localStorage.getItem("tigggleid");
+            if (savedId) {
+                $("#accessId").val(savedId);
+                $("#idSave").prop("checked", true);
+            }
         });
         $("#accessId").focus();
 
@@ -61,24 +66,42 @@
                 alert("야!! 비번 입력해야지@!!!");
                 $("#password").focus();
             }else{
-                $("#loginFm").submit();
-            }
-        });
-        $("#idSave").change(function(){
-            if(this.checked){
-               localStorage.setItem("tigggleid",$("#accessId").val());
-            }else{
-                localStorage.removeItem("tigggleid");
+                if ($("#idSave").is(":checked")) {
+                    localStorage.setItem("tigggleid", $("#accessId").val());
+                } else {
+                    localStorage.removeItem("tigggleid");
+                }
+                if ($("#loginKeep").is(":checked")) {
+                    const formData = {
+                        username: $("#accessId").val(),
+                        password: $("#password").val(),
+                        autoLogin: $("#loginKeep").is(":checked")
+                    };
+                    const token = $('meta[name="_csrf"]').attr('content');
+                    const header = $('meta[name="_csrf_header"]').attr('content');
+                    $.ajax({
+                        url: "/user/signIn",
+                        method: "POST",
+                        contentType: "application/json",
+                        data: JSON.stringify(formData),
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
+                        success: function (response) {
+                            // 로그인 성공 시 이동
+                            location.href = "/";
+                        },
+                        error: function () {
+                            alert("로그인 실패");
+                        }
+                    });
+                }else {
+                    $("#loginFm").submit();
+                }
             }
         });
 
-        $("#loginKeep").change(function(){
-            if(this.checked){
-                localStorage.setItem("tigggleid",$("#accessId").val());
-            }else{
-                localStorage.removeItem("tigggleid");
-            }
-        });
+
     </script>
 </div>
 

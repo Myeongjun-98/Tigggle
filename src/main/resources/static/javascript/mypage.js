@@ -38,3 +38,34 @@ $("#profile").change(function(){
         }
     });
 });
+
+function myInfoUpdate(){
+    const token = $('meta[name="_csrf"]').attr('content');
+    const header = $('meta[name="_csrf_header"]').attr('content');
+
+    const formData = {
+        tel: $('input[name="tel"]').val(),
+        email: $('input[name="email"]').val(),
+        gender: $('select[name="gender"]').val(),
+        birthday: $('input[name="birthday"]').val()
+    };
+
+    $.ajax({
+        url: '/user/profile/update',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        beforeSend: function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
+        success: function(response) {
+            alert("정보가 성공적으로 수정되었습니다.");
+            // 필요시 페이지 새로고침 or 반영
+            // location.reload();
+        },
+        error: function(error) {
+            alert("정보 수정에 실패했습니다.");
+            console.error(error);
+        }
+    });
+}

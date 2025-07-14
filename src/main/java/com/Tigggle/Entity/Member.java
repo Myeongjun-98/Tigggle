@@ -2,9 +2,11 @@ package com.Tigggle.Entity;
 
 import com.Tigggle.Constant.Role;
 import com.Tigggle.Constant.UserStatus;
+import com.Tigggle.DTO.MyPageDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.time.LocalDate;
 
@@ -38,4 +40,10 @@ public class Member {
     private UserStatus userStatus; // 유저 상태 - 가입, 탈퇴, 탈퇴대기
 
 
+    public void myInfoUpdate(MyPageDto dto) {
+        this.setTel(dto.getTel());
+        this.setEmail(dto.getEmail());
+        this.setGender(dto.isGender());
+        this.setBirthday(dto.getBirthday());
+    }
 }
