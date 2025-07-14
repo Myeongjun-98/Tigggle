@@ -28,6 +28,8 @@ public class Product {
     @Enumerated(EnumType.STRING)
     private DataSource dataSource; // 제공받은 데이터('API', 'MANUAL')
 
+    private String productName; // 상품명
+
     private int periodMonth; // 가입 기간
 
     private Long amountMoney; // 가입 금액

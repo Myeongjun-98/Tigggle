@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/defaultLayout}">
+
+<th:block layout:fragment="css">
+  <link rel="stylesheet" th:href="@{/css/product/ProductRegister.css}">
+</th:block>
+<th:block layout:fragment="script">
+  <script th:src="@{/javascript/product/ProductRegister.js}"></script>
+</th:block>
+
+<div  layout:fragment="content">
+
+  <form th:action="@{/admin/product/manual-register}" method="post">
+    <!-- 은행 정보 입력 -->
+    <label><span>은행명:</span> <input type="text" name="bankName" id="bank-name" required></label><br>
+    <label><span>로고 URL:</span> <input type="text" name="logoUrl" id="bank-logo" required></label><br>
+    <label><span>홈페이지 주소:</span> <input type="text" name="homepageUrl" id="bank-url" required></label><br>
+
+    <!-- 상품 정보 입력 -->
+    <label><span>상품명:</span> <input type="text" name="productName" required></label><br>
+    <label><span>상품 타입:</span>
+      <select name="productType">
+        <option value="DEPOSIT">예금</option>
+        <option value="SAVINGS">적금</option>
+      </select>
+    </label><br>
+    <label><span>가입 기간 (개월):</span> <input type="number" name="periodMonth" required></label><br>
+    <label><span>가입 금액:</span> <input type="number" name="amountMoney" required></label><br>
+    <label><span>금리 (%):</span> <input type="number" step="0.01" name="interestRate" required></label><br>
+
+    <div class="form-buttons">
+      <input type="submit" value="상품 등록">
+      <button type="button" class="cancel-button" onclick="confirmCancel()">취소</button>
+    </div>
+  </form>
+
+
+</div>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout/defaultLayout}">
+
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/product/Product.css}">
+</th:block>
+<th:block layout:fragment="script">
+    <script th:src="@{/javascript/product/Product.js}"></script>
+</th:block>
+
+<div  layout:fragment="content">
+
+    <h1>상품 페이지</h1>
+
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+
+    <div id="bank-search-box" style="margin: 20px 0;">
+        <input type="text" id="bank-search-input" placeholder="은행 이름을 입력하세요 (예: 카카오뱅크)" style="padding: 8px; width: 250px;" />
+        <button onclick="scrollToBank()" style="padding: 8px 12px;">검색</button>
+    </div>
+
+    <span id="flash-message" th:if="${message}" th:text="${message}" style="display:none;"></span>
+
+    <!-- 관리자만 보이는 상품 등록 버튼 -->
+    <div sec:authorize="hasRole('ROLE_ADMIN')" style="margin-bottom: 20px;">
+        <a th:href="@{/admin/product/register}" class="register-button">상품 등록</a>
+    </div>
+
+    <div id="bank-header">
+        <img src="/images/KDB_logo.png" alt="KDB 로고" />
+
+        <a href="https://www.kdb.co.kr" target="_blank"
+           rel="noopener noreferrer">한국산업은행</a>
+    </div>
+
+    <table id="product-table">
+        <thead>
+        <tr>
+            <th>상품명</th>
+            <th>설명</th>
+            <th>이율조건</th>
+            <th>대상</th>
+            <th>채널</th>
+            <th>가입기간</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+
+    </table>
+
+    <div th:each="bank : ${banks}" class="bank-block"
+         th:attr="id=${'bank-' + bank.name}">
+        <div class="bank-header-common">
+            <!-- logoUrl 값이 실제로 뭔지 확인 -->
+
+            <img th:src="${bank.logoUrl}" alt="은행 로고" class="bank-logo"/>
+            <a th:href="${bank.homepageUrl}" target="_blank" th:text="${bank.name}">은행명</a>
+        </div>
+
+    <table class="manual-product-table">
+        <thead>
+        <tr>
+            <th>상품명</th>
+            <th>금리</th>
+            <th>가입기간</th>
+            <th>금액</th> <!-- 금액 컬럼 추가 -->
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="product : ${bank.products}">
+            <td>
+                <span th:text="${product.productName}">상품명</span>
+                <button class="delete-button"
+                        th:data-id="${product.id}"
+                        onclick="deleteProduct(this)"
+                        sec:authorize="hasRole('ROLE_ADMIN')">삭제</button>
+            </td>
+            <td th:text="${product.interestRate} + '%'">이율</td>
+            <td th:text="${product.periodMonth} + '개월'">가입기간</td>
+            <td th:text="${#numbers.formatInteger(
+                        product.amountMoney, 3, 'COMMA')} + '원'">금액</td> <!-- 금액 출력 -->
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+</div>
+</html>
