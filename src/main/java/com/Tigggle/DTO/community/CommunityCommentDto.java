@@ -21,6 +21,8 @@ public class CommunityCommentDto {
     private LocalDateTime updateDate;
     private boolean deleted;
 
+    private Long boardId; //  게시판 ID 있어야 됨 정훈!!
+
     public CommunityComment to (Member member, CommunityBoard communityBoard) {
 
         CommunityComment communityComment = new CommunityComment();
@@ -44,6 +46,7 @@ public class CommunityCommentDto {
         communityCommentDto.setWriteDate(communityComment.getWriteDate());
         communityCommentDto.setUpdateDate(communityComment.getUpdateDate());
         communityCommentDto.setDeleted(communityComment.isDeleted());
+        communityCommentDto.setBoardId(communityComment.getCommunityBoard().getId());
 
         if(communityComment.isDeleted()) {
             communityCommentDto.setContent("삭제된 댓글입니다.");

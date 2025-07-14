@@ -1,6 +1,7 @@
 package com.Tigggle.Repository.community;
 
 import com.Tigggle.Constant.Community.CommunityCategory;
+import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.community.CommunityBoard;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,6 +15,11 @@ import java.util.Optional;
 @Repository
 
 public interface CommunityBoardRepository extends JpaRepository<CommunityBoard, Long> {
+
+    List<CommunityBoard> findByMember(Member member, Pageable pageable); // 로그인 유저의 게시글 만 가져오기
+
+
+
     Page<CommunityBoard> findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(
             CommunityCategory communityCategory, Pageable pageable);
 

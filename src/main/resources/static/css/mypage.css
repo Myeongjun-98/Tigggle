@@ -124,6 +124,7 @@
 }
 .profile-pic.pic-big{
     width:140px; height:140px;
+    margin:0 auto;
     margin-bottom:30px;
 }
 
@@ -149,13 +150,15 @@
     border-radius: 5px;
 }
 
-.profile-pic-box a{
+.profile-pic-box label{
     background-color: #fff;
     border:1px solid #bababa;
     border-radius: 20px;
     color:#bababa;
+    cursor: pointer;
+    padding:10px 20px;
 }
-
+#profile{ display: none;}
 
 .myp-info-bt{
     text-align: right;
