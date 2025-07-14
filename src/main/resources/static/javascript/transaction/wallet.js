@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeWalletPage(currentYear, currentMonth);
 
     // 2. '이전 달', '다음 달' 버튼에 클릭 이벤트 리스너를 추가합니다.
+
     document.getElementById('TR-previous-month-btn').addEventListener('click', () => {
         currentMonth--;
         if (currentMonth < 1) {
@@ -88,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
             openPopup('/transaction/scheduled-transaction', '정기 입/출금 관리', 900, 700);
         });
     }
-
 });
 
 /*
@@ -110,8 +110,8 @@ async function initializeWalletPage(year, month) {
         // 2. 기본 API URL을 만듭니다.
         let apiUrl = `/api/wallet/page?year=${year}&month=${month}`;
 
-        // 3. assetId가 숫자 형태일 경우에만 파라미터로 추가합니다.
-        if (!isNaN(assetId) && assetId.trim() !== '') {
+        // 3. assetId가 숫자 형태이고, 'wallet'이 아닐 경우에만 파라미터로 추가합니다.
+        if (!isNaN(assetId) && assetId.trim() !== 'wallet') {
             apiUrl += `&assetId=${assetId}`;
         }
 
@@ -165,8 +165,8 @@ function updateAssetInfo(assetData) {
 // * @param {object} ledgerData - MonthlyLedgerDto에 해당하는 데이터
 function updateMonthlySummary(ledgerData) {
     document.getElementById('TR-current-month-display').innerText = `📅 ${ledgerData.year}년 ${ledgerData.month}월`;
-    document.getElementById('TR-monthly-income').innerText = ledgerData.monthlyTotalIncome.toLocaleString() + '원';
-    document.getElementById('TR-monthly-expense').innerText = ledgerData.monthlyTotalExpense.toLocaleString() + '원';
+    document.getElementById('TR-monthly-income').innerText = (ledgerData.monthlyTotalIncome ? ledgerData.monthlyTotalIncome.toLocaleString() : 0) + '원';
+    document.getElementById('TR-monthly-expense').innerText = (ledgerData.monthlyTotalExpense ? ledgerData.monthlyTotalExpense.toLocaleString() : 0) + '원';
 }
 
 // * 일별로 그룹핑된 거래 내역 리스트를 그리는 함수
@@ -364,4 +364,32 @@ function openPopup(url, windowName, width, height) {
     const options = `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`;
 
     window.open(url, windowName, options);
+}
+
+// * 사용자에게 메시지를 보여주는 커스텀 알림 모달 함수
+// * @param {string} message - 표시할 메시지
+function showAlert(message) {
+    // 1. 필요한 HTML 요소들을 ID로 찾습니다.
+    const modal = document.getElementById('TR-alert-modal');
+    const messageElement = document.getElementById('TR-alert-message');
+    const closeButton = document.getElementById('TR-alert-close-btn');
+
+    // 2. 만약 필수 요소 중 하나라도 없다면, 기본 alert를 사용합니다.
+    if (!modal || !messageElement || !closeButton) {
+        console.error('Alert modal 또는 그 안의 요소를 찾을 수 없습니다.');
+        alert(message); // 비상조치
+        return;
+    }
+
+    // 3. 모달의 p 태그에 메시지를 설정합니다.
+    messageElement.textContent = message;
+
+    // 4. 모달을 화면에 표시합니다.
+    modal.classList.remove('TR-hidden');
+
+    // 5. '확인' 버튼을 누르면 모달이 닫히도록 이벤트 리스너를 설정합니다.
+    // (이미 리스너가 있다면 중복 추가되지 않도록, 한번만 실행되는 { once: true } 옵션을 사용합니다.)
+    closeButton.addEventListener('click', () => {
+        modal.classList.add('TR-hidden');
+    }, { once: true });
 }

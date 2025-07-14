@@ -45,16 +45,6 @@ function initializeCreateModal() {
     const creditCardDetailsSection = document.getElementById('TR-credit-card-details');
     const myAccountTransferDetailsSection = document.getElementById('TR-my-account-transfer-details');
 
-    // openModalBtn이 null이 아닐 때만 이벤트 리스너를 등록 (오류 방지)
-    if (openModalBtn) {
-        openModalBtn.addEventListener('click', () => {
-            resetCreateModalToDefault();
-            document.getElementById('transaction-modal').classList.remove('TR-hidden');
-        });
-    }
-
-    // --- 이벤트 리스너 등록 ---
-
     // 2. '내역 입력' 버튼 클릭 시 모달창 보이기
     openModalBtn.addEventListener('click', () => {
         modalOverlay.classList.remove('TR-hidden');
@@ -321,14 +311,15 @@ function initializeCreateModal() {
 // 폼을 닫고 모든 상태를 초기화하는 헬퍼 함수
 function resetAndCloseModal() {
     currentEditingTransactionId = null; // 수정 모드 종료
-    document.getElementById('TR-create-form').reset();
+    const form = document.getElementById('TR-create-form')
+    if(form) form.reset();
 
     // 비활성화 했던 필드들을 다시 활성화
-    document.querySelectorAll('input[name="transactionType"]').forEach(radio => radio.disabled = false);
-    document.getElementById('TR-tx-pay-method').disabled = false;
-    // ...
+    document.querySelectorAll('#TR-create-form select, #TR-create-form input[type="radio"]')
+        .forEach(el => el.disabled = false);
 
     document.getElementById('transaction-modal').classList.add('TR-hidden');
+
     initializeWalletPage(currentYear, currentMonth); // 목록 새로고침
 }
 
