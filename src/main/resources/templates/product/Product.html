@@ -75,11 +75,11 @@
         <tbody>
         <tr th:each="product : ${bank.products}">
             <td>
-                <span th:text="${product.productName}">상품명</span>
                 <button class="delete-button"
                         th:data-id="${product.id}"
                         onclick="deleteProduct(this)"
                         sec:authorize="hasRole('ROLE_ADMIN')">삭제</button>
+                <span th:text="${product.productName}">상품명</span>
             </td>
             <td th:text="${product.interestRate} + '%'">이율</td>
             <td th:text="${product.periodMonth} + '개월'">가입기간</td>
