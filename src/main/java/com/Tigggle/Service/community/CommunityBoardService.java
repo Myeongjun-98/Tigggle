@@ -68,8 +68,7 @@ public class CommunityBoardService {
     public Page<CommunityBoardListDto> getCommunityBoards(CommunityCategory communityCategory,
                                                           Pageable pageable) {
 
-        Page<CommunityBoard> communityBoards = communityBoardRepository.
-                findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(
+        Page<CommunityBoard> communityBoards = communityBoardRepository.findByCommunityCategoryAndDeletedIsFalseOrderByWriteDateDesc(
                         communityCategory, pageable);
 
         List<CommunityBoardListDto> communityBoardListDtos = new ArrayList<>();

@@ -16,7 +16,7 @@ import lombok.Setter;
 @Setter @Getter @NoArgsConstructor @AllArgsConstructor
 public class TransactionUpdateDto {
     @NotNull
-    private String transactionType;      // "INCOME" or "EXPENSE"
+    private boolean isConsumption;      // "INCOME" or "EXPENSE"
     @NotBlank
     private String description;         // 내용
     @NotNull
@@ -27,9 +27,4 @@ public class TransactionUpdateDto {
     private Long keywordId;           // 분류
     private String note;                // 메모
 
-    private String payMethod;        // 결제 수단
-    private Long sourceAssetId;     // 돈 나간 자산 ID
-
-    private Long creditCardId;          // 신용카드 ID
-    private int installment;            // 할부 개월
 }
