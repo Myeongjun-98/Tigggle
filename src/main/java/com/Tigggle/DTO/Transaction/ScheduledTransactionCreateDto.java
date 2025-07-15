@@ -2,6 +2,7 @@ package com.Tigggle.DTO.Transaction;
 
 import com.Tigggle.Constant.Transaction.Frequency;
 import com.Tigggle.Constant.Transaction.PayMethod;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -18,6 +19,7 @@ public class ScheduledTransactionCreateDto {
     // 2. 거래의 기본 정보
     private String description;
     private Long amount;
+    @JsonProperty("isConsumption")
     private boolean isConsumption; // 지출 여부 (true/false)
 
     // 3. 지출일 경우에만 필요한 정보

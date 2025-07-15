@@ -1,10 +1,5 @@
 // modal.js
 
-document.addEventListener('DOMContentLoaded', () => {
-    initializeCreateModal();
-    initializeAlertModal();
-});
-
 const token = $("meta[name='_csrf']").attr("content");
 const header = $("meta[name='_csrf_header']").attr("content");
 
@@ -48,6 +43,8 @@ function initializeCreateModal() {
     // 2. '내역 입력' 버튼 클릭 시 모달창 보이기
     openModalBtn.addEventListener('click', () => {
         modalOverlay.classList.remove('TR-hidden');
+        resetCreateModalToDefault();
+
     });
 
     // 3. '닫기(X)' 버튼 클릭 시 모달창 숨기기
@@ -129,93 +126,64 @@ function initializeCreateModal() {
     // 5. '거래 방식' 선택 변경 시
     payMethodSelect.addEventListener('change', async (event) => {
         const selectedMethod = event.target.value;
-
-        // 신용카드 할부 섹션 처리
-        if (selectedMethod === 'CREDIT_CARD') {
-            creditCardDetailsSection.classList.remove('TR-hidden');
-        } else {
-            creditCardDetailsSection.classList.add('TR-hidden');
-            installmentInput.value = '0'; // 신용카드가 아니면 할부 개월 수 초기화
-        }
-
-        // 내 계좌 이체 섹션 처리
-        if (selectedMethod === 'MY_ACCOUNT_TRANSFER') {
-            myAccountTransferDetailsSection.classList.remove('TR-hidden');
-        } else {
-            myAccountTransferDetailsSection.classList.add('TR-hidden');
-            destinationAssetSelect.value = ''; // 내 계좌 이체가 아니면 목적지 자산 초기화
-        }
-
-        // --- 출금 자산 목록을 동적으로 불러오는 로직 ---
         const sourceAssetSelect = document.getElementById('TR-tx-source-asset');
-        sourceAssetSelect.innerHTML = '<option>불러오는 중...</option>'; // 로딩 중 표시
 
-        // 신용카드는 출금 자산이 없으므로 API를 호출하지 않음
-        if (selectedMethod === 'CREDIT_CARD') {
-            sourceAssetSelect.innerHTML = '<option value="">카드를 선택하세요</option>'; // 예시
-            try {
-                const response = await fetch(`/api/transactions/by-paymethod?payMethod=${selectedMethod}`);
-                const assets = await response.json();
+        // 1. 상세 옵션 섹션들의 표시 여부를 먼저 결정합니다.
+        creditCardDetailsSection.classList.toggle('TR-hidden', selectedMethod !== 'CREDIT_CARD');
+        myAccountTransferDetailsSection.classList.toggle('TR-hidden', selectedMethod !== 'MY_ACCOUNT_TRANSFER');
 
-                sourceAssetSelect.innerHTML = ''; // 기존 옵션을 모두 비웁니다.
+        // 2. 다른 옵션으로 변경 시, 관련 필드 값을 초기화합니다.
+        if (selectedMethod !== 'CREDIT_CARD') installmentInput.value = '0';
+        if (selectedMethod !== 'MY_ACCOUNT_TRANSFER') destinationAssetSelect.value = '';
 
-                sourceAssetSelect.innerHTML = '<option value="">== 카드 선택 ==</option>>'
+        // 3. API를 호출하여 '현금/카드/계좌' 드롭다운을 채웁니다.
+        sourceAssetSelect.innerHTML = '<option>불러오는 중...</option>';
+        destinationAssetSelect.innerHTML = ''; // 목적지 자산은 미리 비워둡니다.
 
-                assets.forEach(asset => {
-                    const option = document.createElement('option');
-                    option.value = asset.id;
-                    option.textContent = `[${asset.type}] ${asset.alias}`;
-                    sourceAssetSelect.appendChild(option);
-                });
-
-            } catch (error) {
-                console.error('카드/계좌 목록을 불러오는 데 실패했습니다:', error);
-                sourceAssetSelect.innerHTML = '<option value="">목록을 불러올 수 없습니다.</option>';
-            }
-            return; // 아래 로직을 실행하지 않고 종료
+        // `payMethod` 값이 있어야만 API를 호출합니다.
+        if (!selectedMethod) {
+            sourceAssetSelect.innerHTML = '<option>== 거래 방식을 선택하세요 ==</option>';
+            return;
         }
-
-        // 입금처 계좌를 불러옴!
 
         try {
-            // 1. 백엔드 API를 호출하여 선택된 거래 방식에 맞는 자산 목록을 요청
             const response = await fetch(`/api/transactions/by-paymethod?payMethod=${selectedMethod}`);
-            if (!response.ok) throw new Error('자산 목록 로딩 실패');
-
+            if (!response.ok) {
+                throw new Error('자산 목록을 불러오는 데 실패했습니다.');
+            }
             const assets = await response.json();
 
-            // 2. 받아온 데이터로 <option> 태그를 만들어 드롭다운을 새로 채움
-            sourceAssetSelect.innerHTML = ''; // 로딩 중 메시지를 지웁니다.
+            // 4. 받아온 자산 목록으로 드롭다운을 채웁니다.
+            sourceAssetSelect.innerHTML = '';
+            destinationAssetSelect.innerHTML = ''; // 입금처 목록도 미리 비워줍니다.
 
-            if (assets.length === 0) {
-                sourceAssetSelect.innerHTML = '<option value="">선택 가능한 자산이 없습니다.</option>';
-            } else {
-                sourceAssetSelect.innerHTML = '<option value="">== 현금/계좌 선택 ==</option>>'
-                destinationAssetSelect.innerHTML = '<option value="">== 현금/계좌 선택 ==</option>>'
+            const defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.textContent = "== 선택 ==";
+            sourceAssetSelect.appendChild(defaultOption.cloneNode(true));
+            destinationAssetSelect.appendChild(defaultOption.cloneNode(true));
+
+            if (assets.length > 0) {
                 assets.forEach(asset => {
                     const option = document.createElement('option');
                     option.value = asset.id;
                     option.textContent = `[${asset.type}] ${asset.alias}`;
-                    sourceAssetSelect.appendChild(option);
-                });
 
-                // MYACCOUNT일 시 입금처도 입력!
-                if(selectedMethod === 'MY_ACCOUNT_TRANSFER'){
-                    const destinationAssetSelect = document.getElementById('TR-tx-destination-asset')
+                    // 출금 계좌 드롭다운에 옵션 추가
+                    sourceAssetSelect.appendChild(option.cloneNode(true));
 
-                    assets.forEach(asset => {
-                        const option = document.createElement('option');
-                        option.value = asset.id;
-                        option.textContent = `[${asset.type}] ${asset.alias}`;
+                    // '내 계좌 이체'일 경우에만 입금처 드롭다운에도 옵션을 추가합니다.
+                    if (selectedMethod === 'MY_ACCOUNT_TRANSFER') {
                         destinationAssetSelect.appendChild(option);
-                    })
-                }
+                    }
+                });
             }
+
         } catch (error) {
-            console.error('카드/계좌 목록을 불러오는 데 실패했습니다:', error);
-            sourceAssetSelect.innerHTML = '<option value="">목록을 불러올 수 없습니다.</option>';
+            console.error('자산 목록 조회 중 오류:', error);
+            sourceAssetSelect.innerHTML = `<option>${error.message}</option>`;
         }
-        });
+    });
 
     // * 폼 제출 이벤트 처리
     const form = document.getElementById('TR-create-form')
@@ -223,12 +191,14 @@ function initializeCreateModal() {
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
-        console.log('[SUBMIT] 저장 버튼 클릭됨. 현재 currentEditingTransactionId:', currentEditingTransactionId);
+        const submitBtn = document.querySelector('.transaction-submit-btn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = '저장 중...';
 
         const isEditMode = currentEditingTransactionId !== null;
         const dto = {}; // 서버로 보낼 DTO 객체
 
-        // --- 1. DTO 객체 채우기 ---
+        // --- 1. DTO 객체 채우기 ---t
 
         if (isEditMode) {
             // [수정 모드] TransactionUpdateDto에 맞는 필드만 채웁니다.
@@ -302,8 +272,11 @@ function initializeCreateModal() {
                 showAlert(`저장에 실패했습니다: ${errorText}`);
             }
         } catch (error) {
-            console.error('API 호출 중 오류 발생:', error);
+            console.error('폼 제출 중 오류 발생:', error);
             showAlert('저장 중 오류가 발생했습니다.');
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = isEditMode ? '수정' : '저장';
         }
     });
 }
@@ -351,5 +324,5 @@ function resetCreateModalToDefault() {
 
     // 6. 모달 제목과 버튼 텍스트를 '생성 모드'로 되돌림
     document.querySelector('#transaction-modal h2').innerText = '새로운 거래내역 작성';
-    document.querySelector('#transaction-modal .submit-button').innerText = '저장하기';
+    document.querySelector('#transaction-modal .transaction-submit-btn').innerText = '저장하기';
 }

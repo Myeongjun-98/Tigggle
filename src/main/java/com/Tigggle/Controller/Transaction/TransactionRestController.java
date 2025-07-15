@@ -10,6 +10,7 @@ import com.Tigggle.Repository.UserRepository;
 import com.Tigggle.Service.Transaction.AssetService;
 import com.Tigggle.Service.Transaction.TransactionService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/api/transactions")
 @CrossOrigin(origins = "http://localhost:3000")
+@Log4j2
 public class TransactionRestController {
     private final TransactionService transactionService;
     private final UserRepository memberRepository;
@@ -73,6 +75,7 @@ public class TransactionRestController {
     ){
         Member member = memberRepository.findByAccessId(principal.getName());
         TransactionDetailDto transactionDetailDto = transactionService.getTransactionDetail(transactionId, member);
+        log.info(transactionDetailDto);
         return ResponseEntity.ok(transactionDetailDto);
     }
 

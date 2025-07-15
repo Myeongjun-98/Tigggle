@@ -30,7 +30,7 @@ public class ScheduledTransactionController {
         return ResponseEntity.ok(dtoList);
     }
 
-    @PostMapping("") // POST /api/scheduled-transactions 요청을 처리
+    @PostMapping("/create") // POST /api/scheduled-transactions 요청을 처리
     public ResponseEntity<Void> createScheduledTransaction(
             @RequestBody ScheduledTransactionCreateDto createDto,
             Principal principal) {
@@ -40,6 +40,9 @@ public class ScheduledTransactionController {
 
         // 2. 서비스 계층에 DTO와 Member 객체를 전달하여 로직 실행을 위임합니다.
         scheduledTransactionService.createScheduledTransaction(createDto, member);
+
+        System.out.println("Controller가 받은 DTO의 isConsumption 값: " + createDto.isConsumption());
+
 
         // 3. 성공적으로 처리되었음을 알리는 HTTP 201 Created 응답을 반환합니다.
         return ResponseEntity.status(HttpStatus.CREATED).build();

@@ -1,14 +1,10 @@
 package com.Tigggle.Service.Transaction;
 
 import com.Tigggle.DTO.Transaction.AssetListDto;
-import com.Tigggle.DTO.Transaction.CashDto;
-import com.Tigggle.DTO.Transaction.OrdinaryAccountDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.Transaction.*;
 import com.Tigggle.Repository.Transaction.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,29 +25,29 @@ public class AssetService {
 
     // * 잔액 계산 메서드
     @Transactional
-    public void updateBalance(Long assetId, Long amount, boolean isConsumption) {
+    public void updateBalance(Asset asset, Long amount, boolean isConsumption) {
 
-        Asset asset = assetRepository.findById(assetId).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 자산입니다."));
+        if (asset == null) {
+            return;
+        }
+        long changeAmount = isConsumption ? -amount : amount;
 
-        if (asset instanceof Cash) {
-            Cash cash = (Cash) asset;
-            long originalBalance = cash.getBalance();
-            if (isConsumption) {
-                cash.setBalance(originalBalance - amount);
-            } else {
-                cash.setBalance(originalBalance + amount);
+        // [핵심 해결책] 전달받은 Asset의 '타입'을 확인하는 대신,
+        // 그 ID를 사용해 각 자식 Repository에서 '완전한 객체'를 직접 조회합니다.
+
+        Cash cash = cashRepository.singleCash(asset.getId());
+        if(cash != null){
+            cash.setBalance(cash.getBalance() + changeAmount);
+            cashRepository.save(cash);
+            System.out.println("캐쉬쪽에서 업데이트한다/!!!!!!!!!");
+        }
+        else{
+            OrdinaryAccount ordinaryAccount = ordinaryRepository.singleOrdinary(asset.getId());
+            if (ordinaryAccount != null) {
+                ordinaryAccount.setBalance(ordinaryAccount.getBalance() + changeAmount);
+                ordinaryRepository.save(ordinaryAccount);
+            System.out.println("Ordinary에서 업데이트한다/!!!!!!!!!");
             }
-            cashRepository.saveAndFlush(cash);
-
-        } else if (asset instanceof BankAccount) {
-            BankAccount bankAccount = (BankAccount) asset;
-            long originalBalance = bankAccount.getBalance();
-            if (isConsumption) {
-                bankAccount.setBalance(originalBalance - amount);
-            } else {
-                bankAccount.setBalance(originalBalance + amount);
-            }
-            bankAccountRepository.saveAndFlush(bankAccount);
         }
     }
 

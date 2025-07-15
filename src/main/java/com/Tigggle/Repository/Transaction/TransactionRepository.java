@@ -30,9 +30,6 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long>{
      * @return 조건에 맞는 거래내역 (Optional)
      */
     @Query("SELECT t FROM Transaction t WHERE t.id = :transactionId AND t.asset.member = :member")
-    Optional<Transaction> findByIdAndMember(
-            @Param("transactionId") Long transactionId,
-            @Param("member") Member member
-    );
+    Optional<Transaction> findByIdAndMember(@Param("transactionId") Long transactionId, @Param("member") Member member);
 
 }

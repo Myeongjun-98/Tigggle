@@ -11,13 +11,14 @@
     counter-reset: row-num;
 }
 
-/* 테이블의 tbody 안에 있는 각 tr 요소에 대해 (가상 요소 ::before 사용) */
-.schedule-table tbody tr::before {
-    display: table-cell; /* td처럼 보이게 함 */
-    counter-increment: row-num; /* 카운터 숫자를 1씩 증가 */
-    content: counter(row-num); /* 증가된 카운터 숫자를 내용으로 표시 */
+.schedule-table tbody tr td:nth-child(2)::before {
+    counter-increment: row-num;   /* 카운터 숫자를 1씩 증가 */
+    content: counter(row-num);    /* 증가된 카운터 숫자를 내용으로 표시 */
+}
+
+.schedule-table tbody tr td:nth-child(2) {
     text-align: center;
-    padding: 8px; /* 다른 td와 간격을 맞추기 위해 필요할 수 있음 */
+    padding: 8px; /* 필요에 따라 기존 padding 값과 동일하게 조정 */
 }
 
 td.expense {

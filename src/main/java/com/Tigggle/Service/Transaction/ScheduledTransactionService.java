@@ -45,90 +45,39 @@ public class ScheduledTransactionService {
     // 엔티티를 DTO로 변환하는 헬퍼 메소드
     private ScheduledTransactionDto convertToDto(ScheduledTransaction schedule) {
 
-        // 키워드가 null일 경우를 대비하여 안전하게 처리합니다.
-        String keywordStr = "분류 없음"; // 기본값
-        if (schedule.getKeyword() != null) {
-            Keywords keyword = schedule.getKeyword();
-            keywordStr = (keyword.getMinorKeyword() == null)
-                    ? keyword.getMajorKeyword()
-                    : keyword.getMajorKeyword() + " > " + keyword.getMinorKeyword();
+        if (schedule == null) {
+            return null;
         }
 
-        Asset asset = schedule.getAsset();
-        String assetType = "";
-        String assetAlias = "";
+        ScheduledTransactionDto dto = new ScheduledTransactionDto();
 
-        if (asset != null) {
-            assetAlias = asset.getAlias();
-            if (asset instanceof InstallmentSaving) {
-                assetType = "적금";
-            } else if (asset instanceof Deposit) {
-                assetType = "정기예금";
-            } else if (asset instanceof OrdinaryAccount) {
-                assetType = "보통예금";
-            } else if (asset instanceof Cash) {
-                assetType = "현금";
-            }
-        }
+        // 공통 필드 채우기
+        dto.setId(schedule.getId());
+        dto.setDescription(schedule.getDescription());
+        dto.setAmount(schedule.getAmount());
+        dto.setNote(schedule.getNote());
+        dto.setStartDate(schedule.getStartDate());
+        dto.setEndDate(schedule.getEndDate());
+        dto.setDayOfExecution(schedule.getDayOfExecution());
 
-        return new ScheduledTransactionDto(
-                schedule.getId(),
-                assetType,
-                assetAlias,
-                schedule.getDescription(),
-                keywordStr,
-                schedule.isConsumption() ? "지출" : "수입",
-                schedule.getAmount(),
-                "정기 거래",
-                schedule.getNote(),
-                schedule.isReflectOnAsset(),
-                schedule.getFrequency().toString(), // Enum을 문자열로 변환
-                schedule.getDayOfExecution(),
-                schedule.getNextExecutionDate(),
-                schedule.getEndDate(),
-                schedule.isActive()
-        );
+        // 목록 표시용 필드 채우기
+        dto.setType(schedule.isConsumption() ? "지출" : "수입");
+        dto.setFrequency(schedule.getFrequency().name());
+        dto.setAssetAlias(schedule.getAsset().getAlias());
+        dto.setKeyword(schedule.getKeyword().getMajorKeyword() + " > " + schedule.getKeyword().getMinorKeyword());
+
+        // 수정 및 로직용 필드 채우기
+        dto.setAssetId(schedule.getAsset().getId());
+        dto.setKeywordId(schedule.getKeyword().getId());
+        dto.setActive(schedule.isActive());
+        dto.setReflectOnAsset(schedule.isReflectOnAsset());
+        dto.setNextExecutionDate(schedule.getNextExecutionDate());
+        dto.setConsumption(schedule.isConsumption());
+
+        return dto;
     }
 
-    @Scheduled(cron = "0 0 0 * * *")
-    @Transactional
-    public void executeScheduledTransactions(){
-        System.out.println("정기 거래 스케쥴러 실행: " + LocalDateTime.now());
 
-        LocalDate today = LocalDate.now();
-
-        int dayOfMonth = today.getDayOfMonth();
-        int dayOfWeek = today.getDayOfWeek().getValue();
-        // 1. 오늘 실행되어야 할 모든 정기 거래 목록을 DB에서 조회합니다.
-        List<ScheduledTransaction> dueSchedules = scheduledTransactionRepository.findSchedulesDueOn(dayOfMonth, dayOfWeek);
-
-        // 2. 각 정기 거래 규칙에 대해 실제 거래내역(Transaction)을 생성합니다.
-        for (ScheduledTransaction schedule : dueSchedules) {
-            // DTO를 생성하여 TransactionService에 전달
-            TransactionCreateRequestDto createDto = new TransactionCreateRequestDto();
-            createDto.setTransactionType(schedule.isConsumption() ? "EXPENSE" : "INCOME");
-            createDto.setDescription(schedule.getDescription());
-            createDto.setAmount(schedule.getAmount());
-            createDto.setTransactionDate(LocalDateTime.now());
-            createDto.setKeywordId(schedule.getKeyword().getId());
-            createDto.setNote("정기 거래로 자동 생성됨");
-            createDto.setPayMethod("SCHEDULED");
-
-            // Asset에서 Member 정보를 가져옵니다.
-            Member member = schedule.getAsset().getMember();
-
-            // sourceAssetId, creditCardId 등 payMethod에 따라 추가 설정...
-            if ("CREDIT_CARD".equals(createDto.getPayMethod())) {
-                createDto.setCreditCardId(schedule.getAsset().getId());
-            } else {
-                createDto.setSourceAssetId(schedule.getAsset().getId());
-            }
-
-            // TransactionService의 생성 로직을 호출하여 실제 거래를 생성합니다.
-            transactionService.createTransaction(createDto, member);
-        }
-
-    }
 
     // * 정기 입출금 내역 생성
     @Transactional // 데이터를 생성하므로 @Transactional은 필수입니다.
@@ -152,6 +101,7 @@ public class ScheduledTransactionService {
         schedule.setConsumption(createDto.isConsumption());
         schedule.setPayMethod(createDto.getPayMethod());
         schedule.setNote(createDto.getNote());
+
         schedule.setReflectOnAsset(createDto.isReflectOnAsset());
 
         schedule.setFrequency(createDto.getFrequency());
@@ -195,14 +145,14 @@ public class ScheduledTransactionService {
                 // 2. 시작일에 계산된 날짜를 더합니다.
                 return startDate.plusDays(daysToAdd);
 
-            case YEARLY:
-                // 1. 올해의 해당 날짜를 계산합니다. (시작일의 월/일을 사용)
-                LocalDate yearlyNextDate = startDate.withYear(startDate.getYear());
-                // 2. 만약 올해의 해당 날짜가 이미 지났다면, 내년으로 설정합니다.
-                if (yearlyNextDate.isBefore(startDate)) {
-                    return yearlyNextDate.plusYears(1);
-                }
-                return yearlyNextDate;
+//            case YEARLY:
+//                // 1. 올해의 해당 날짜를 계산합니다. (시작일의 월/일을 사용)
+//                LocalDate yearlyNextDate = startDate.withYear(startDate.getYear());
+//                // 2. 만약 올해의 해당 날짜가 이미 지났다면, 내년으로 설정합니다.
+//                if (yearlyNextDate.isBefore(startDate)) {
+//                    return yearlyNextDate.plusYears(1);
+//                }
+//                return yearlyNextDate;
 
             default:
                 // 다른 주기가 추가될 경우를 대비
@@ -233,12 +183,19 @@ public class ScheduledTransactionService {
         ScheduledTransaction schedule = scheduledTransactionRepository.findByIdAndAsset_Member(scheduleId, member)
                 .orElseThrow(() -> new SecurityException("수정할 권한이 없는 정기 거래입니다."));
 
+        Keywords keyword = keywordsRepository.findById(updateDto.getKeywordId()).orElseThrow(() -> new IllegalArgumentException("존재하지 않는 분류입니다."));
+
         // 2. DTO에 담긴 새로운 값으로 엔티티의 필드를 업데이트합니다.
         schedule.setDescription(updateDto.getDescription());
         schedule.setAmount(updateDto.getAmount());
-        schedule.setConsumption(updateDto.isConsumption());
+        schedule.setKeyword(keyword); // 찾은 Keyword 객체로 설정
+        schedule.setNote(updateDto.getNote());
+        schedule.setEndDate(updateDto.getEndDate());
+        schedule.setReflectOnAsset(updateDto.isReflectOnAsset());
         schedule.setActive(updateDto.isActive());
-        schedule.setKeyword(updateDto.getKeyword());
+        schedule.setFrequency(updateDto.getFrequency());
+        schedule.setDayOfExecution(updateDto.getDayOfExecution());
+        schedule.setConsumption(updateDto.isConsumption());
         }
 
     public ScheduledTransactionDto getSingleScheduledTransaction(Long scheduleId) {
@@ -248,4 +205,45 @@ public class ScheduledTransactionService {
         // 기존의 변환 메소드를 재사용합니다.
         return convertToDto(schedule);
     }
+
+    // * 정기 스케쥴러 실행
+    @Scheduled(cron = "0 0 0 * * *")
+    @Transactional
+    public void executeScheduledTransactions(){
+        System.out.println("정기 거래 스케쥴러 실행: " + LocalDateTime.now());
+
+        LocalDate today = LocalDate.now();
+
+        int dayOfMonth = today.getDayOfMonth();
+        int dayOfWeek = today.getDayOfWeek().getValue();
+        // 1. 오늘 실행되어야 할 모든 정기 거래 목록을 DB에서 조회합니다.
+        List<ScheduledTransaction> dueSchedules = scheduledTransactionRepository.findSchedulesDueOn(dayOfMonth, dayOfWeek);
+
+        // 2. 각 정기 거래 규칙에 대해 실제 거래내역(Transaction)을 생성합니다.
+        for (ScheduledTransaction schedule : dueSchedules) {
+            // DTO를 생성하여 TransactionService에 전달
+            TransactionCreateRequestDto createDto = new TransactionCreateRequestDto();
+            createDto.setTransactionType(schedule.isConsumption() ? "EXPENSE" : "INCOME");
+            createDto.setDescription(schedule.getDescription());
+            createDto.setAmount(schedule.getAmount());
+            createDto.setTransactionDate(LocalDateTime.now());
+            createDto.setKeywordId(schedule.getKeyword().getId());
+            createDto.setNote("정기 거래로 자동 생성됨");
+            createDto.setPayMethod("SCHEDULED");
+
+            // Asset에서 Member 정보를 가져옵니다.
+            Member member = schedule.getAsset().getMember();
+
+            // sourceAssetId, creditCardId 등 payMethod에 따라 추가 설정...
+            if ("CREDIT_CARD".equals(createDto.getPayMethod())) {
+                createDto.setCreditCardId(schedule.getAsset().getId());
+            } else {
+                createDto.setSourceAssetId(schedule.getAsset().getId());
+            }
+
+            // TransactionService의 생성 로직을 호출하여 실제 거래를 생성합니다.
+            transactionService.createTransaction(createDto, member);
+        }
+    }
+
 }

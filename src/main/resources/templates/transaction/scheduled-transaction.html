@@ -23,8 +23,8 @@
   <table class="schedule-table">
     <thead>
     <tr>
-      <th>번호</th>
       <th><input type="checkbox" id="select-all-schedules"></th>
+      <th>번호</th>
       <th>내용</th>
       <th>금액</th>
       <th>분류</th>
@@ -66,14 +66,25 @@
         <select id="schedule-frequency" required>
           <option value="MONTHLY">매월</option>
           <option value="WEEKLY">매주</option>
-          <option value="YEARLY">매년</option>
         </select>
       </div>
 
       <div class="form-group">
-        <label for="schedule-day-execution">실행일:</label>
-        <input type="number" id="schedule-day-execution" min="1" max="31" required>
-        <span id="day-execution-guide">(매월: 1-31일)</span>
+        <label for="schedule-frequency">실행일:</label>
+        <div id="day-execution-container">
+          <input type="number" id="schedule-day-of-month" min="1" max="31">
+          <span class="day-execution-guide">(매월: 1-31일)</span>
+
+          <select id="schedule-day-of-week" class="TR-hidden">
+            <option value="1">월요일</option>
+            <option value="2">화요일</option>
+            <option value="3">수요일</option>
+            <option value="4">목요일</option>
+            <option value="5">금요일</option>
+            <option value="6">토요일</option>
+            <option value="7">일요일</option>
+          </select>
+        </div>
       </div>
 
       <div class="form-group">
@@ -99,12 +110,17 @@
             </option>
           </th:block>
         </select>
-        </select>
       </div>
       <div class="form-group">
         <label for="schedule-note">메모:</label>
         <textarea id="schedule-note"></textarea>
       </div>
+
+      <div id="start-date-group" class="form-group">
+        <label for="schedule-start-date">시작일:</label>
+        <input type="date" id="schedule-start-date" disabled>
+      </div>
+
       <div class="form-group">
         <label for="schedule-end-date">종료일 (선택):</label>
         <input type="date" id="schedule-end-date">
@@ -114,6 +130,14 @@
         <label for="schedule-reflect-asset">자산 총액에 반영</label>
         <label class="switch">
           <input type="checkbox" id="schedule-reflect-asset" checked>
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div class="form-group switch-group">
+        <label for="schedule-is-active">이 규칙 활성화</label>
+        <label class="switch">
+          <input type="checkbox" id="schedule-is-active">
           <span class="slider round"></span>
         </label>
       </div>

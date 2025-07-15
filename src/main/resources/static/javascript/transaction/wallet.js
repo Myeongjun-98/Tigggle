@@ -6,12 +6,9 @@ let currentMonth;
 let currentTransactionIdForModal = null; // 상세보기 모달에 표시된 거래 ID
 let currentEditingTransactionId = null;  // 현재 '수정 중인' 거래 ID
 
-// csrf 토큰
-var token = $("meta[name='_csrf']").attr("content");
-var header = $("meta[name='_csrf_header']").attr("content");
-
 // 페이지의 모든 HTML 요소가 로드되면 이 스크립트를 실행합니다.
 document.addEventListener('DOMContentLoaded', () => {
+
     // 1. 페이지가 로드될 때, 현재 날짜를 기준으로 초기화 함수를 호출합니다.
     const today = new Date();
     currentYear = today.getFullYear();
@@ -89,6 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
             openPopup('/transaction/scheduled-transaction', '정기 입/출금 관리', 900, 700);
         });
     }
+    initializeCreateModal();
 });
 
 /*
@@ -273,6 +271,8 @@ function convertPaymethodKo(payMethod){
             return "신용카드"
         case "SCHEDULED":
             return "정기결제"
+        default:
+            return "기타"
     }
 }
 
@@ -317,14 +317,10 @@ async function openCreateModalInEditMode(transactionId) {
         const createModal = document.getElementById('transaction-modal');
         createModal.classList.remove('TR-hidden');
 
-
-        console.log('[EDIT MODE] 수정 모드 진입. currentEditingTransactionId를', transactionId, '로 설정합니다.');
-
-
         currentEditingTransactionId = transactionId; // '수정 모드'로 전환
 
         createModal.querySelector('h2').innerText = '거래내역 수정';
-        createModal.querySelector('.submit-button').innerText = '수정하기';
+        createModal.querySelector('.transaction-submit-btn').innerText = '수정하기';
 
         // 가져온 데이터로 폼 필드를 채웁니다.
         document.getElementById('TR-tx-date').value = detailData.transactionDate.substring(0, 16);
