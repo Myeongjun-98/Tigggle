@@ -106,9 +106,19 @@ body {
   background-color: #f2f3f8;
   border-radius: 25px;
 }
-.consump-graph-box> span{
+.consump-amount{
     font-size: 32px;
     font-weight: 600;
+    margin-left: 60px;
+}
+.consump-graph-content {
+    width: 600px;
+    height: 400px;
+    margin-top: 130px;
+}
+.consump-graph-content-2 {
+    width: 480px;
+    margin-top: 180px;
 }
 .keyword-btn-box {
     width: 1250px;
@@ -164,16 +174,23 @@ body {
     height: 270px;
     margin-top: 28px;
 }
+.f-profile-photo {
+    width: 100px;
+    height: 100px;
+}
 .profile-photo {
-    width: 88px;
-    height: 88px;
-    background-color: #D9D9D9;
+    width: 50px;
+    height: 50px;
     border-radius: 80px;
+    margin-top: 50px;
+}
+.r-consump-sub-box{
+    margin-top: 40px;
 }
 .foot-title {
     font-size: 32px;
     font-weight: 700;
-    margin-top: 20px;
+    margin-top: 50px;
 }
 .foot-right-consump-box {
     width: 722px;
@@ -185,6 +202,41 @@ body {
     background-color: #FAFBFF;
     border-radius: 15px;
     border: 1px solid #E7E7E7;
+    text-align: center;
+    line-height: 83px;
+    font-size: 18px;
+}
+.top-c-text {
+    font-size: 26px;
+    font-weight: 600;
+}
+.left-consump-text-1 {
+    font-size: 20px;
+    margin-bottom: 10px;
+    margin-top: 50px;
+}
+.left-consump-text-2 {
+    font-size: 32px;
+    font-weight: 600;
+}
+.left-consump-text-btn {
+    margin-top: 15px;
+    border-radius: 10px;
+    background-color: #EFF2FF;
+    color: #91A4C5;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    width: 160px;
+    height: 40px;
+}
+.r-consump-text {
+    font-weight: 600;
+    font-size: 20px;
+    width: 160px;
+    height: 80px;
+    text-align: center;
 }
 .l-r-box {
     display: flex;
@@ -197,6 +249,7 @@ body {
     border-radius: 15px;
     border: 1px solid #E7E7E7;
     margin-right: 15px;
+    text-align: center;
 }
 .right-consump-box {
     width: 229px;

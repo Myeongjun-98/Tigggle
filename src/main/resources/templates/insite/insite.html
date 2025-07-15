@@ -297,7 +297,7 @@
             <!-- 우측 날짜 선택 및 버튼 -->
             <div class="date-controls">
                 <!-- 달력 아이콘 -->
-                <span class="calendar-icon" id="calendarIcon">📅</span>
+<!--                <span class="calendar-icon" id="calendarIcon">📅</span>-->
 
                 <!-- 월 이동 표시 -->
                 <div class="month-display">
@@ -313,7 +313,7 @@
         <!-- 타이틀 -->
 
         <!-- 달력 팝업용 -->
-        <input type="text" id="datepicker" />
+<!--        <input type="text" id="datepicker" />-->
         <!-- 달력 팝업용 -->
 
         <!-- 소비내역 -->
@@ -322,8 +322,10 @@
                 <div class="left-consump">
                     <p>월간 소비내역 그래프</p>
                     <div class="consump-graph-box">
-                        <span id="leftTotalAmount">1,200,000원</span>
-                        <canvas id="barChartLeft"></canvas>
+<!--                        <img src="images/consump-img.png" alt="이미지">-->
+                        <p class="consump-amount" id="leftTotalAmount">
+                            1,200,000원</p>
+                        <canvas class="consump-graph-content" id="barChartLeft"></canvas>
                     </div>
                     <div class="keyword-btn-box">
                     </div>
@@ -331,8 +333,8 @@
                 <div class="right-consump">
                     <p>6월 소비내역</p>
                     <div class="month-graph-box">
-                        <span id="rightTotalAmount">1,200,000원</span>
-                        <canvas id="barChartRight"></canvas>
+                        <p id="rightTotalAmount">1,200,000원</p>
+                        <canvas class="consump-graph-content-2" id="barChartRight"></canvas>
                     </div>
                 </div>
             </div>
@@ -342,7 +344,9 @@
             <div class="foot-box">
                 <!-- 왼쪽: 프로필 및 안내 문구 -->
                 <div class="foot-text-box">
-                    <div class="profile-photo"></div>
+                    <div class="f-profile-photo">
+                        <img src="images/foot-title-img.png">
+                    </div>
                     <div class="foot-title">
                         <p th:text="${memberName} + '님,'"></p>
                         <p th:text="${ageGroupAverageDto.getAgeGroup()} + '들의'"></p>
@@ -354,22 +358,26 @@
                     <!-- 상단: 연령대 평균 표시 -->
                     <div class="top-consump-box">
                         <span th:text="'지난 달 ' + ${ageGroupAverageDto.getAgeGroup()} + ' 한 달 사용 소비금액  '"></span>
-                        <span style="color: #3340cb;" th:text=
+                        <span class="top-c-text" style="color: #3340cb;" th:text=
                               "${ageGroupAverageDto.getAverageAmount()} + '원'"
                         ></span>
                     </div>
                     <!-- 하단: 본인 소비, 차이 -->
                     <div class="l-r-box">
                         <div class="left-consump-box">
-                            <p style="font-weight: 600; margin-bottom: 10px;" th:text="${memberName} + '님의 이번 달 소비금액'"></p>
-                            <p id="amount-of-this-month" style="font-size: 28px; font-weight: bold;">원</p>
-                            <button style="margin-top: 15px; padding: 10px 20px; border-radius: 10px; border: none; background-color: #f0f2fa; font-weight: bold;">가계부 바로가기</button>
+                            <p class="left-consump-text-1" th:text="${memberName} + '님의 이번 달 소비금액'"></p>
+                            <p class="left-consump-text-2" id="amount-of-this-month">원</p>
+                            <button class="left-consump-text-btn">가계부 바로가기</button>
                         </div>
                         <!-- 차이 -->
                         <div class="right-consump-box">
-                            <div class="profile-photo" style="margin-bottom: 10px;"></div>
-                            <input type="hidden" id="age-group-average-amount" th:value="${ageGroupAverageDto.getAverageAmount()}"/>
-                            <p id="spending-comparison-result" style="font-weight: bold;"></p>
+                            <div class="r-consump-sub-box">
+                                <div class="profile-photo" style="margin-bottom: 10px; margin-top: 20px;">
+                                    <img src="images/r-consump-text.png" alt="이미지">
+                                </div>
+                                <input type="hidden" id="age-group-average-amount" th:value="${ageGroupAverageDto.getAverageAmount()}"/>
+                                <p class="r-consump-text" id="spending-comparison-result"></p>
+                            </div>
                         </div>
                     </div>
                 </div>
