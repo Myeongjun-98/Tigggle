@@ -3,11 +3,141 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/defaultLayout}">
 
-<th:block layout:fragment="css"></th:block>
+<th:block layout:fragment="css"><link rel="stylesheet" href="/css/mypage.css"></th:block>
 <th:block layout:fragment="script"></th:block>
 
 <div  layout:fragment="content">
 
+    <div class="wrapper">
+        <div class="myp-top flex flex-item-center flex-js-between mb-3">
+            <div class="flex flex-item-center column-gap-30">
+                <div class="profile-pic" th:style="|background: url(@{${myPageDto.profileUrl}}) no-repeat center; background-size: contain;|"></div>
+                <h3 th:text="${myPageDto.name}">신선우님</h3>
+            </div>
+            <div class="flex flex-item-center column-gap-20">
+                <span>상담사 사용 횟수 : <span th:text="${myPageDto.counselingTokken}">2</span></span>
+            </div>
+        </div>
+        <div class="myp-wrap">
+            <div class="sidebar flex">
+
+                <div class="side-section flex flex-col cs">
+                    <p class="side-text1">전문 상담사의 도움이 필요하신가요?</p>
+                    <div class="cs-img">
+                        <img src="/images/commentator.png">
+                        <div class="cs-count" th:text="${myPageDto.counselingTokken}">2</div>
+                    </div>
+                    <a href="">초기화</a>
+                    <a href="">멤버십 전환</a>
+                </div>
+
+                <div class="side-section my-trans flex flex-col">
+                    <h2>6월 <span style="color: orange">900,000원</span></h2>
+                        <ul class="my-tans-list">
+                            <li>식비 : 400,000원</li>
+                            <li>생활비 : 300,000원</li>
+                            <li>기타 : 200,000원</li>
+                        </ul>
+                        <a href="/transaction/wallet">가계부로 이동</a>
+                </div>
+                <div class="member-drar-bt">
+                    <a href="">회원탈퇴</a>
+                </div>
+            </div>
+
+            <div class="myp-main">
+                <div class="card">
+                    <div class="section-title">내 정보 변경</div>
+                    <div class="flex flex-js-between">
+                        <div class="profile-pic-box">
+                            <div class="profile-pic pic-big" id="profilePic" th:style="|background: url(@{${myPageDto.profileUrl}}) no-repeat center; background-size: contain;|"></div>
+                            <label for="profile">프로필 사진 변경</label>
+                            <input type="file" name="profile" id="profile">
+                        </div>
+                        <div class="flex flex-col w-70" th:object="${myPageDto}">
+
+                            <div class="myp-info flex flex-item-center">
+                                <label for="">아이디</label>
+                                <input type="text" placeholder="아이디" th:field="*{accessId}" disabled>
+                            </div>
+                            <div class="myp-info flex flex-item-center">
+                                <label for="">휴대전화</label>
+                                <input type="text" placeholder="휴대전화" th:field="*{tel}">
+                            </div>
+                            <div class="myp-info flex flex-item-center">
+                                <label for="">이메일</label>
+                                <input type="email" placeholder="example@naver.com" th:field="*{email}">
+                            </div>
+
+                            <div style="display: flex; gap: 30px; margin-bottom:30px;">
+                                <div class="flex w-30 myp-info flex-item-center">
+                                    <label>성별</label>
+                                    <select>
+                                        <option th:selected="${myPageDto.gender}==false"   value="0">여성</option>
+                                        <option th:selected="${myPageDto.gender}==true" value="1">남성</option>
+                                    </select>
+                                </div>
+
+                                <div class="flex w-70 myp-info flex-item-center">
+                                    <label>생년월일</label>
+                                    <input type="date" name="birthday"
+                                           th:value="${#temporals.format(myPageDto.birthday, 'yyyy-MM-dd')}">
+                                </div>
+
+                            </div>
+                            <div class="myp-info-bt">
+                                <a href="javascript:myInfoUpdate();">내 정보 변경</a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">내가 작성한 글</div>
+                    <table>
+                        <tbody>
+                        <tr th:each="row,stat : ${myPageDto.communityBoardList}">
+                            <td> <input type="checkbox"> </td>
+                            <td th:text="${stat.count}">1</td>
+                            <td><span class="category" th:text="${row.category}">커뮤니티글</span></td>
+                            <td style="text-align:left" >
+                                <a th:href="'/community/detail/'+${row.id}" th:text="${row.title}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</a>
+                            </td>
+                            <td th:text="${row.writeDate}">2025.07.07</td>
+                            <td>댓글<span th:text="${row.commentCount}"></span></td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <span class="active">1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-title">내가 작성한 댓글</div>
+                    <table>
+                        <tbody>
+                        <tr th:each="row,stat : ${myPageDto.communityCommentDtoList}">
+                            <td> <input type="checkbox"> </td>
+                            <td th:text="${stat.count}">1</td>
+                            <td style="text-align:left" >
+                                <a th:href="'/community/detail/'+${row.boardId}" th:text="${row.content}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</a>
+                            </td>
+                            <td th:text="${row.name}">username</td>
+                            <td th:text="${row.writeDate}">2025.07.07</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination">
+                        <span class="active">1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/javascript/mypage.js"></script>
 </div>
 
 </html>

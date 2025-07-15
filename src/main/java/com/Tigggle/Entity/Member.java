@@ -2,9 +2,11 @@ package com.Tigggle.Entity;
 
 import com.Tigggle.Constant.Role;
 import com.Tigggle.Constant.UserStatus;
+import com.Tigggle.DTO.MyPageDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.jpa.repository.Modifying;
 
 import java.time.LocalDate;
 
@@ -31,11 +33,17 @@ public class Member {
     private LocalDate birthday;   //생년월일
     private byte counselingTokken=3;
     @Column(nullable = false)
-    private String profileImage="/image/defProfile.jpg";  // 프로필이미지
+    private String profileImage="/images/default_profile.jpg";  // 프로필이미지
     @Enumerated(EnumType.STRING)
     private Role role; // 권한
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus; // 유저 상태 - 가입, 탈퇴, 탈퇴대기
 
 
+    public void myInfoUpdate(MyPageDto dto) {
+        this.setTel(dto.getTel());
+        this.setEmail(dto.getEmail());
+        this.setGender(dto.isGender());
+        this.setBirthday(dto.getBirthday());
+    }
 }

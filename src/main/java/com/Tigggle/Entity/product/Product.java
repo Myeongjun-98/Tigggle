@@ -1,7 +1,7 @@
 package com.Tigggle.Entity.product;
 
-import com.Tigggle.Constant.DataSource;
-import com.Tigggle.Constant.ProductType;
+import com.Tigggle.Constant.FinancialProduct.DataSource;
+import com.Tigggle.Constant.FinancialProduct.ProductType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

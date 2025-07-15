@@ -1,4 +1,4 @@
-package com.Tigggle.Constant;
+package com.Tigggle.Constant.Community;
 
 public enum CommunityCategory {
     TIP("지출/저축tip"), DISCUSSION("예/적금 분석 및 토론"), ECONOMIC_MARKET("경제시장");

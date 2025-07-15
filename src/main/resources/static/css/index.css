@@ -1,14 +1,15 @@
 #content{
+    max-width:1900px;
     padding:40px;
 }
+.main-section{width:1820px;}
 #intro{
-    width:100%;
     background-image: linear-gradient(to bottom, #1a53d1, #5497ff , #3a78ea);
     border-radius: 80px;
-    padding:60px 140px;
+    padding:60px 140px;font-size:17px;
 }
 #intro .intro-box{
-    width:100%;
+    width:1540px;
 }
 #intro .intro-box .intro-top{
     margin-bottom:50px;
@@ -18,20 +19,21 @@
     padding-bottom:220px;
 }
 #intro .intro-box .intro-top .intro-top-left{
-    width:60%;
+    width:924px;
     color:#fff;
+
 }
 #intro .intro-box .intro-top .intro-top-left .intro-title{
-    font-size:100px;
+    font-size:6em;
     font-family: '돋움';
 }
 #intro .intro-box .intro-top .intro-top-left .intro-desc{
     padding:50px 0;
-    font-size:40px;
+    font-size:1.8em;
 }
 #intro .intro-box .intro-top .intro-top-left .intro-desc2{
     padding-bottom:50px;
-    font-size:36px;
+    font-size:2em;
 }
 
 #intro .intro-box .intro-top .intro-top-left .intor-search-wrap{
@@ -78,12 +80,12 @@
 
 }
 #intro .intro-box .intro-top .intro-top-right{
-    width:40%;
+    width:616px;
     padding-left:30px;
     position:relative;
 }
 #intro .intro-box .intro-top .intro-top-right .intro-card{
-    width:450px;
+    width:70%;
     height:600px;
     background-color: #fff;
     border-radius: 50px;
@@ -105,6 +107,76 @@
     border-radius: 40px;
 
 }
+
+#intro .intro-top-right {
+    position: relative;
+    width: 400px;
+    height: 600px;
+    padding-left: 30px;
+}
+
+/* 공통 카드 스타일 */
+#intro .intro-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    border-radius: 40px;
+    box-shadow: 0 0 15px 4px #0000000c;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: all 0.5s ease;
+    cursor: pointer;
+    overflow-y: auto;
+}
+
+/* 초기 상태: 수입 카드가 앞 */
+#intro .intro-card1 {
+    z-index: 2;
+    transform: scale(1);
+    opacity: 1;
+}
+#intro .intro-card2 {
+    z-index: 1;
+    transform: scale(0.95);
+    opacity: 0.9;
+}
+
+/* 전환 효과를 위한 클래스 */
+.card-front {
+    z-index: 2 !important;
+    transform: scale(1);
+    opacity: 1;
+}
+.card-back {
+    z-index: 1 !important;
+    transform: scale(0.95);
+    opacity: 0.9;
+}
+
+/* 카드 안쪽 내용 */
+.intro-card-inner {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #d9d9d9;
+    border-radius: 30px;
+    padding: 15px;
+    box-sizing: border-box;
+    text-align: left;
+    overflow-y: auto;
+}
+
+
+
+
+
+
+
+
+
+
 #intro .intro-box .intor-bottom-list{
     display:flex;
     color:#fff;
@@ -119,7 +191,6 @@
 
 /*  section1  */
 #section1{
-    width:100%;
     padding: 100px 300px;
     display:flex;
     flex-direction: column;
@@ -165,7 +236,6 @@
 
 /*  section2  */
 #section2{
-    width:100%;
     padding: 100px 300px;
     display:flex;
     flex-direction: column;
@@ -265,7 +335,6 @@
 /*  section3  */
 
 #section3{
-    width:100%;
     padding:35px;
 }
 #section3 .section3-title{
@@ -312,57 +381,6 @@
 
 
 
-
-
-
-
-
-
-
-
-/*  공통 효과 - 스크롤 */
-
-.fade-in {
-    opacity: 0;
-    transition: all 1s ease-in;
-}
-.fade-in.visible {
-    opacity: 1;
-}
-
-.reveal {
-    opacity: 0;
-    transform: translateY(20px); /* 기본 위로 올라오는 효과 */
-    transition: all 0.6s ease-out;
-}
-
-.reveal.left-view {
-    transform: translateX(-50px); /* 왼쪽에서 등장 */
-}
-.reveal.right-view {
-    transform: translateX(50px); /* 오른쪽에서 등장 */
-}
-
-.reveal.up {
-    transform: translateY(40px); /* 위로 등장 */
-}
-
-.reveal.show {
-    opacity: 1;
-    transform: translate(0, 0);
-}
-
-/* 지연 효과 (0.2초, 0.4초, 0.6초 등) */
-.delay-1 {
-    transition-delay: 0.2s;
-}
-.delay-2 {
-    transition-delay: 0.4s;
-}
-.delay-3 {
-    transition-delay: 0.6s;
-}
-
 .text-30{
     font-size:30px;
 }
@@ -371,3 +389,89 @@
 }
 .pd-tb-20{padding:20px 0;}
 .pd-tb-50{padding:50px 0;}
+
+
+
+@media screen and (max-width:1200px){
+    .main-section{
+        width:100%;
+    }
+    #content .section-low{
+        padding-left:0; padding-right:0;
+    }
+    #intro .intro-box {width:100%;}
+    #intro .intro-box .intro-top {
+        flex-direction: column;
+        row-gap:50px
+    }
+    #intro .intro-box .intro-top .intro-top-left{
+        width:100%;
+    }
+    #intro .intro-box .intro-top .intro-top-right{
+        width:100%;
+    }
+    #intro .intro-box .intro-top .intro-top-left .intro-search-box {
+        width:100%;
+    }
+
+    #section2 .section2-middle{
+        padding:0 30px 0 15px;
+    }
+    /* #intro .intro-box .intro-top .intro-top-right .intro-card{
+         width:450px;
+     } */
+}
+
+@media screen and (max-width:700px){
+    #content{padding:0;}
+    #intro{padding-left:0; padding-right:0; font-size:10px;border-radius: 5px;}
+
+    #intro .intro-box .intro-top .intro-top-right{padding:10px;}
+    #intro .intro-box .intro-top .intro-top-right .intro-card1{
+        float: none; width:100%;
+    }
+    #intro .intro-box .intro-top{padding-bottom:0;}
+    #intro .intro-box .intor-bottom-list{
+        flex-wrap: wrap;padding: 15px;
+    }
+    #intro .intro-box .intor-bottom-list li{
+        padding:5px 5px;
+    }
+    #section1 .section1-content {
+        flex-direction: column;
+    }
+
+
+
+    #section1 .section1-content .sec1-text {
+        width:90%;
+        order:1;
+    }
+    #section1 .section1-content .sec1-text h1{font-size:40px;}
+    #section1 .section1-content .sec1-card{
+        width:90%;
+        order:2;
+    }
+    #content #section2{padding:0 15px; row-gap:0;}
+    #section2 .section2-top{
+        flex-wrap:wrap;
+    }
+    #section2 .section2-top h1{ font-size:40px;}
+    #section2 .my-bank-list-wrap{
+        width:100%;
+    }
+    #section2 .section2-middle{
+        padding:0 15px;
+    }
+
+    #section3 .section3-title {padding-top:10px;}
+
+    #section3 .slider-wrap .slider-box .slider{
+        flex-wrap: wrap;
+    }
+    #section3 .slider-wrap .slider-box .slider .slider-card{
+        width:250px;height:340px;
+    }
+
+
+}

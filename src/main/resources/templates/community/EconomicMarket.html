@@ -3,10 +3,87 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/defaultLayout}">
 
-<th:block layout:fragment="css"></th:block>
-<th:block layout:fragment="script"></th:block>
+<th:block layout:fragment="css">
+    <link rel="stylesheet" th:href="@{/css/community/EconomicMarket.css}">
+</th:block>
+<th:block layout:fragment="script">
+    <script th:src="@{/javascript/community/EconomicMarket.js}"></script>
+</th:block>
 
 <div  layout:fragment="content">
+
+    <a th:href="@{/communityEconomicMarket}">
+        <h2>경제시장</h2>
+    </a>
+
+    <div class="write-button-container">
+        <a th:href="@{/community/EconomicMarketWrite}" class="write-button">작성</a>
+    </div>
+    <table>
+        <thead>
+        <tr>
+            <th>제목</th>
+            <th>작성자</th>
+            <th>작성일</th>
+            <th>조회수</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="board : ${communityBoardListDto}">
+            <td>
+                <a th:href="@{/community/detail/{id}(id=${board.id})}"
+                   th:text="${board.title}">제목</a>
+                <span th:if="${board.hasImage}" style="margin-left:4px">🖼️</span>
+
+                <span th:if="${board.commentCount > 0}" style="margin-left:4px"
+                      th:text="'[' + ${board.commentCount} + ']'"></span>
+            </td>
+            <td th:text="${board.name}">작성자</td>
+            <td th:text="${board.formattedWriteDate}">작성일</td>
+            <td th:text="${board.hit}">조회수</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!--    페이징 -->
+
+    <div class="pagination">
+        <!-- 이전 페이지 버튼 -->
+        <a th:if="${communityBoardListDto.hasPrevious()}"
+           th:href="@{/communityTip(page=${communityBoardListDto.number - 1}, keyword=${communitySearchDto.keyword}, searchType=${communitySearchDto.searchType})}">
+            이전
+        </a>
+
+        <!-- 페이지 번호 버튼 반복 -->
+        <span th:each="pageNum : ${#numbers.sequence(1, communityBoardListDto.totalPages)}">
+        <a th:href="@{/communityTip(page=${pageNum - 1}, keyword=${communitySearchDto.keyword}, searchType=${communitySearchDto.searchType})}"
+           th:text="${pageNum}"
+           th:classappend="${pageNum == communityBoardListDto.number + 1} ? 'current' : ''">
+        </a>
+    </span>
+
+        <!-- 다음 페이지 버튼 -->
+        <a th:if="${communityBoardListDto.hasNext()}"
+           th:href="@{/communityTip(page=${communityBoardListDto.number + 1}, keyword=${communitySearchDto.keyword}, searchType=${communitySearchDto.searchType})}">
+            다음
+        </a>
+    </div>
+
+<!--    검색 폼 시작-->
+
+    <form th:action="@{/communityEconomicMarket}" method="get" class="search-form">
+        <select name="searchType">
+            <option th:each="type : ${searchTypes}"
+                    th:value="${type}"
+                    th:text="${type.label}"
+                    th:selected="${type} == ${communitySearchDto.searchType}">제목</option>
+        </select>
+
+        <input type="text" name="keyword" placeholder="검색어를 입력하세요."
+                th:value="${communitySearchDto != null ? communitySearchDto.keyword : ''}">
+
+        <button type="submit">검색</button>
+    </form>
 
 </div>
 

@@ -1,6 +1,6 @@
 package com.Tigggle.Entity.community;
 
-import com.Tigggle.Constant.CommunityCategory;
+import com.Tigggle.Constant.Community.CommunityCategory;
 import com.Tigggle.Entity.Member;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -18,7 +18,7 @@ public class CommunityBoard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 게시글 일련번호
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member; // 사용자
 
