@@ -14,7 +14,21 @@
 
   <form th:action="@{/admin/product/manual-register}" method="post">
     <!-- 은행 정보 입력 -->
-    <label><span>은행명:</span> <input type="text" name="bankName" id="bank-name" required></label><br>
+    <label><span>은행명:</span> <select name="bankName" id="bank-name" required>
+      <option value="">-- 은행 선택 --</option>
+      <option value="한국산업은행">한국산업은행</option>
+      <option value="국민은행">국민은행</option>
+      <option value="우리은행">우리은행</option>
+      <option value="하나은행">하나은행</option>
+      <option value="농협은행">농협은행</option>
+      <option value="SC제일은행">SC제일은행</option>
+      <option value="한국씨티은행">한국씨티은행</option>
+      <option value="카카오뱅크">카카오뱅크</option>
+      <option value="토스뱅크">토스뱅크</option>
+      <option value="케이뱅크">케이뱅크</option>
+    </select>
+    </label><br>
+
     <label><span>로고 URL:</span> <input type="text" name="logoUrl" id="bank-logo" required></label><br>
     <label><span>홈페이지 주소:</span> <input type="text" name="homepageUrl" id="bank-url" required></label><br>
 
@@ -26,9 +40,12 @@
         <option value="SAVINGS">적금</option>
       </select>
     </label><br>
-    <label><span>가입 기간 (개월):</span> <input type="number" name="periodMonth" required></label><br>
-    <label><span>가입 금액:</span> <input type="number" name="amountMoney" required></label><br>
-    <label><span>금리 (%):</span> <input type="number" step="0.01" name="interestRate" required></label><br>
+    <label><span>가입 기간 (개월):</span>
+      <input type="number" name="periodMonth" placeholder="가입 기간을 입력해주세요" required></label><br>
+    <label><span>가입 금액:</span>
+      <input type="number" name="amountMoney" placeholder="가입 금액을 입력해주세요" required></label><br>
+    <label><span>금리 (%):</span>
+      <input type="number" step="0.01" name="interestRate" placeholder="금리를 입력해주세요" required></label><br>
 
     <div class="form-buttons">
       <input type="submit" value="상품 등록">

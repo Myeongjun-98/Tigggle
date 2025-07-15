@@ -20,7 +20,7 @@
          logoUrl: "/images/nh_logo.png",
          homepageUrl: "https://www.nonghyup.com"
        },
-       "SC제일은행": {
+       "제일은행": {
          logoUrl: "/images/sc_logo.png",
          homepageUrl: "https://www.standardchartered.co.kr"
        },
@@ -48,7 +48,7 @@
      const urlInput = document.getElementById('bank-url');
 
      if (bankNameInput && logoInput && urlInput) {
-         bankNameInput.addEventListener('input', function () {
+         bankNameInput.addEventListener('change', function () {
              const bank = bankInfoMap[this.value.trim()];
              if (bank) {
                  logoInput.value = bank.logoUrl;

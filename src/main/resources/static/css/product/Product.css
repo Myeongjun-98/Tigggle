@@ -25,7 +25,7 @@ th {
 }
 
 .bank-header-common {
-    margin-top: 40px;
+
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -40,6 +40,37 @@ th {
     object-fit: contain;    /* 비율 유지하면서 최대 크기 안에서 조정 */
     vertical-align: middle;
 }
+
+.bank-block {
+  margin-top: 50px;
+}
+
+.manual-product-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.manual-product-table th:nth-child(1),
+.manual-product-table td:nth-child(1) {
+  width: 30%;  /* 상품명 */
+}
+
+.manual-product-table th:nth-child(2),
+.manual-product-table td:nth-child(2) {
+  width: 20%;  /* 금리 */
+}
+
+.manual-product-table th:nth-child(3),
+.manual-product-table td:nth-child(3) {
+  width: 25%;  /* 가입기간 */
+}
+
+.manual-product-table th:nth-child(4),
+.manual-product-table td:nth-child(4) {
+  width: 25%;  /* 금액 */
+}
+
+
 
 .bank-header-common a {
     font-size: 22px;
