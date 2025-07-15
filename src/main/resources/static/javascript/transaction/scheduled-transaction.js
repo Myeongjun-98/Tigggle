@@ -206,6 +206,9 @@ function createDtoFromForm() {
         dayOfExecution = form.querySelector('#schedule-day-of-month').value;
     }
 
+    const isActiveCheckbox = form.querySelector('#schedule-is-active');
+    console.log('DTO 생성 직전, isActive 체크박스의 checked 상태:', isActiveCheckbox.checked);
+
     const dto = {
         assetId: form.querySelector('#schedule-asset').value,
         description: form.querySelector('#schedule-description').value,
@@ -216,13 +219,12 @@ function createDtoFromForm() {
         note: form.querySelector('#schedule-note').value,
         frequency: frequency,
         dayOfExecution: dayOfExecution,
-        // startDate: form.querySelector('#schedule-start-date').value,
+        startDate: form.querySelector('#schedule-start-date').value,
         endDate: form.querySelector('#schedule-end-date').value || null,
-        reflectOnAsset: form.querySelector('#schedule-reflect-asset').checked
-    };
-    if(isEditMode){
-        dto.isActive = form.querySelector('#schedule-is-active').checked;
+        reflectOnAsset: form.querySelector('#schedule-reflect-asset').checked,
+        isActive: form.querySelector('#schedule-is-active').checked
     }
+    console.log('서버로 전송될 최종 DTO 객체:', dto);
     return dto;
 }
 

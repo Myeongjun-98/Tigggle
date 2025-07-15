@@ -20,6 +20,7 @@ public class ScheduledTransactionUpdateDto {
     private String note;
     private LocalDate endDate;
     private boolean reflectOnAsset;
+    @JsonProperty("isActive")
     private boolean isActive;
     private Frequency frequency;
     private int dayOfExecution;

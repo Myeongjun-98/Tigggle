@@ -22,6 +22,8 @@ public class AssetService {
     private final CreditCardRepository creditCardRepository;
     private final AssetRepository assetRepository;
     private final BankAccountRepository bankAccountRepository;
+    private final InstallmentSavingRepository installmentSavingRepository;
+    private final DepositRepository depositRepository;
 
     // * 잔액 계산 메서드
     @Transactional
@@ -112,6 +114,12 @@ public class AssetService {
         } else if (asset instanceof Cash) {
             type = "현금";
             name = asset.getAlias();
+        } else if (asset instanceof InstallmentSaving){
+            type = "적금";
+            name = asset.getAlias();
+        } else if (asset instanceof Deposit) {
+            type = "정기예금";
+            name = asset.getAlias();
         } else {
             type = "기타 자산";
             name = asset.getAlias();
@@ -124,15 +132,19 @@ public class AssetService {
     public List<AssetListDto> getAssetsForScheduling(Member member) {
 
         // 1. 모든 종류의 은행 계좌를 조회합니다.
-        List<BankAccount> bankAccounts = bankAccountRepository.findByMember(member);
+        List<OrdinaryAccount> OrdinaryAccounts = ordinaryRepository.findByMember(member);
+        List<InstallmentSaving> installmentSavings = installmentSavingRepository.findByMember(member);
+        List<Deposit> deposits = depositRepository.findByMember(member);
         // 2. 모든 현금 자산을 조회합니다.
         List<Cash> cashAssets = cashRepository.findByMember(member);
         // 3. 두 리스트를 모두 담을 수 있는 부모 타입(Asset)의 리스트를 새로 만듭니다.
         List<Asset> combinedList = new ArrayList<>();
 
         // 4. addAll()을 사용하여 두 리스트의 내용을 모두 합칩니다.
-        combinedList.addAll(bankAccounts);
+        combinedList.addAll(OrdinaryAccounts);
         combinedList.addAll(cashAssets);
+        combinedList.addAll(installmentSavings);
+        combinedList.addAll(deposits);
 
         // 5. 합쳐진 리스트를 DTO 리스트로 변환하여 반환합니다.
         return combinedList.stream()
