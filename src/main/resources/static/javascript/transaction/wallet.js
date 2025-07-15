@@ -308,13 +308,16 @@ async function deleteSelectedTransactions(ids) {
 async function openCreateModalInEditMode(transactionId) {
     if (!transactionId) return;
 
+    const expenseRadio = document.getElementById('TR-type-expense');
+    const incomeRadio = document.getElementById('TR-type-income');
+    const createModal = document.getElementById('transaction-modal');
+
     try {
         const response = await fetch(`/api/transactions/${transactionId}`);
         if (!response.ok) throw new Error('수정할 내역을 불러오는 데 실패했습니다.');
         const detailData = await response.json();
 
         document.getElementById('TR-detail-modal').classList.add('TR-hidden');
-        const createModal = document.getElementById('transaction-modal');
         createModal.classList.remove('TR-hidden');
 
         currentEditingTransactionId = transactionId; // '수정 모드'로 전환
@@ -328,23 +331,36 @@ async function openCreateModalInEditMode(transactionId) {
         document.getElementById('TR-tx-description').value = detailData.description;
         document.getElementById('TR-tx-note').value = detailData.note;
         document.getElementById('TR-tx-keyword').value = detailData.keywordId;
+        // document.getElementById('TR-tx-pay-method').value = detailData.payMethod;
 
-        const typeRadio = detailData.isConsumption ? 'TR-type-expense' : 'TR-type-income';
-        document.getElementById(typeRadio).checked = true;
+        if(detailData.consumption){
+            expenseRadio.checked = true;
+            expenseRadio.dispatchEvent(new Event('change'));
+        }
+        else{
+            incomeRadio.checked = true;
+            incomeRadio.dispatchEvent(new Event('change'));
+        }
 
-        // 수입/지출 및 거래방식에 맞는 하위 드롭다운을 표시하고 채웁니다.
-        document.querySelector(`input[name="transactionType"]:checked`).dispatchEvent(new Event('change'));
+        document.querySelectorAll('input[name="transactionType"]').forEach(radio => {
+            radio.disabled = true;
+            
+            // 비활성화 대신 그냥 숨겨버리기
+            document.getElementById('expense-details').classList.add('TR-hidden');
+            // document.getElementById('expense-details').disabled = true;
+            document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
+
+        document.getElementById('TR-tx-pay-method').disable = true;
+        document.getElementById('TR-tx-source-asset').classList.add('TR-hidden');
+        document.getElementById('TR-tx-income-asset').classList.add('TR-hidden');
+        document.getElementById('TR-tx-destination-asset').classList.add('TR-hidden');
+        });
 
     } catch (error) {
         showAlert('수정 정보를 불러오는 중 오류가 발생했습니다.');
+        createModal.classList.add('TR-hidden')
+        currentEditingTransactionId = null;
     }
-    document.querySelectorAll('input[name="transactionType"]').forEach(radio => {
-        radio.disabled = true;
-    });
-    document.getElementById('TR-tx-pay-method').disabled = true;
-    document.getElementById('TR-tx-source-asset').disabled = true;
-    document.getElementById('TR-tx-income-asset').disabled = true;
-    document.getElementById('TR-tx-destination-asset').disabled = true;
 }
 
 /*

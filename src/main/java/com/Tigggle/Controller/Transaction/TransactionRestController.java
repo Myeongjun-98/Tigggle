@@ -54,6 +54,7 @@ public class TransactionRestController {
     }
 
     // * 거래내역 저장(지출) 모달에서 paymethod에 따라 option값 표현
+    // 오류로 인해 죽인 코드
     @GetMapping("/by-paymethod")
     public ResponseEntity<List<AssetListDto>> getAssetsByPayMethod(
         @RequestParam String payMethod,

@@ -42,9 +42,11 @@ function initializeCreateModal() {
 
     // 2. '내역 입력' 버튼 클릭 시 모달창 보이기
     openModalBtn.addEventListener('click', () => {
-        modalOverlay.classList.remove('TR-hidden');
+        if(currentEditingTransactionId === null){
         resetCreateModalToDefault();
+        }
 
+        modalOverlay.classList.remove('TR-hidden');
     });
 
     // 3. '닫기(X)' 버튼 클릭 시 모달창 숨기기

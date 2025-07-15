@@ -329,49 +329,55 @@ public class TransactionService {
 
      // * 거래내역 수정
      @Transactional
-     public void updateTransaction(Long transactionId, TransactionUpdateDto transactionUpdateDto, Member member){
+     public void updateTransaction(Long transactionId, TransactionUpdateDto dto, Member member){
           // 1. 소유권 검증과 함께 수정할 원본 거래내역을 조회합니다.
           Transaction originalTx = transactionRepository.findByIdAndMember(transactionId, member)
                   .orElseThrow(() -> new SecurityException("수정할 권한이 없는 거래내역입니다."));
 
           // 2. '수정 전' 금액과 타입을 변수에 저장해 둡니다.
-          long originalAmount = originalTx.getAmount();
-          boolean originalIsConsumption = originalTx.isConsumption();
+          Long originalAmount = originalTx.getAmount();
           Asset originalAsset = originalTx.getAsset();
+          boolean originalIsConsumption = originalTx.isConsumption();
+
+          assetService.updateBalance(originalAsset, originalAmount, !originalIsConsumption);
 
           // 3. '수정 후'의 새로운 값들을 DTO로부터 엔티티에 반영합니다.
-          originalTx.setDescription(transactionUpdateDto.getDescription());
-          originalTx.setAmount(transactionUpdateDto.getAmount());
-          originalTx.setTransactionDate(transactionUpdateDto.getTransactionDate());
-          originalTx.setNote(transactionUpdateDto.getNote());
-          originalTx.setKeyword(keywordsRepository.findById(transactionUpdateDto.getKeywordId()).orElseThrow());
-          originalTx.setConsumption(transactionUpdateDto.isConsumption());
+          originalTx.setDescription(dto.getDescription());
+          originalTx.setAmount(dto.getAmount());
+          originalTx.setTransactionDate(dto.getTransactionDate());
+          originalTx.setNote(dto.getNote());
+          originalTx.setKeyword(keywordsRepository.findById(dto.getKeywordId()).orElseThrow());
 
-          // --- 4. 자산 잔액 재계산 ---
-
-          // 4-1. 먼저, '수정 전' 거래의 효과를 취소합니다. (삭제 로직과 동일)
-          //       (지출이었으면 더하고, 수입이었으면 뺍니다)
-          Long balanceAfterRevert = assetRepository.findBalanceById(originalAsset.getId());
-          if (originalIsConsumption) {
-               balanceAfterRevert += originalAmount;
-          } else {
-               balanceAfterRevert -= originalAmount;
-          }
-
-          // 4-2. 그 다음, '수정 후' 거래의 효과를 새로 적용합니다.
-          //       (DTO에 isConsumption이 있다고 가정. 없다면 transactionType으로 변경)
-          Long finalBalance;
-          if (transactionUpdateDto.isConsumption()) { // 수정 후에도 지출이라면
-               finalBalance = balanceAfterRevert - transactionUpdateDto.getAmount();
-          } else { // 수정 후 수입이라면
-               finalBalance = balanceAfterRevert + transactionUpdateDto.getAmount();
-          }
-
-          // 4-3. 계산된 최종 잔액을 DB에 직접 UPDATE 합니다.
-          assetRepository.updateBalance(finalBalance, originalAsset.getId());
-
-          // 5. 모든 변경사항이 반영된 Transaction 엔티티를 저장합니다.
           transactionRepository.save(originalTx);
+
+          assetService.updateBalance(originalTx.getAsset(), originalTx.getAmount(), originalTx.isConsumption());
+
+//          // --- 4. 자산 잔액 재계산 ---
+//
+//
+//          // 4-1. 먼저, '수정 전' 거래의 효과를 취소합니다. (삭제 로직과 동일)
+//          //       (지출이었으면 더하고, 수입이었으면 뺍니다)
+//          Long balanceAfterRevert = assetRepository.findBalanceById(originalAsset.getId());
+//          if (originalIsConsumption) {
+//               balanceAfterRevert += originalAmount;
+//          } else {
+//               balanceAfterRevert -= originalAmount;
+//          }
+//
+//          // 4-2. 그 다음, '수정 후' 거래의 효과를 새로 적용합니다.
+//          //       (DTO에 isConsumption이 있다고 가정. 없다면 transactionType으로 변경)
+//          Long finalBalance;
+//          if (dto.isConsumption()) { // 수정 후에도 지출이라면
+//               finalBalance = balanceAfterRevert - dto.getAmount();
+//          } else { // 수정 후 수입이라면
+//               finalBalance = balanceAfterRevert + dto.getAmount();
+//          }
+//
+//          // 4-3. 계산된 최종 잔액을 DB에 직접 UPDATE 합니다.
+//          assetRepository.updateBalance(finalBalance, originalAsset.getId());
+//
+//          // 5. 모든 변경사항이 반영된 Transaction 엔티티를 저장합니다.
+//          transactionRepository.save(originalTx);
           }
      }
 
