@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -30,13 +31,16 @@ public class ProductController {
 
     @GetMapping("/product")
     public String showProductPage(Model model) {
-
         List<Product> products = productRepository.findAll();
-        List<Bank> banks = bankRepository.findAll();
+        List<Bank> allBanks = bankRepository.findAll();
+
+        List<Bank> banksWithProducts = allBanks.stream()
+                .filter(bank -> bank.getProducts() != null && !bank.getProducts().isEmpty())
+                .collect(Collectors.toList());
 
         model.addAttribute("products", products);
-        model.addAttribute("banks", banks);
-        return "product/Product";  // templates/product/Product.html
+        model.addAttribute("banks", banksWithProducts);
+        return "product/Product";
     }
 
     // 상품 수기 등록

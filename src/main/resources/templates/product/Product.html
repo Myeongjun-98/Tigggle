@@ -17,19 +17,22 @@
 
     <meta name="_csrf" th:content="${_csrf.token}"/>
 
-    <div id="bank-search-box" style="margin: 20px 0;">
-        <input type="text" id="bank-search-input" placeholder="은행 이름을 입력하세요 (예: 카카오뱅크)" style="padding: 8px; width: 250px;" />
-        <button onclick="scrollToBank()" style="padding: 8px 12px;">검색</button>
-    </div>
-
     <span id="flash-message" th:if="${message}" th:text="${message}" style="display:none;"></span>
 
-    <!-- 관리자만 보이는 상품 등록 버튼 -->
-    <div sec:authorize="hasRole('ROLE_ADMIN')" style="margin-bottom: 20px;">
-        <a th:href="@{/admin/product/register}" class="register-button">상품 등록</a>
+    <!-- 검색 + 등록 버튼 영역을 하나로 묶기 -->
+    <div class="top-action-bar">
+        <div id="bank-search-box">
+            <input type="text" id="bank-search-input" placeholder="은행 이름을 입력하세요 (예: 카카오뱅크)" />
+            <button onclick="scrollToBank()">검색</button>
+        </div>
+
+        <div sec:authorize="hasRole('ROLE_ADMIN')">
+            <a th:href="@{/admin/product/register}" class="register-button">상품 등록</a>
+        </div>
     </div>
 
-    <div id="bank-header">
+
+    <div class="bank-header-common" id="bank-한국산업은행">
         <img src="/images/KDB_logo.png" alt="KDB 로고" />
 
         <a href="https://www.kdb.co.kr" target="_blank"

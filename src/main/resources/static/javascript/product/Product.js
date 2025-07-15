@@ -66,6 +66,12 @@ function deleteProduct(button) {
 
   if (!confirm("정말 이 상품을 삭제하시겠습니까?")) return;
 
+  // 삭제 대상 요소들을 먼저 저장
+  const productRow = button.closest('tr');
+  const tbody = productRow?.parentElement;
+  const manualTable = tbody?.closest('.manual-product-table');
+  const bankBlock = manualTable?.closest('.bank-block');
+
   fetch(`/admin/product/delete/${productId}`, {
     method: 'DELETE',
     headers: {
@@ -77,15 +83,12 @@ function deleteProduct(button) {
     if (!res.ok) throw new Error("삭제 실패");
     alert("상품이 삭제되었습니다.");
 
-    const productRow = button.closest('tr');
+    // 이제 삭제
     productRow.remove();
 
-    const tbody = productRow.parentElement;
-    if (tbody.querySelectorAll('tr').length === 0) {
-      const bankBlock = tbody.closest('.bank-block');
-      if (bankBlock) {
-        bankBlock.remove();
-      }
+    // 상품이 모두 삭제되었는지 확인 후 bankBlock 제거
+    if (tbody && tbody.querySelectorAll('tr').length === 0 && bankBlock) {
+      bankBlock.remove();
     }
   })
   .catch(err => {
@@ -95,20 +98,18 @@ function deleteProduct(button) {
 }
 
 function scrollToBank() {
-     const input = document.getElementById("bank-search-input").value.trim();
-     if (!input) return;
+    const input = document.getElementById("bank-search-input").value.trim();
+    if (!input) return;
 
-     // 공백 제거, 대소문자 무시
-     const normalizedInput = input.replace(/\s/g, '');
+    const normalizedInput = input.replace(/\s/g, '').toLowerCase();
 
-     // 해당 id 요소 찾기
-     const targetId = "bank-" + normalizedInput;
-     const target = Array.from(document.querySelectorAll("[id^='bank-']"))
-         .find(el => el.id.replace(/\s/g, '') === targetId);
+    const target = Array.from(document.querySelectorAll("[id^='bank-']"))
+        .find(el => el.id.replace(/\s/g, '').toLowerCase().includes(normalizedInput));
 
-     if (target) {
-         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-     } else {
-         alert("해당 은행을 찾을 수 없습니다.");
-     }
- }
+    if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+        alert("해당 은행을 찾을 수 없습니다.");
+    }
+}
+
