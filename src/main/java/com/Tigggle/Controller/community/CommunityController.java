@@ -103,14 +103,14 @@ public class CommunityController {
     }
 
     // 수정 처리
-    @GetMapping("/community/Tip/edit/{id}")
+    @GetMapping("/community/tip/edit/{id}")
     public String tipEditForm(@PathVariable Long id, Model model, Principal principal) {
         CommunityWriteDto dto = communityBoardService.getPostForEdit(id, principal.getName());
         model.addAttribute("communityWriteDto", dto);
         return "community/TipWrite"; // 작성 페이지 뷰 재활용
     }
 
-    @PostMapping("/community/Tip/edit/{id}")
+    @PostMapping("/community/tip/edit/{id}")
     public String tipEditPost(@PathVariable Long id,
                               @ModelAttribute CommunityWriteDto dto,
                               Principal principal) {
@@ -180,7 +180,7 @@ public class CommunityController {
     }
 
     // discussion 게시판 수정 처리
-    @GetMapping("/community/Discussion/edit/{id}")
+    @GetMapping("/community/discussion/edit/{id}")
     public String discussionEditForm(@PathVariable Long id, Model model, Principal principal) {
         CommunityWriteDto dto = communityBoardService.getPostForEdit(id, principal.getName());
         model.addAttribute("communityWriteDto", dto);
@@ -242,7 +242,7 @@ public class CommunityController {
     }
 
     // EconomicMarket 게시판 수정
-    @GetMapping("/community/EconomicMarket/edit/{id}")
+    @GetMapping("/community/economicMarket/edit/{id}")
     public String economicMarketEditForm(@PathVariable Long id, Model model, Principal principal) {
         CommunityWriteDto dto = communityBoardService.getPostForEdit(id, principal.getName());
         model.addAttribute("communityWriteDto", dto);

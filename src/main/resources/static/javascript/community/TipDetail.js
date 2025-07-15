@@ -58,7 +58,7 @@ function cancelUpdate(commentId) {
   // 수정 / 삭제 버튼 다시 표시
   const buttonArea = document.getElementById(`action-buttons-${commentId}`);
   if (buttonArea) {
-    buttonArea.style.display = "block";
+    buttonArea.style.display = "flex";
   }
 }
 
