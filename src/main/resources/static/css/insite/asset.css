@@ -333,10 +333,9 @@ body {
     margin-top: 30px;
 }
 .c-char-1, .c-char-2, .c-char-3, .c-char-4 {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     border-radius: 50px;
-    background-color: #D9D9D9;
     display: inline-block;
     margin-top: 15px;
     margin-left: 30px;
@@ -344,11 +343,9 @@ body {
 .c-r-text {
     font-size: 22px;
     margin-left: 50px;
-    line-height: 118px;
 }
 .c-r-content {
   font-size: 28px;
     margin-left: 50px;
     font-weight: 600;
-    line-height: 118px;
 }

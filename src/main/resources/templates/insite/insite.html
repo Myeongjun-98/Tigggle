@@ -364,9 +364,10 @@
                     <!-- 하단: 본인 소비, 차이 -->
                     <div class="l-r-box">
                         <div class="left-consump-box">
-                            <p class="left-consump-text-1" th:text="${memberName} + '님의 이번 달 소비금액'"></p>
+                            <p class="left-consump-text-1" th:text="${memberName} + '님의 이번 달 소비금액'"><
+                                /p>
                             <p class="left-consump-text-2" id="amount-of-this-month">원</p>
-                            <button class="left-consump-text-btn">가계부 바로가기</button>
+                            <button class="left-consump-text-btn"><a href="/transaction/wallet">가계부 바로가기</a></button>
                         </div>
                         <!-- 차이 -->
                         <div class="right-consump-box">
