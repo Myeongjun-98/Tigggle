@@ -6,12 +6,9 @@ let currentMonth;
 let currentTransactionIdForModal = null; // 상세보기 모달에 표시된 거래 ID
 let currentEditingTransactionId = null;  // 현재 '수정 중인' 거래 ID
 
-// csrf 토큰
-var token = $("meta[name='_csrf']").attr("content");
-var header = $("meta[name='_csrf_header']").attr("content");
-
 // 페이지의 모든 HTML 요소가 로드되면 이 스크립트를 실행합니다.
 document.addEventListener('DOMContentLoaded', () => {
+
     // 1. 페이지가 로드될 때, 현재 날짜를 기준으로 초기화 함수를 호출합니다.
     const today = new Date();
     currentYear = today.getFullYear();
@@ -20,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeWalletPage(currentYear, currentMonth);
 
     // 2. '이전 달', '다음 달' 버튼에 클릭 이벤트 리스너를 추가합니다.
+
     document.getElementById('TR-previous-month-btn').addEventListener('click', () => {
         currentMonth--;
         if (currentMonth < 1) {
@@ -78,6 +76,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const schedulePopupBtn = document.getElementById('open-schedule-popup-btn');
+    if (schedulePopupBtn) {
+        schedulePopupBtn.addEventListener('click', (event) => {
+            // a 태그의 기본 동작을 한 번 더 확실하게 막아줍니다.
+            event.preventDefault();
+
+            // 팝업을 여는 함수를 여기서 직접 호출합니다.
+            openPopup('/transaction/scheduled-transaction', '정기 입/출금 관리', 900, 700);
+        });
+    }
+    // 급조, 달력 클릭 시 넘어가기!
+    const calendarIcon = document.querySelector('.TR-date-navigator .material-symbols-outlined');
+    if (calendarIcon) {
+        calendarIcon.addEventListener('click', () => {
+            const input = prompt("이동할 년-월을 입력하세요 (예: 2025-06)");
+            if (input) {
+                const parts = input.split('-');
+                if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10);
+
+                    // 현재 연/월 변수를 업데이트하고 페이지를 다시 로드합니다.
+                    currentYear = year;
+                    currentMonth = month;
+                    initializeWalletPage(currentYear, currentMonth);
+                } else {
+                    alert("잘못된 형식입니다. YYYY-MM 형식으로 입력해주세요.");
+                }
+            }
+        });
+    }
+    initializeCreateModal();
 });
 
 /*
@@ -99,8 +129,8 @@ async function initializeWalletPage(year, month) {
         // 2. 기본 API URL을 만듭니다.
         let apiUrl = `/api/wallet/page?year=${year}&month=${month}`;
 
-        // 3. assetId가 숫자 형태일 경우에만 파라미터로 추가합니다.
-        if (!isNaN(assetId) && assetId.trim() !== '') {
+        // 3. assetId가 숫자 형태이고, 'wallet'이 아닐 경우에만 파라미터로 추가합니다.
+        if (!isNaN(assetId) && assetId.trim() !== 'wallet') {
             apiUrl += `&assetId=${assetId}`;
         }
 
@@ -124,6 +154,8 @@ async function initializeWalletPage(year, month) {
         container.innerHTML = `<div>오류 발생: ${error.message}</div>`;
         console.error("페이지 초기화 중 오류:", error);
     }
+    manageAssetTabActivation();
+    manageSidebarActivation();
 }
 
 
@@ -154,8 +186,12 @@ function updateAssetInfo(assetData) {
 // * @param {object} ledgerData - MonthlyLedgerDto에 해당하는 데이터
 function updateMonthlySummary(ledgerData) {
     document.getElementById('TR-current-month-display').innerText = `📅 ${ledgerData.year}년 ${ledgerData.month}월`;
-    document.getElementById('TR-monthly-income').innerText = ledgerData.monthlyTotalIncome.toLocaleString() + '원';
-    document.getElementById('TR-monthly-expense').innerText = ledgerData.monthlyTotalExpense.toLocaleString() + '원';
+    document.getElementById('TR-monthly-income').innerText = (ledgerData.monthlyTotalIncome ? ledgerData.monthlyTotalIncome.toLocaleString() : 0) + '원';
+    document.getElementById('TR-monthly-expense').innerText = (ledgerData.monthlyTotalExpense ? ledgerData.monthlyTotalExpense.toLocaleString() : 0) + '원';
+
+    const month = ledgerData.month;
+    document.querySelector('#TR-monthly-expense').previousElementSibling.innerText = `${month}월 지출액`;
+    document.querySelector('#TR-monthly-income').previousElementSibling.innerText = `${month}월 수익`;
 }
 
 // * 일별로 그룹핑된 거래 내역 리스트를 그리는 함수
@@ -260,6 +296,10 @@ function convertPaymethodKo(payMethod){
             return "보통거래"
         case "CREDITCARD":
             return "신용카드"
+        case "SCHEDULED":
+            return "정기결제"
+        default:
+            return "기타"
     }
 }
 
@@ -295,23 +335,22 @@ async function deleteSelectedTransactions(ids) {
 async function openCreateModalInEditMode(transactionId) {
     if (!transactionId) return;
 
+    const expenseRadio = document.getElementById('TR-type-expense');
+    const incomeRadio = document.getElementById('TR-type-income');
+    const createModal = document.getElementById('transaction-modal');
+
     try {
         const response = await fetch(`/api/transactions/${transactionId}`);
         if (!response.ok) throw new Error('수정할 내역을 불러오는 데 실패했습니다.');
         const detailData = await response.json();
 
         document.getElementById('TR-detail-modal').classList.add('TR-hidden');
-        const createModal = document.getElementById('transaction-modal');
         createModal.classList.remove('TR-hidden');
-
-
-        console.log('[EDIT MODE] 수정 모드 진입. currentEditingTransactionId를', transactionId, '로 설정합니다.');
-
 
         currentEditingTransactionId = transactionId; // '수정 모드'로 전환
 
         createModal.querySelector('h2').innerText = '거래내역 수정';
-        createModal.querySelector('.submit-button').innerText = '수정하기';
+        createModal.querySelector('.transaction-submit-btn').innerText = '수정하기';
 
         // 가져온 데이터로 폼 필드를 채웁니다.
         document.getElementById('TR-tx-date').value = detailData.transactionDate.substring(0, 16);
@@ -319,21 +358,131 @@ async function openCreateModalInEditMode(transactionId) {
         document.getElementById('TR-tx-description').value = detailData.description;
         document.getElementById('TR-tx-note').value = detailData.note;
         document.getElementById('TR-tx-keyword').value = detailData.keywordId;
+        // document.getElementById('TR-tx-pay-method').value = detailData.payMethod;
 
-        const typeRadio = detailData.isConsumption ? 'TR-type-expense' : 'TR-type-income';
-        document.getElementById(typeRadio).checked = true;
+        if(detailData.consumption){
+            expenseRadio.checked = true;
+            expenseRadio.dispatchEvent(new Event('change'));
+        }
+        else{
+            incomeRadio.checked = true;
+            incomeRadio.dispatchEvent(new Event('change'));
+        }
 
-        // 수입/지출 및 거래방식에 맞는 하위 드롭다운을 표시하고 채웁니다.
-        document.querySelector(`input[name="transactionType"]:checked`).dispatchEvent(new Event('change'));
+        document.querySelectorAll('input[name="transactionType"]').forEach(radio => {
+            radio.disabled = true;
+            
+            // 비활성화 대신 그냥 숨겨버리기
+            document.getElementById('expense-details').classList.add('TR-hidden');
+            // document.getElementById('expense-details').disabled = true;
+            document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
+
+        document.getElementById('TR-tx-pay-method').disable = true;
+        document.getElementById('TR-tx-source-asset').classList.add('TR-hidden');
+        document.getElementById('TR-tx-income-asset').classList.add('TR-hidden');
+        document.getElementById('TR-tx-destination-asset').classList.add('TR-hidden');
+        });
 
     } catch (error) {
         showAlert('수정 정보를 불러오는 중 오류가 발생했습니다.');
+        createModal.classList.add('TR-hidden')
+        currentEditingTransactionId = null;
     }
-    document.querySelectorAll('input[name="transactionType"]').forEach(radio => {
-        radio.disabled = true;
+}
+
+/*
+ * 지정된 URL을 정해진 크기의 팝업 창으로 엽니다.
+ * @param {string} url - 팝업으로 열 페이지의 URL
+ * @param {string} windowName - 팝업 창의 이름
+ * @param {number} width - 팝업 창의 너비
+ * @param {number} height - 팝업 창의 높이
+ */
+function openPopup(url, windowName, width, height) {
+    const left = (window.screen.width / 2) - (width / 2);
+    const top = (window.screen.height / 2) - (height / 2);
+    const options = `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes`;
+
+    window.open(url, windowName, options);
+}
+
+// * 사용자에게 메시지를 보여주는 커스텀 알림 모달 함수
+// * @param {string} message - 표시할 메시지
+function showAlert(message) {
+    // 1. 필요한 HTML 요소들을 ID로 찾습니다.
+    const modal = document.getElementById('TR-alert-modal');
+    const messageElement = document.getElementById('TR-alert-message');
+    const closeButton = document.getElementById('TR-alert-close-btn');
+
+    // 2. 만약 필수 요소 중 하나라도 없다면, 기본 alert를 사용합니다.
+    if (!modal || !messageElement || !closeButton) {
+        console.error('Alert modal 또는 그 안의 요소를 찾을 수 없습니다.');
+        alert(message); // 비상조치
+        return;
+    }
+
+    // 3. 모달의 p 태그에 메시지를 설정합니다.
+    messageElement.textContent = message;
+
+    // 4. 모달을 화면에 표시합니다.
+    modal.classList.remove('TR-hidden');
+
+    // 5. '확인' 버튼을 누르면 모달이 닫히도록 이벤트 리스너를 설정합니다.
+    // (이미 리스너가 있다면 중복 추가되지 않도록, 한번만 실행되는 { once: true } 옵션을 사용합니다.)
+    closeButton.addEventListener('click', () => {
+        modal.classList.add('TR-hidden');
+    }, { once: true });
+}
+
+// 자산 메뉴 스타일 적용 전용
+function manageAssetTabActivation() {
+    const currentPath = window.location.pathname;
+    const assetLinks = document.querySelectorAll('.TR-wallet-list a');
+
+    // 만약 자산 탭이 하나도 없으면, 함수를 즉시 종료합니다.
+    if (assetLinks.length === 0) {
+        return;
+    }
+
+    let isAnyTabActive = false; // URL과 일치하는 활성 탭이 있는지 확인하는 플래그
+
+    // 1. 먼저, URL과 정확히 일치하는 탭이 있는지 찾아봅니다.
+    assetLinks.forEach(link => {
+        const linkPath = new URL(link.href).pathname;
+        if (currentPath === linkPath) {
+            link.classList.add('active');
+            isAnyTabActive = true; // 일치하는 탭을 찾았다고 표시
+        } else {
+            link.classList.remove('active');
+        }
     });
-    document.getElementById('TR-tx-pay-method').disabled = true;
-    document.getElementById('TR-tx-source-asset').disabled = true;
-    document.getElementById('TR-tx-income-asset').disabled = true;
-    document.getElementById('TR-tx-destination-asset').disabled = true;
+
+    // 2. [핵심] 만약 위 과정에서 활성화된 탭이 하나도 없었다면,
+    //    HTML에 있는 가장 첫 번째 자산 탭을 강제로 활성화합니다.
+    if (!isAnyTabActive) {
+        assetLinks[0].classList.add('active');
+    }
+}
+
+// 사이드바 메뉴 스타일 적용 전용
+function manageSidebarActivation() {
+    // 1. 현재 페이지의 URL 경로를 가져옵니다. (예: /transaction/wallet)
+    const currentPath = window.location.pathname;
+
+    // 2. 모든 사이드바 메뉴 링크를 가져옵니다.
+    const sidebarLinks = document.querySelectorAll('.TR-sub-menu a');
+
+    // 3. 각 링크를 순회하며 .active 클래스를 관리합니다.
+    sidebarLinks.forEach(link => {
+        // 링크의 href에서 경로 부분을 추출합니다.
+        const linkPath = new URL(link.href, window.location.origin).pathname;
+        const parentLi = link.closest('.TR-sub-menu'); // 부모 li 요소를 찾습니다.
+
+        // 4. 현재 경로가 링크의 경로로 '시작'하는지 확인합니다.
+        // (예: 현재 /transaction/wallet/5 는 /transaction/wallet 으로 시작함)
+        if (currentPath.startsWith(linkPath)) {
+            parentLi.classList.add('active');
+        } else {
+            parentLi.classList.remove('active');
+        }
+    });
 }

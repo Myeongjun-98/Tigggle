@@ -17,5 +17,9 @@ public interface CashRepository extends JpaRepository<Cash, Long>{
     @Query("SELECT a FROM Asset a WHERE a.member.id = :memberID AND TYPE(a) IN (Cash)")
     List<Cash> cashList(@Param("memberId") Long memberId);
 
-    List<Cash> findByMember(Member member);
+    @Query("SELECT c FROM Cash c WHERE c.id = :assetId AND TYPE(c) IN (Cash)")
+    Cash singleCash(@Param("assetId") Long assetId);
+
+    @Query("SELECT c FROM Cash c WHERE c.member = :member")
+    List<Cash> findByMember(@Param("member") Member member);
 }

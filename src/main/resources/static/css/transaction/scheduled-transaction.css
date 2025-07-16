@@ -1,0 +1,350 @@
+/*@import "transaction-modal.css";*/
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+:root {
+    --primary-color: #3340CB;
+    --bg-page: #f8f9fa;
+    --bg-card: #ffffff;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --font-family: "Pretendard Variable", Pretendard, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+}
+/**{*/
+/*    padding:0;*/
+/*    margin:0;*/
+/*    box-sizing: border-box;*/
+/*}*/
+
+/*body {*/
+/*    padding: 30px;*/
+/*    background-color: var(--bg-page, #f8f9fa);*/
+/*    font-family: var(--font-family);*/
+/*}*/
+
+/*h1 {*/
+/*    font-size: 24px;*/
+/*    font-weight: 600;*/
+/*    margin-bottom: 20px;*/
+/*}*/
+
+/*!* 버튼 스타일 *!*/
+/*.button {*/
+/*    padding: 8px 16px;*/
+/*    border-radius: 8px;*/
+/*    border: 1px solid #d1d5db;*/
+/*    background-color: #ffffff;*/
+/*    font-weight: 500;*/
+/*    cursor: pointer;*/
+/*    transition: all 0.2s ease;*/
+/*}*/
+
+/*.button-primary {*/
+/*    background-color: var(--primary-color, #5a67d8);*/
+/*    color: white;*/
+/*    border-color: var(--primary-color, #5a67d8);*/
+/*}*/
+
+/*!* 테이블 스타일 *!*/
+/*table {*/
+/*    width: 100%;*/
+/*    border-collapse: collapse;*/
+/*    margin-top: 20px;*/
+/*    background-color: #ffffff;*/
+/*    box-shadow: var(--shadow);*/
+/*}*/
+
+/*th, td {*/
+/*    padding: 12px 15px;*/
+/*    text-align: left;*/
+/*    border-bottom: 1px solid #e2e8f0;*/
+/*}*/
+
+/*th {*/
+/*    background-color: #f8f9fa;*/
+/*    font-weight: 600;*/
+/*}*/
+
+/*!* 모달에 적용될 스타일은 transaction-modal.css를 재사용하거나,*/
+/*   여기에 복사해와서 사용할 수 있습니다. *!*/
+
+/* 테이블 전체에 카운터 초기화 */
+.schedule-table {
+    counter-reset: row-num;
+}
+
+.schedule-table tbody tr td:nth-child(2)::before {
+    counter-increment: row-num;   /* 카운터 숫자를 1씩 증가 */
+    content: counter(row-num);    /* 증가된 카운터 숫자를 내용으로 표시 */
+}
+
+.schedule-table tbody tr td:nth-child(2) {
+    text-align: center;
+    padding: 8px; /* 필요에 따라 기존 padding 값과 동일하게 조정 */
+}
+
+/*td.expense {*/
+/*    color: red; !* 지출일 경우 빨간색 *!*/
+/*    font-weight: bold;*/
+/*}*/
+
+/*td.income {*/
+/*    color: #3340CBFF; !* 수입일 경우 파란색 *!*/
+/*    font-weight: bold;*/
+/*}*/
+
+/* scheduled-transaction.css (최종 수정안) */
+
+/* --- 기본 설정 & 폰트 --- */
+
+
+
+body {
+    padding: 30px;
+    background-color: var(--bg-page);
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* --- 상단 버튼 영역 --- */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#add-schedule-btn,
+#delete-selected-schedules-btn,
+.close-popup-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background-color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#add-schedule-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.popup-footer-actions {
+    display: flex;
+    justify-content: flex-end; /* 내용을 오른쪽으로 정렬 */
+    margin-top: 20px;
+}
+
+.close-popup-btn {
+    display: block;
+    width: 200px;
+    height: 50px;
+    text-align: center;
+    margin-top: 0px;
+    background-color: #e9ecef;
+}
+
+/* --- 테이블 스타일 --- */
+.table-container{
+    max-height: 75vh; /* 테이블의 최대 높이를 화면 높이의 65%로 제한 */
+    overflow-y: auto; /* 내용이 max-height를 넘어가면 자동으로 세로 스크롤바 생성 */
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.schedule-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    box-shadow: var(--shadow);
+    border-radius: 8px;
+    overflow: hidden; /* radius 적용을 위해 */
+    font-size: 14px;
+}
+
+.schedule-table th,
+.schedule-table td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.schedule-table thead th {
+    position: sticky; /* 스크롤 시 위치를 고정 */
+    top: 0; /* 컨테이너의 가장 위에 붙임 */
+    background-color: #f8f9fa; /* 스크롤 시 다른 내용에 가려지지 않도록 배경색 지정 */
+    z-index: 10;
+    font-weight: 600;
+    color: #4a5568;
+    text-align: center;
+}
+
+.schedule-table tbody tr:hover {
+    background-color: #f7f8ff;
+}
+
+/* 수입/지출 색상 및 아이콘 */
+.schedule-table td.expense { color: #e53e3e; font-weight: 600; }
+.schedule-table td.income { color: #3b82f6; font-weight: 600; }
+.schedule-table .material-symbols-outlined {
+    font-size: 20px;
+    vertical-align: middle;
+}
+
+/* 수정 버튼 스타일 */
+.schedule-table .edit-btn {
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.schedule-table .edit-btn:hover {
+    background-color: #f0f0f0;
+    border-color: #aaa;
+}
+
+/* --- 모달 스타일 (wallet.html과 동일하게) --- */
+.TR-modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+.TR-modal-content {
+    background-color: #fff;
+    padding: 30px 35px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 480px;
+}
+.TR-hidden { display: none !important; }
+
+#schedule-modal h2 {
+    font-size: 24px; font-weight: 700;
+    margin-bottom: 30px; text-align: center;
+}
+#schedule-create-form {
+    display: flex; flex-direction: column; gap: 18px;
+}
+
+/* 모달 내부 폼 그룹 정렬 */
+.form-group {
+    display: grid;
+    grid-template-columns: 100px 1fr; /* 라벨 너비 100px */
+    align-items: center;
+    gap: 15px;
+}
+.form-group > label {
+    font-weight: 600; color: #4a5568;
+}
+
+/* 모든 입력창 공통 스타일 */
+.form-group input[type="text"],
+.form-group input[type="number"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    transition: all 0.2s ease;
+    font-size: 15px;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(90, 103, 216, 0.2);
+}
+.form-group textarea { resize: none; min-height: 90px; }
+
+/* 토글 스위치 스타일 */
+.switch-group {
+    justify-content: space-between;
+    grid-template-columns: auto auto; /* 그리드 재정의 */
+}
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+}
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+}
+input:checked + .slider {
+    background-color: var(--primary-color);
+}
+input:checked + .slider:before {
+    transform: translateX(22px);
+}
+.slider.round { border-radius: 34px; }
+.slider.round:before { border-radius: 50%; }
+
+/* 버튼 영역 */
+.submit-button,
+#schedule-modal-close-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+}
+.submit-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+#schedule-modal-close-btn {
+    background-color: #e9ecef;
+}

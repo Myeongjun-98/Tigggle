@@ -29,6 +29,7 @@ public class TransactionService {
      private final BankAccountRepository bankAccountRepository;
      private final CreditCardTransactionRepository creditCardTransactionRepository;
      private final CreditCardInstallmentPaymentRepository creditCardInstallmentPaymentRepository;
+     private final ScheduledTransactionRepository scheduledTransactionRepository;
 
      private final AssetService assetService;
 
@@ -85,8 +86,11 @@ public class TransactionService {
      private void processIncome(TransactionCreateRequestDto dto, Member member) {
 
           // 사용자 검증
-          Asset asset = (Asset) assetRepository.findByIdAndMember(dto.getSourceAssetId(), member).
-                  orElseThrow(() -> new SecurityException("자산에 대한 권한이 없습니다."));
+//          Asset asset = (Asset) assetRepository.findByIdAndMember(dto.getSourceAssetId(), member).
+//                  orElseThrow(() -> new SecurityException("자산에 대한 권한이 없습니다."));
+
+          Asset asset = assetRepository.findByIdAndMemberWithLock(dto.getSourceAssetId(), member.getId()).orElseThrow(
+                  () -> new IllegalArgumentException("자산을 찾을 수 없습니다."));
 
           Transaction tx = new Transaction();
           tx.setAsset(asset);
@@ -100,16 +104,18 @@ public class TransactionService {
 
           transactionRepository.save(tx);
 
-          if(tx.isReflectOnAsset())
-               assetService.updateBalance(tx.getAsset().getId(), dto.getAmount(), tx.isConsumption());
+          assetService.updateBalance(tx.getAsset(), dto.getAmount(), tx.isConsumption());
      }
 
      // ** 지출 처리 로직
      private void processExpense(TransactionCreateRequestDto dto, Member member) {
 
-          // 사용자 검증
-          Asset asset = (Asset) assetRepository.findByIdAndMember(dto.getSourceAssetId(), member).
-                  orElseThrow(() -> new SecurityException("올바른 자산을 선택해주세요."));
+//          // 사용자 검증
+//          Asset asset = (Asset) assetRepository.findByIdAndMember(dto.getSourceAssetId(), member).
+//                  orElseThrow(() -> new SecurityException("올바른 자산을 선택해주세요."));
+
+          Asset asset = assetRepository.findByIdAndMemberWithLock(dto.getSourceAssetId(), member.getId()).orElseThrow(
+                  () -> new IllegalArgumentException("자산을 찾을 수 없습니다."));
 
           // ** 결제 수단에 따라 다시 두 번째 로직 분기
           switch (dto.getPayMethod()) {
@@ -121,6 +127,11 @@ public class TransactionService {
                case "MY_ACCOUNT_TRANSFER":
                     // 내계좌이체는 자산 반영 여부가 false
                     processDirectExpense(dto, false, PayMethod.MYACCOUNT, member, asset);
+                    break;
+
+               case "SCHEDULED":
+                    // 정기 결제도 체크카드/이체처럼 자산에서 즉시 출금되는 것으로 처리
+                    processDirectExpense(dto, true, PayMethod.SCHEDULED, member, asset);
                     break;
 
                case "CREDIT_CARD":
@@ -147,15 +158,18 @@ public class TransactionService {
           expenseTx.setPayMethod(payMethod);
           expenseTx.setKeyword(keyword);
           transactionRepository.save(expenseTx);
-          assetService.updateBalance(sourceAsset.getId(), dto.getAmount(), true);
+          assetService.updateBalance(sourceAsset, dto.getAmount(), true);
 
           // *** 내 자산 안에서의 금액 이동인 경우, 해당 목적지에 입금처리
           if (payMethod == PayMethod.MYACCOUNT) {
 
                String incomeDesciption = String.format("[%s]로부터 %s", sourceAsset.getAlias(), "자산 이동");
 
-               Asset destinationAsset = (Asset) assetRepository.findByIdAndMember(dto.getDestinationAssetId(), member)
-                       .orElseThrow(() -> new SecurityException("목적지 자산에 대한 권한이 없습니다."));
+               Asset destinationAsset = assetRepository.findByIdAndMemberWithLock(dto.getSourceAssetId(), member.getId()).orElseThrow(
+                       () -> new IllegalArgumentException("자산을 찾을 수 없습니다."));
+
+//               Asset destinationAsset = (Asset) assetRepository.findByIdAndMember(dto.getDestinationAssetId(), member)
+//                       .orElseThrow(() -> new SecurityException("목적지 자산에 대한 권한이 없습니다."));
 
                Transaction incomeTx = new Transaction();
                incomeTx.setAsset(destinationAsset);
@@ -170,7 +184,7 @@ public class TransactionService {
 
                transactionRepository.save(incomeTx);
 
-               assetService.updateBalance(destinationAsset.getId(), dto.getAmount(), false);
+               assetService.updateBalance(destinationAsset, dto.getAmount(), false);
           }
      }
 
@@ -265,81 +279,105 @@ public class TransactionService {
                  transaction.getNote());
      }
 
-     // * 거래내역 삭제
+//     // * 거래내역 삭제
+//     @Transactional
+//     public void deleteTransaction(List<Long> transactionIds, Member member) {
+//          // 1. 소유권 검증과 함께 삭제할 거래내역을 조회합니다.
+//          for(Long transactionId : transactionIds){
+//          Transaction transaction = transactionRepository.findByIdAndMember(transactionId, member)
+//                  .orElseThrow(() -> new SecurityException("삭제할 권한이 없는 거래내역이 포함되어 있습니다. ID: " + transactionId));
+//
+//               Asset assetToUpdate = transaction.getAsset();
+//
+//               Long a = assetRepository.findBalanceById(assetToUpdate.getId());
+//
+//               // 결과 변수 저장!
+//               Long res;
+//
+//               if(transaction.isConsumption())
+//               // 지울 거래내역이 지출이었을 경우, 지출했던 값을 더함
+//                    res = a + transaction.getAmount();
+//               // 수익이었으면 다시 뺴야함
+//               else res = a - transaction.getAmount();
+//
+//               assetRepository.updateBalance(res, assetToUpdate.getId());
+//               try {
+//                    transactionRepository.delete(transaction);
+//               } catch (Exception e) {
+//                    System.err.println("  -> [오류!] Transaction 삭제 중 예외 발생: " + e.getMessage());
+//                    // 이 예외가 트랜잭션 롤백의 원인일 가능성이 매우 높습니다.
+//               }
+//          }
+//     }
+
      @Transactional
      public void deleteTransaction(List<Long> transactionIds, Member member) {
-          // 1. 소유권 검증과 함께 삭제할 거래내역을 조회합니다.
-          for(Long transactionId : transactionIds){
-          Transaction transaction = transactionRepository.findByIdAndMember(transactionId, member)
-                  .orElseThrow(() -> new SecurityException("삭제할 권한이 없는 거래내역이 포함되어 있습니다. ID: " + transactionId));
+          for (Long transactionId : transactionIds) {
+               Transaction transaction = transactionRepository.findByIdAndMember(transactionId, member) // member.getId() 사용 확인
+                       .orElseThrow(() -> new SecurityException("권한이 없는 자산입니다."));
 
-               Asset assetToUpdate = transaction.getAsset();
-               Long a = assetRepository.findBalanceById(assetToUpdate.getId());
-               
-               // 결과 변수 저장!
-               Long res;
+               // AssetService를 통해 잔액을 안전하게 복구
+               assetService.updateBalance(
+                       transaction.getAsset(),
+                       transaction.getAmount(),
+                       !transaction.isConsumption() // 논리 반전
+               );
 
-               if(transaction.isConsumption())
-               // 지울 거래내역이 지출이었을 경우, 지출했던 값을 더함
-                    res = a + transaction.getAmount();
-               // 수익이었으면 다시 뺴야함
-               else res = a - transaction.getAmount();
-
-               assetRepository.updateBalance(res, assetToUpdate.getId());
-               try {
-                    transactionRepository.delete(transaction);
-               } catch (Exception e) {
-                    System.err.println("  -> [오류!] Transaction 삭제 중 예외 발생: " + e.getMessage());
-                    // 이 예외가 트랜잭션 롤백의 원인일 가능성이 매우 높습니다.
-               }
+               transactionRepository.delete(transaction);
           }
      }
 
      // * 거래내역 수정
      @Transactional
-     public void updateTransaction(Long transactionId, TransactionUpdateDto transactionUpdateDto, Member member){
+     public void updateTransaction(Long transactionId, TransactionUpdateDto dto, Member member){
           // 1. 소유권 검증과 함께 수정할 원본 거래내역을 조회합니다.
           Transaction originalTx = transactionRepository.findByIdAndMember(transactionId, member)
                   .orElseThrow(() -> new SecurityException("수정할 권한이 없는 거래내역입니다."));
 
           // 2. '수정 전' 금액과 타입을 변수에 저장해 둡니다.
-          long originalAmount = originalTx.getAmount();
-          boolean originalIsConsumption = originalTx.isConsumption();
+          Long originalAmount = originalTx.getAmount();
           Asset originalAsset = originalTx.getAsset();
+          boolean originalIsConsumption = originalTx.isConsumption();
+
+          assetService.updateBalance(originalAsset, originalAmount, !originalIsConsumption);
 
           // 3. '수정 후'의 새로운 값들을 DTO로부터 엔티티에 반영합니다.
-          originalTx.setDescription(transactionUpdateDto.getDescription());
-          originalTx.setAmount(transactionUpdateDto.getAmount());
-          originalTx.setTransactionDate(transactionUpdateDto.getTransactionDate());
-          originalTx.setNote(transactionUpdateDto.getNote());
-          originalTx.setKeyword(keywordsRepository.findById(transactionUpdateDto.getKeywordId()).orElseThrow());
-          originalTx.setConsumption(transactionUpdateDto.isConsumption());
+          originalTx.setDescription(dto.getDescription());
+          originalTx.setAmount(dto.getAmount());
+          originalTx.setTransactionDate(dto.getTransactionDate());
+          originalTx.setNote(dto.getNote());
+          originalTx.setKeyword(keywordsRepository.findById(dto.getKeywordId()).orElseThrow());
 
-          // --- 4. 자산 잔액 재계산 ---
-
-          // 4-1. 먼저, '수정 전' 거래의 효과를 취소합니다. (삭제 로직과 동일)
-          //       (지출이었으면 더하고, 수입이었으면 뺍니다)
-          Long balanceAfterRevert = assetRepository.findBalanceById(originalAsset.getId());
-          if (originalIsConsumption) {
-               balanceAfterRevert += originalAmount;
-          } else {
-               balanceAfterRevert -= originalAmount;
-          }
-
-          // 4-2. 그 다음, '수정 후' 거래의 효과를 새로 적용합니다.
-          //       (DTO에 isConsumption이 있다고 가정. 없다면 transactionType으로 변경)
-          Long finalBalance;
-          if (transactionUpdateDto.isConsumption()) { // 수정 후에도 지출이라면
-               finalBalance = balanceAfterRevert - transactionUpdateDto.getAmount();
-          } else { // 수정 후 수입이라면
-               finalBalance = balanceAfterRevert + transactionUpdateDto.getAmount();
-          }
-
-          // 4-3. 계산된 최종 잔액을 DB에 직접 UPDATE 합니다.
-          assetRepository.updateBalance(finalBalance, originalAsset.getId());
-
-          // 5. 모든 변경사항이 반영된 Transaction 엔티티를 저장합니다.
           transactionRepository.save(originalTx);
+
+          assetService.updateBalance(originalTx.getAsset(), originalTx.getAmount(), originalTx.isConsumption());
+
+//          // --- 4. 자산 잔액 재계산 ---
+//
+//
+//          // 4-1. 먼저, '수정 전' 거래의 효과를 취소합니다. (삭제 로직과 동일)
+//          //       (지출이었으면 더하고, 수입이었으면 뺍니다)
+//          Long balanceAfterRevert = assetRepository.findBalanceById(originalAsset.getId());
+//          if (originalIsConsumption) {
+//               balanceAfterRevert += originalAmount;
+//          } else {
+//               balanceAfterRevert -= originalAmount;
+//          }
+//
+//          // 4-2. 그 다음, '수정 후' 거래의 효과를 새로 적용합니다.
+//          //       (DTO에 isConsumption이 있다고 가정. 없다면 transactionType으로 변경)
+//          Long finalBalance;
+//          if (dto.isConsumption()) { // 수정 후에도 지출이라면
+//               finalBalance = balanceAfterRevert - dto.getAmount();
+//          } else { // 수정 후 수입이라면
+//               finalBalance = balanceAfterRevert + dto.getAmount();
+//          }
+//
+//          // 4-3. 계산된 최종 잔액을 DB에 직접 UPDATE 합니다.
+//          assetRepository.updateBalance(finalBalance, originalAsset.getId());
+//
+//          // 5. 모든 변경사항이 반영된 Transaction 엔티티를 저장합니다.
+//          transactionRepository.save(originalTx);
           }
      }
 

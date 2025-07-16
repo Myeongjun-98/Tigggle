@@ -28,6 +28,7 @@ public class WalletService {
     private final CashRepository cashRepository;
     private final BankAccountRepository bankAccountRepository;
     private final UserRepository memberRepository;
+    private final TransactionService transactionService;
 
     public WalletPageDto getWalletPageData(Long memberId, int year, int month, Long assetId) {
 
