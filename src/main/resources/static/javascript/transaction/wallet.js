@@ -185,7 +185,7 @@ function updateAssetInfo(assetData) {
 // * 월별 요약 정보(총수입, 총지출)를 업데이트하는 함수
 // * @param {object} ledgerData - MonthlyLedgerDto에 해당하는 데이터
 function updateMonthlySummary(ledgerData) {
-    document.getElementById('TR-current-month-display').innerText = `📅 ${ledgerData.year}년 ${ledgerData.month}월`;
+    document.getElementById('TR-current-month-display').innerText = `${ledgerData.year}년 ${ledgerData.month}월`;
     document.getElementById('TR-monthly-income').innerText = (ledgerData.monthlyTotalIncome ? ledgerData.monthlyTotalIncome.toLocaleString() : 0) + '원';
     document.getElementById('TR-monthly-expense').innerText = (ledgerData.monthlyTotalExpense ? ledgerData.monthlyTotalExpense.toLocaleString() : 0) + '원';
 

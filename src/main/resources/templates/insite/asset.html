@@ -254,45 +254,47 @@
                     <div class="food-expense-box">
                         <div class="food-expense">
                             <p class="c-title">식비</p>
-                            <p class="c-content" th:text="${goalConsumDto.foodExpense} + '원'"></p>
+                            <p class="c-content" th:text="${#numbers.formatInteger(goalConsumDto.foodExpense, 1, 'COMMA')} + '원'"></p>
                         </div>
                         <div class="foot-food-box">
-                            <div class="warning-box">
+                            <div class="warning-box"
+                                 th:if="${foodAlert.excessAmount > 0}">
                                 ☆★ 이상 소비 탐지 ☆★
                             </div>
                             <div class="text-box">
                             <p>현재 사용금액</p>
-                            <div class="now-consump" th:text="${#numbers.formatInteger(foodAlert.expenseAmount, 3, 'COMMA')} + '원'">
+                            <div class="now-consump" th:text="${#numbers.formatInteger(foodAlert.expenseAmount, 1, 'COMMA')} + '원'">
                             </div>
                             <div class="over-amount"
                                  th:if="${foodAlert.excessAmount > 0}"
-                                 th:text="${#numbers.formatInteger(foodAlert.excessAmount, 3, 'COMMA')} + '원 초과!'">
+                                 th:text="${#numbers.formatInteger(foodAlert.excessAmount, 1, 'COMMA')} + '원 초과!'">
                             </div>
-                                <div class="over-amount"
-                                     th:unless="${foodAlert.excessAmount > 0}">
-                                    사용 금액이 목표 이내입니다.
-                                </div>
+                            <div class="fit-amount"
+                                 th:unless="${foodAlert.excessAmount > 0}">
+                                사용 금액이 목표 이내입니다.
+                            </div>
                         </div>
                         </div>
                     </div>
                     <div class="communication-box">
                         <div class="communication">
                             <p class="c-title">주거/통신</p>
-                            <p class="c-content" th:text="${goalConsumDto.communication} + '원'"></p>
+                            <p class="c-content" th:text="${#numbers.formatInteger(goalConsumDto.communication, 1, 'COMMA')} + '원'"></p>
                         </div>
                         <div class="foot-communication-box">
-                            <div class="warning-box">
+                            <div class="warning-box"
+                                 th:if="${commAlert.excessAmount > 0}">
                                 ☆★ 이상 소비 탐지 ☆★
                             </div>
                             <div class="text-box">
                                 <p>현재 사용금액</p>
-                                <div class="now-consump" th:text="${#numbers.formatInteger(commAlert.expenseAmount, 3, 'COMMA')} + '원'">
+                                <div class="now-consump" th:text="${#numbers.formatInteger(commAlert.expenseAmount, 1, 'COMMA')} + '원'">
                                 </div>
                                 <div class="over-amount"
                                      th:if="${commAlert.excessAmount > 0}"
-                                     th:text="${#numbers.formatInteger(commAlert.excessAmount, 3, 'COMMA')} + '원 초과!'">
+                                     th:text="${#numbers.formatInteger(commAlert.excessAmount, 1, 'COMMA')} + '원 초과!'">
                                 </div>
-                                <div class="over-amount"
+                                <div class="fit-amount"
                                      th:unless="${commAlert.excessAmount > 0}">
                                     사용 금액이 목표 이내입니다.
                                 </div>
@@ -302,21 +304,22 @@
                     <div class="insurance-box">
                         <div class="insurance">
                             <p class="c-title">보험</p>
-                            <p class="c-content" th:text="${goalConsumDto.insurance} + '원'"></p>
+                            <p class="c-content" th:text="${#numbers.formatInteger(goalConsumDto.insurance, 1, 'COMMA')} + '원'"></p>
                         </div>
                         <div class="foot-insurance-box">
-                            <div class="warning-box">
+                            <div class="warning-box"
+                                 th:if="${insuAlert.excessAmount > 0}">
                                 ☆★ 이상 소비 탐지 ☆★
                             </div>
                             <div class="text-box">
                                 <p>현재 사용금액</p>
-                                <div class="now-consump" th:text="${#numbers.formatInteger(insuAlert.expenseAmount, 3, 'COMMA')} + '원'">
+                                <div class="now-consump" th:text="${#numbers.formatInteger(insuAlert.expenseAmount, 1, 'COMMA')} + '원'">
                                 </div>
                                 <div class="over-amount"
                                      th:if="${insuAlert.excessAmount > 0}"
-                                     th:text="${#numbers.formatInteger(insuAlert.excessAmount, 3, 'COMMA')} + '원 초과!'">
+                                     th:text="${#numbers.formatInteger(insuAlert.excessAmount, 1, 'COMMA')} + '원 초과!'">
                                 </div>
-                                <div class="over-amount"
+                                <div class="fit-amount"
                                      th:unless="${insuAlert.excessAmount > 0}">
                                     사용 금액이 목표 이내입니다.
                                 </div>
@@ -326,21 +329,22 @@
                     <div class="etc-box">
                         <div class="etc">
                             <p class="c-title">기타</p>
-                            <p class="c-content" th:text="${goalConsumDto.etc} + '원'"></p>
+                            <p class="c-content" th:text="${#numbers.formatInteger(goalConsumDto.etc, 1, 'COMMA')} + '원'"></p>
                         </div>
                         <div class="foot-insurance-box">
-                            <div class="warning-box">
+                            <div class="warning-box"
+                                 th:if="${etcAlert.excessAmount > 0}"                            >
                                 ☆★ 이상 소비 탐지 ☆★
                             </div>
                             <div class="text-box">
                                 <p>현재 사용금액</p>
-                                <div class="now-consump" th:text="${#numbers.formatInteger(etcAlert.expenseAmount, 3, 'COMMA')} + '원'">
+                                <div class="now-consump" th:text="${#numbers.formatInteger(etcAlert.expenseAmount, 1, 'COMMA')} + '원'">
                                 </div>
                                 <div class="over-amount"
                                      th:if="${etcAlert.excessAmount > 0}"
-                                     th:text="${#numbers.formatInteger(etcAlert.excessAmount, 3, 'COMMA')} + '원 초과!'">
+                                     th:text="${#numbers.formatInteger(etcAlert.excessAmount, 1, 'COMMA')} + '원 초과!'">
                                 </div>
-                                <div class="over-amount"
+                                <div class="fit-amount"
                                      th:unless="${etcAlert.excessAmount > 0}">
                                     사용 금액이 목표 이내입니다.
                                 </div>
@@ -378,33 +382,33 @@
             </div>
 
             <div class="total-consump-box">
-                <div class="saving-box">
-                    <div class="saving-title">
-                        <div class="square"></div>
-                        <span th:text="${memberName} + '님의 예/적금'"></span>
-                    </div>
-                    <div class="saving-list-box">
-                        <div class="saving-list">
-                            <div class="saving-header">적금</div>
-                            <div class="saving-content-box">
-                                <div class="saving-account-box">
-                                    <p class="saving-s-title">청년내일 저축 계좌</p>
-                                    <p class="saving-s-account">100,000,000원</p>
-                                </div>
-                                <div class="saving-right">►</div>
-                                <div class="saving-Expectation-box">
-                                    <p class="saving-s-title">14개월 후 예상 금액</p>
-                                    <p class="saving-s-account">1,000,000,000원</p>
-                                </div>
-                            </div>
+<!--                <div class="saving-box">-->
+<!--                    <div class="saving-title">-->
+<!--                        <div class="square"></div>-->
+<!--                        <span th:text="${memberName} + '님의 예/적금'"></span>-->
+<!--                    </div>-->
+<!--                    <div class="saving-list-box">-->
+<!--                        <div class="saving-list">-->
+<!--                            <div class="saving-header">적금</div>-->
+<!--                            <div class="saving-content-box">-->
+<!--                                <div class="saving-account-box">-->
+<!--                                    <p class="saving-s-title">청년내일 저축 계좌</p>-->
+<!--                                    <p class="saving-s-account">100,000,000원</p>-->
+<!--                                </div>-->
+<!--                                <div class="saving-right">►</div>-->
+<!--                                <div class="saving-Expectation-box">-->
+<!--                                    <p class="saving-s-title">14개월 후 예상 금액</p>-->
+<!--                                    <p class="saving-s-account">1,000,000,000원</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
-                        </div>
-                    </div>
-                </div>
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="total-box">
                     <div class="saving-title">
                         <div class="square"></div>
-                        <span><b>7월</b>total</span>
+                        <span><b>7월 </b>total</span>
                     </div>
                     <div class="total-month">
                         <p class="total-m-t">이번 달</p>
@@ -487,35 +491,36 @@
                 <!-- 절약 방법 -->
                 <div class="presenting-method">
                     <p class="saving-situation-title" th:text="${memberName} + '님을 위한 절약방법 추천'"></p>
-                    <p class="saving-situation-sub-title">다음 달 소비액은 <span th:text="${goalConsumDto.foodExpense + goalConsumDto.communication +
-                                goalConsumDto.insurance + goalConsumDto.etc - gapAmount} + '원'"></span>이 좋을 것 같아요!</p>
+                    <p class="saving-situation-sub-title" th:with="nextMonthAmount=${goalConsumDto.foodExpense + goalConsumDto.communication + goalConsumDto.insurance + goalConsumDto.etc - gapAmount}">
+                        다음 달 소비액은 <span th:text="|${#numbers.formatInteger(nextMonthAmount, 1, 'COMMA')}원|"></span>이 좋을 것 같아요!
+                    </p>
                     <div class="next-month-consump">
                         <div class="consum-result-box-1">
                             <div class="c-char-1">
                                 <img src="images/coffee.png" alt="커피이미지">
                             </div>
-                            <span class="c-r-text">잠 안깬다고 스타X스 가지말고 탕비실 커피를...</span>
+                            <span class="c-r-text">별다방에 비해 탕비실 커피는 공짜랍니다!</span>
                             <span class="c-r-content" th:text="'아메리카노 ' + ${suggestionDto.americanoCount} + '잔 덜 마시기'"></span>
                         </div>
                         <div class="consum-result-box-2">
                             <div class="c-char-2">
                                 <img src="images/alcohol.png" alt="술이미지">
                             </div>
-                            <span class="c-r-text">스트레스 받는다고 술먹지 말고 운동장 한바퀴를...</span>
+                            <span class="c-r-text">" 다음에 내가 또 술을 마시면... " 을 실천해볼까요?</span>
                             <span class="c-r-content" th:text="'술자리를 ' + ${suggestionDto.alcoholCount} + '번 덜 가기'"></span>
                         </div>
                         <div class="consum-result-box-3">
                             <div class="c-char-3">
                                 <img src="images/suitcase.png" alt="여행이미지">
                             </div>
-                            <span class="c-r-text">해외여행이 밥먹여 주나 그럴바에는...</span>
+                            <span class="c-r-text">해외여행! 감당 가능하십니까..?</span>
                             <span class="c-r-content" th:text="'해외여행 ' + ${suggestionDto.travelCount} + '번 덜 가기'"></span>
                         </div>
                         <div class="consum-result-box-4">
                             <div class="c-char-4">
                                 <img src="images/bag.png" alt="가방">
                             </div>
-                            <span class="c-r-text">명품은 어쩌구저쩌구.....</span>
+                            <span class="c-r-text">명품 소유자보단 명품 Tigggler!</span>
                             <span class="c-r-content" th:text="'명품구입 ' + ${suggestionDto.luxuryCount} + '번 덜 하기'"></span>
                         </div>
                     </div>
