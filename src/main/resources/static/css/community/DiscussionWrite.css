@@ -37,6 +37,7 @@ form label {
 /* input, textarea 공통 */
 form input[type="text"],
 form textarea {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* ✅ 폰트 지정 */
   width: 100%;
   padding: 10px 14px;
   border: 1px solid #ccc;
