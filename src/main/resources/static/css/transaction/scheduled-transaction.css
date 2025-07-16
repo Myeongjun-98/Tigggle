@@ -6,6 +6,61 @@
     box-sizing: border-box;
 }
 
+body {
+    padding: 30px;
+    background-color: var(--bg-page, #f8f9fa);
+    font-family: var(--font-family);
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+/* 버튼 스타일 */
+.button {
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.button-primary {
+    background-color: var(--primary-color, #5a67d8);
+    color: white;
+    border-color: var(--primary-color, #5a67d8);
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    box-shadow: var(--shadow);
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+/* 모달에 적용될 스타일은 transaction-modal.css를 재사용하거나,
+   여기에 복사해와서 사용할 수 있습니다. */
+
+.TR-modal-overlay {
+    /* (transaction-modal.css의 스타일과 동일) */
+}
 /* 테이블 전체에 카운터 초기화 */
 .schedule-table {
     counter-reset: row-num;

@@ -193,11 +193,62 @@ function initializeCreateModal() {
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
 
+        const isEditMode = currentEditingTransactionId !== null;
+
+        const transactionType = form.querySelector('input[name="transactionType"]:checked').value;
+        const dateValue = document.getElementById('TR-tx-date').value;
+        const amountValue = document.getElementById('TR-tx-amount').value;
+        const descriptionValue = document.getElementById('TR-tx-description').value;
+
+        if (!dateValue) {
+            showAlert('날짜를 입력해주세요.');
+            return;
+        }
+        if (!amountValue || amountValue <= 0) {
+            showAlert('금액은 0보다 커야 합니다.');
+            return;
+        }
+        if (!descriptionValue.trim()) {
+            showAlert('내용을 입력해주세요.');
+            return;
+        }
+
+        if(!isEditMode){
+            if (transactionType === 'EXPENSE') {
+                const payMethod = document.getElementById('TR-tx-pay-method').value;
+                const sourceAsset = document.getElementById('TR-tx-source-asset').value;
+                if (!payMethod) {
+                    showAlert('거래 방식을 선택해주세요.');
+                    return;
+                }
+                if (!sourceAsset) {
+                    showAlert('현금/카드/계좌를 선택해주세요.');
+                    return;
+                }
+                if (payMethod === 'MY_ACCOUNT_TRANSFER') {
+                    const destinationAsset = document.getElementById('TR-tx-destination-asset').value;
+                    if (!destinationAsset) {
+                        showAlert('입금처를 선택해주세요.');
+                        return;
+                    }
+                    if (sourceAsset === destinationAsset) {
+                        showAlert('출금 계좌와 입금 계좌는 같을 수 없습니다.');
+                        return;
+                    }
+                }
+            } else { // INCOME
+                const incomeAsset = document.getElementById('TR-tx-income-asset').value;
+                if (!incomeAsset) {
+                    showAlert('입금될 계좌를 선택해주세요.');
+                    return;
+                }
+            }
+        }
+
         const submitBtn = document.querySelector('.transaction-submit-btn');
         submitBtn.disabled = true;
         submitBtn.textContent = '저장 중...';
 
-        const isEditMode = currentEditingTransactionId !== null;
         const dto = {}; // 서버로 보낼 DTO 객체
 
         // --- 1. DTO 객체 채우기 ---t
@@ -300,31 +351,37 @@ function resetAndCloseModal() {
 
 function resetCreateModalToDefault() {
 
-    console.log('[RESET] 리셋 함수 호출됨. currentEditingTransactionId를 null로 초기화합니다.');
+    console.log('[RESET] 폼을 기본 상태로 초기화합니다.');
 
-    currentEditingTransactionId = null;
+    currentEditingTransactionId = null; // 수정 모드 종료
 
-    // 1. 폼의 모든 입력 값을 HTML 기본값으로 리셋
-    document.getElementById('TR-create-form').reset();
+    // 1. 폼 요소의 값들을 모두 리셋합니다.
+    const form = document.getElementById('TR-create-form');
+    if(form) form.reset();
 
-    // 2. '지출'이 기본 선택이 되도록 설정
+    // 2. 모달 제목과 버튼 텍스트를 '생성 모드'로 되돌립니다.
+    document.querySelector('#transaction-modal h2').innerText = '새로운 거래내역 작성';
+    document.querySelector('.transaction-submit-btn').innerText = '저장하기';
+
+    // 3. '지출' 라디오 버튼을 기본값으로 선택합니다.
     document.getElementById('TR-type-expense').checked = true;
 
-    // 3. UI 상태를 '지출' 기본 상태로 강제 변경
+    // 4. [핵심] 모든 동적 UI 섹션의 표시 상태를 명시적으로 초기화합니다.
     document.getElementById('expense-details').classList.remove('TR-hidden');
     document.getElementById('income-details').classList.add('TR-hidden');
     document.getElementById('TR-credit-card-details').classList.add('TR-hidden');
     document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
 
-    // 4. '거래 방식' 드롭다운의 change 이벤트를 강제로 발생시켜,
-    //    '보통거래'에 해당하는 자산 목록을 미리 불러오게 함
-    document.getElementById('TR-tx-pay-method').dispatchEvent(new Event('change'));
+    // 5. 비활성화되었을 수 있는 모든 필드를 다시 활성화합니다.
+    document.querySelectorAll('#TR-create-form select, #TR-create-form input').forEach(el => {
+        el.disabled = false;
+    });
 
-    // 5. 수정 모드였다면, 비활성화했던 필드들을 다시 활성화
-    document.querySelectorAll('#TR-create-form select, #TR-create-form input[type="radio"]')
-        .forEach(el => el.disabled = false);
-
-    // 6. 모달 제목과 버튼 텍스트를 '생성 모드'로 되돌림
-    document.querySelector('#transaction-modal h2').innerText = '새로운 거래내역 작성';
-    document.querySelector('#transaction-modal .transaction-submit-btn').innerText = '저장하기';
+    // 6. '거래 방식' 드롭다운을 기본값으로 설정하고 change 이벤트를 발생시켜
+    //    하위 '현금/카드/계좌' 드롭다운을 올바르게 표시합니다.
+    const payMethodSelect = document.getElementById('TR-tx-pay-method');
+    if (payMethodSelect) {
+        payMethodSelect.value = ""; // '== 거래 방식 선택 =='으로 초기화
+        payMethodSelect.dispatchEvent(new Event('change'));
+    }
 }

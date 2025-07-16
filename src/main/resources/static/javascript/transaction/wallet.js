@@ -133,6 +133,8 @@ async function initializeWalletPage(year, month) {
         container.innerHTML = `<div>오류 발생: ${error.message}</div>`;
         console.error("페이지 초기화 중 오류:", error);
     }
+    manageAssetTabActivation();
+    manageSidebarActivation();
 }
 
 
@@ -404,4 +406,52 @@ function showAlert(message) {
     closeButton.addEventListener('click', () => {
         modal.classList.add('TR-hidden');
     }, { once: true });
+}
+
+// 자산 메뉴 스타일 적용 전용
+function manageAssetTabActivation() {
+    // 1. 현재 페이지의 전체 URL 경로를 가져옵니다 (예: /transaction/wallet/5)
+    const currentPath = window.location.pathname;
+
+    // 2. 모든 자산 탭 링크를 가져옵니다.
+    const assetLinks = document.querySelectorAll('.TR-wallet-list a');
+
+    // 3. 각 링크를 순회하며 .active 클래스를 관리합니다.
+    assetLinks.forEach(link => {
+        // 링크의 href 속성에서 경로 부분만 추출합니다 (예: /transaction/wallet/3)
+        const linkPath = new URL(link.href).pathname;
+
+        // 4. 현재 페이지 경로와 링크의 경로가 일치하는지 확인합니다.
+        if (currentPath === linkPath) {
+            // 일치하면 .active 클래스를 추가합니다.
+            link.classList.add('active');
+        } else {
+            // 일치하지 않으면 .active 클래스를 제거합니다.
+            link.classList.remove('active');
+        }
+    });
+}
+
+// 사이드바 메뉴 스타일 적용 전용
+function manageSidebarActivation() {
+    // 1. 현재 페이지의 URL 경로를 가져옵니다. (예: /transaction/wallet)
+    const currentPath = window.location.pathname;
+
+    // 2. 모든 사이드바 메뉴 링크를 가져옵니다.
+    const sidebarLinks = document.querySelectorAll('.TR-sub-menu a');
+
+    // 3. 각 링크를 순회하며 .active 클래스를 관리합니다.
+    sidebarLinks.forEach(link => {
+        // 링크의 href에서 경로 부분을 추출합니다.
+        const linkPath = new URL(link.href, window.location.origin).pathname;
+        const parentLi = link.closest('.TR-sub-menu'); // 부모 li 요소를 찾습니다.
+
+        // 4. 현재 경로가 링크의 경로로 '시작'하는지 확인합니다.
+        // (예: 현재 /transaction/wallet/5 는 /transaction/wallet 으로 시작함)
+        if (currentPath.startsWith(linkPath)) {
+            parentLi.classList.add('active');
+        } else {
+            parentLi.classList.remove('active');
+        }
+    });
 }

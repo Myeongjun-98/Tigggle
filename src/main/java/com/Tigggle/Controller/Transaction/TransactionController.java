@@ -37,15 +37,13 @@ public class TransactionController {
     @GetMapping("/wallet")
     public String DefaultTransactionPage(Principal principal, Model model){
 
-        //! 구현 안할 것 같음! 최신순 필터링
         List<Keywords> keywords = keywordsRepository.findAll();
         model.addAttribute("keywords", keywords);
-        //! 구현 안할 것 같음! 최신순 필터링
 
         Member memberInfo = memberRepository.findByAccessId(principal.getName());
-        model.addAttribute("memberInfo", memberInfo);
-
         List<AssetListDto> assetListDtos = walletService.loadWalletList(memberInfo);
+
+        model.addAttribute("memberInfo", memberInfo);
         model.addAttribute("AssetList", assetListDtos);
 
         return "transaction/wallet";
@@ -54,10 +52,8 @@ public class TransactionController {
     @GetMapping("/wallet/{assetId}")
     public String SpecificTransactionPage(Principal principal, Model model){
 
-        //! 구현 안할 것 같음! 최신순 필터링
         List<Keywords> keywords = keywordsRepository.findAll();
         model.addAttribute("keywords", keywords);
-        //! 구현 안할 것 같음! 최신순 필터링
 
         Member memberInfo = memberRepository.findByAccessId(principal.getName());
         model.addAttribute("memberInfo", memberInfo);
