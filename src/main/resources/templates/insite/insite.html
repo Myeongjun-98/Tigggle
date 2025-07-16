@@ -297,7 +297,7 @@
             <!-- 우측 날짜 선택 및 버튼 -->
             <div class="date-controls">
                 <!-- 달력 아이콘 -->
-<!--                <span class="calendar-icon" id="calendarIcon">📅</span>-->
+                <span class="calendar-icon" id="calendarIcon">📅</span>
 
                 <!-- 월 이동 표시 -->
                 <div class="month-display">
@@ -321,7 +321,7 @@
                 <div class="left-consump">
                     <p>월간 소비내역 그래프</p>
                     <div class="consump-graph-box">
-<!--                        <img src="images/consump-img.png" alt="이미지">-->
+<!--                        <img src="images/consump-mainpagePicture2.png" alt="이미지">-->
                         <p class="consump-amount" id="leftTotalAmount">
                             1,200,000원</p>
                         <canvas class="consump-graph-content" id="barChartLeft"></canvas>
@@ -364,8 +364,7 @@
                     <!-- 하단: 본인 소비, 차이 -->
                     <div class="l-r-box">
                         <div class="left-consump-box">
-                            <p class="left-consump-text-1" th:text="${memberName} + '님의 이번 달 소비금액'"><
-                                /p>
+                            <p class="left-consump-text-1" th:text="${memberName} + '님의 이번 달 소비금액'"></p>
                             <p class="left-consump-text-2" id="amount-of-this-month">원</p>
                             <button class="left-consump-text-btn"><a href="/transaction/wallet">가계부 바로가기</a></button>
                         </div>

@@ -14,63 +14,18 @@
     padding: 0;
     font-family: var(--font-family);
 }
-/**{*/
-/*    padding:0;*/
-/*    margin:0;*/
-/*    box-sizing: border-box;*/
-/*}*/
 
-/*body {*/
-/*    padding: 30px;*/
-/*    background-color: var(--bg-page, #f8f9fa);*/
-/*    font-family: var(--font-family);*/
-/*}*/
+.radio-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* '지출', '수입' 라벨과 버튼 사이의 간격 */
+}
 
-/*h1 {*/
-/*    font-size: 24px;*/
-/*    font-weight: 600;*/
-/*    margin-bottom: 20px;*/
-/*}*/
-
-/*!* 버튼 스타일 *!*/
-/*.button {*/
-/*    padding: 8px 16px;*/
-/*    border-radius: 8px;*/
-/*    border: 1px solid #d1d5db;*/
-/*    background-color: #ffffff;*/
-/*    font-weight: 500;*/
-/*    cursor: pointer;*/
-/*    transition: all 0.2s ease;*/
-/*}*/
-
-/*.button-primary {*/
-/*    background-color: var(--primary-color, #5a67d8);*/
-/*    color: white;*/
-/*    border-color: var(--primary-color, #5a67d8);*/
-/*}*/
-
-/*!* 테이블 스타일 *!*/
-/*table {*/
-/*    width: 100%;*/
-/*    border-collapse: collapse;*/
-/*    margin-top: 20px;*/
-/*    background-color: #ffffff;*/
-/*    box-shadow: var(--shadow);*/
-/*}*/
-
-/*th, td {*/
-/*    padding: 12px 15px;*/
-/*    text-align: left;*/
-/*    border-bottom: 1px solid #e2e8f0;*/
-/*}*/
-
-/*th {*/
-/*    background-color: #f8f9fa;*/
-/*    font-weight: 600;*/
-/*}*/
-
-/*!* 모달에 적용될 스타일은 transaction-modal.css를 재사용하거나,*/
-/*   여기에 복사해와서 사용할 수 있습니다. *!*/
+/* 라디오 버튼 옆의 라벨(지출, 수입)에 대한 스타일 */
+.radio-wrapper label {
+    font-weight: 500;
+    margin-right: 15px; /* '지출'과 '수입' 그룹 사이의 간격 */
+}
 
 /* 테이블 전체에 카운터 초기화 */
 .schedule-table {
@@ -86,22 +41,6 @@
     text-align: center;
     padding: 8px; /* 필요에 따라 기존 padding 값과 동일하게 조정 */
 }
-
-/*td.expense {*/
-/*    color: red; !* 지출일 경우 빨간색 *!*/
-/*    font-weight: bold;*/
-/*}*/
-
-/*td.income {*/
-/*    color: #3340CBFF; !* 수입일 경우 파란색 *!*/
-/*    font-weight: bold;*/
-/*}*/
-
-/* scheduled-transaction.css (최종 수정안) */
-
-/* --- 기본 설정 & 폰트 --- */
-
-
 
 body {
     padding: 30px;

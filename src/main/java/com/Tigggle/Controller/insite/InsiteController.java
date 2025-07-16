@@ -73,8 +73,8 @@ public class InsiteController {
     // pdf 변환하기
     @GetMapping("/insite/export-pdf")
     public ResponseEntity<byte[]> exportInsiteToPdf(Principal principal) throws Exception {
-        Long memberId = memberRepository.findByAccessId(principal.getName()).getId();
-        Member member = memberRepository.findById(memberId).orElseThrow();
+        Member member = memberRepository.findByAccessId(principal.getName());
+        Long memberId = member.getId();
 
         ModelMap model = new ModelMap();
 
