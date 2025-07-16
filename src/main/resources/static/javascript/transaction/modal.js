@@ -372,6 +372,10 @@ function resetCreateModalToDefault() {
     document.getElementById('TR-credit-card-details').classList.add('TR-hidden');
     document.getElementById('TR-my-account-transfer-details').classList.add('TR-hidden');
 
+    document.getElementById('TR-tx-source-asset').classList.remove('TR-hidden');
+
+    document.getElementById('TR-tx-destination-asset').classList.remove('TR-hidden');
+
     // 5. 비활성화되었을 수 있는 모든 필드를 다시 활성화합니다.
     document.querySelectorAll('#TR-create-form select, #TR-create-form input').forEach(el => {
         el.disabled = false;

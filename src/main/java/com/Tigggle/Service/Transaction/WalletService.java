@@ -89,20 +89,6 @@ public class WalletService {
         return assetListDtos;
     }
 
-    // !
-    public AssetListDto loadDefaultWallet(Member member){
-        Asset asset = transactionService.determineDefaultWalletAsset(member.getId());
-
-        String type = "";
-        if(asset instanceof OrdinaryAccount)
-            type = "ORDINARY";
-        else if (asset instanceof Cash) {
-            type = "CASH";
-        }
-
-        return new AssetListDto(asset.getId(), asset.getAlias(), type);
-    }
-
     // Asset 엔티티를 AssetSummaryDto로 변환하는 헬퍼 메소드
     private AssetSummaryDto createAssetSummary(Asset asset) {
         if (asset instanceof OrdinaryAccount) { // OrdinaryAccount 타입이라면

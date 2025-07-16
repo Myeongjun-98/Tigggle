@@ -20,32 +20,36 @@
     <button id="delete-selected-schedules-btn">선택 항목 삭제</button>
   </div>
 
-  <table class="schedule-table">
-    <thead>
-    <tr>
-      <th><input type="checkbox" id="select-all-schedules"></th>
-      <th>번호</th>
-      <th>내용</th>
-      <th>금액</th>
-      <th>분류</th>
-      <th>주기</th>
-      <th>자산이름</th>
-      <th>실행일</th>
-      <th>다음 예정일</th>
-      <th>만기일</th>
-      <th>메모</th>
-      <th>자산반영</th>
-      <th>활성</th>
-      <th>관리</th>
-    </tr>
-    </thead>
-    <tbody id="schedule-table-body">
-    <tr>
-      <td colspan="14">정기 거래 내역을 불러오는 중입니다...</td>
-    </tr>
-    </tbody>
-  </table>
+  <div class="table-container">
+    <table class="schedule-table">
+      <thead>
+      <tr>
+        <th><input type="checkbox" id="select-all-schedules"></th>
+        <th>번호</th>
+        <th>내용</th>
+        <th>금액</th>
+        <th>분류</th>
+        <th>주기</th>
+        <th>자산이름</th>
+        <th>실행일</th>
+        <th>다음 예정일</th>
+        <th>만기일</th>
+        <th>메모</th>
+        <th>자산반영</th>
+        <th>활성</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody id="schedule-table-body">
+      <tr>
+        <td colspan="14">정기 거래 내역을 불러오는 중입니다...</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="popup-footer-actions">
   <button class="close-popup-btn">닫기</button>
+  </div>
 </div>
 
 <div id="schedule-modal" class="TR-modal-overlay TR-hidden">

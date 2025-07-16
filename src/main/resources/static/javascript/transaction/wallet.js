@@ -86,6 +86,27 @@ document.addEventListener('DOMContentLoaded', () => {
             openPopup('/transaction/scheduled-transaction', '정기 입/출금 관리', 900, 700);
         });
     }
+    // 급조, 달력 클릭 시 넘어가기!
+    const calendarIcon = document.querySelector('.TR-date-navigator .material-symbols-outlined');
+    if (calendarIcon) {
+        calendarIcon.addEventListener('click', () => {
+            const input = prompt("이동할 년-월을 입력하세요 (예: 2025-06)");
+            if (input) {
+                const parts = input.split('-');
+                if (parts.length === 2 && !isNaN(parts[0]) && !isNaN(parts[1])) {
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10);
+
+                    // 현재 연/월 변수를 업데이트하고 페이지를 다시 로드합니다.
+                    currentYear = year;
+                    currentMonth = month;
+                    initializeWalletPage(currentYear, currentMonth);
+                } else {
+                    alert("잘못된 형식입니다. YYYY-MM 형식으로 입력해주세요.");
+                }
+            }
+        });
+    }
     initializeCreateModal();
 });
 
@@ -167,6 +188,10 @@ function updateMonthlySummary(ledgerData) {
     document.getElementById('TR-current-month-display').innerText = `📅 ${ledgerData.year}년 ${ledgerData.month}월`;
     document.getElementById('TR-monthly-income').innerText = (ledgerData.monthlyTotalIncome ? ledgerData.monthlyTotalIncome.toLocaleString() : 0) + '원';
     document.getElementById('TR-monthly-expense').innerText = (ledgerData.monthlyTotalExpense ? ledgerData.monthlyTotalExpense.toLocaleString() : 0) + '원';
+
+    const month = ledgerData.month;
+    document.querySelector('#TR-monthly-expense').previousElementSibling.innerText = `${month}월 지출액`;
+    document.querySelector('#TR-monthly-income').previousElementSibling.innerText = `${month}월 수익`;
 }
 
 // * 일별로 그룹핑된 거래 내역 리스트를 그리는 함수
@@ -410,26 +435,32 @@ function showAlert(message) {
 
 // 자산 메뉴 스타일 적용 전용
 function manageAssetTabActivation() {
-    // 1. 현재 페이지의 전체 URL 경로를 가져옵니다 (예: /transaction/wallet/5)
     const currentPath = window.location.pathname;
-
-    // 2. 모든 자산 탭 링크를 가져옵니다.
     const assetLinks = document.querySelectorAll('.TR-wallet-list a');
 
-    // 3. 각 링크를 순회하며 .active 클래스를 관리합니다.
-    assetLinks.forEach(link => {
-        // 링크의 href 속성에서 경로 부분만 추출합니다 (예: /transaction/wallet/3)
-        const linkPath = new URL(link.href).pathname;
+    // 만약 자산 탭이 하나도 없으면, 함수를 즉시 종료합니다.
+    if (assetLinks.length === 0) {
+        return;
+    }
 
-        // 4. 현재 페이지 경로와 링크의 경로가 일치하는지 확인합니다.
+    let isAnyTabActive = false; // URL과 일치하는 활성 탭이 있는지 확인하는 플래그
+
+    // 1. 먼저, URL과 정확히 일치하는 탭이 있는지 찾아봅니다.
+    assetLinks.forEach(link => {
+        const linkPath = new URL(link.href).pathname;
         if (currentPath === linkPath) {
-            // 일치하면 .active 클래스를 추가합니다.
             link.classList.add('active');
+            isAnyTabActive = true; // 일치하는 탭을 찾았다고 표시
         } else {
-            // 일치하지 않으면 .active 클래스를 제거합니다.
             link.classList.remove('active');
         }
     });
+
+    // 2. [핵심] 만약 위 과정에서 활성화된 탭이 하나도 없었다면,
+    //    HTML에 있는 가장 첫 번째 자산 탭을 강제로 활성화합니다.
+    if (!isAnyTabActive) {
+        assetLinks[0].classList.add('active');
+    }
 }
 
 // 사이드바 메뉴 스타일 적용 전용

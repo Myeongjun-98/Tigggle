@@ -116,7 +116,7 @@ async function loadScheduledTransactions() {
                 <td>${schedule.nextExecutionDate}</td>
                 ${schedule.endDate === null
                 ? `<td>없음</td>`
-                : schedule.endDate}
+                : `<td>${schedule.endDate}</td>`}
                 <td>${schedule.note}</td>
                 ${schedule.reflectOnAsset
                     ? `<td><span class="material-symbols-outlined" style="color: red">check</span></td>`
