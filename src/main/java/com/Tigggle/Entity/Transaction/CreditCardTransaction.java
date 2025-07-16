@@ -1,6 +1,7 @@
 package com.Tigggle.Entity.Transaction;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class CreditCardTransaction {
     private String description;         // 내용
 
     @Column(nullable = false)
-    private LocalDate transactionDate;  // 내역 발생시기
+    private LocalDateTime transactionDate;  // 내역 발생시기
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = true)
@@ -29,12 +30,10 @@ public class CreditCardTransaction {
     @Column(nullable = false)
     private Long originalAmount;        // 원 결제금액
 
-    @Column(nullable = false)
-    private Long nextPayAmount;         // 다음 결제 예정금액
-
-    @Column(nullable = false)
-    private Long leftToPayAmount;       // 남은 결제금액
-
     @Lob
     private String note;                // 메모
+
+    @Column(nullable = false)
+    private int installment;                    // 할부 개월 수
+
 }

@@ -16,9 +16,12 @@ public class CommunityCommentDto {
     private Long id;
     private String content;
     private String name;
+    private String userAccessId;
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
-    private Boolean deleted;
+    private boolean deleted;
+
+    private Long boardId; //  게시판 ID 있어야 됨 정훈!!
 
     public CommunityComment to (Member member, CommunityBoard communityBoard) {
 
@@ -38,12 +41,21 @@ public class CommunityCommentDto {
         CommunityCommentDto communityCommentDto = new CommunityCommentDto();
 
         communityCommentDto.setId(communityComment.getId());
-        communityCommentDto.setContent(communityComment.getContent());
         communityCommentDto.setName(communityComment.getMember().getName());
+        communityCommentDto.setUserAccessId(communityComment.getMember().getAccessId());
         communityCommentDto.setWriteDate(communityComment.getWriteDate());
         communityCommentDto.setUpdateDate(communityComment.getUpdateDate());
         communityCommentDto.setDeleted(communityComment.isDeleted());
+        communityCommentDto.setBoardId(communityComment.getCommunityBoard().getId());
+
+        if(communityComment.isDeleted()) {
+            communityCommentDto.setContent("삭제된 댓글입니다.");
+        } else {
+            communityCommentDto.setContent(communityComment.getContent());
+        }
+
         return communityCommentDto;
 
     }
+
 }

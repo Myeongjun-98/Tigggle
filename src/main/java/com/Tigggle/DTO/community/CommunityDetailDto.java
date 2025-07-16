@@ -1,6 +1,6 @@
 package com.Tigggle.DTO.community;
 
-import com.Tigggle.Constant.CommunityCategory;
+import com.Tigggle.Constant.Community.CommunityCategory;
 import com.Tigggle.Entity.community.CommunityBoard;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +17,7 @@ public class CommunityDetailDto {
     private String content;
     private CommunityCategory category;
     private String name;
+    private String MemberAccessId;
     private LocalDateTime writeDate;
     private LocalDateTime updateDate;
     private List<CommunityCommentDto> comments;
@@ -27,12 +28,14 @@ public class CommunityDetailDto {
                                           List<CommunityCommentDto> communityCommentsDtos,
                                           List<CommunityImgDto> communityImgDtos,
                                           List<CommunityGraphDto> communityGraphDtos) {
+
         CommunityDetailDto communityDetailDto = new CommunityDetailDto();
         communityDetailDto.setId(communityBoard.getId());
         communityDetailDto.setTitle(communityBoard.getTitle());
         communityDetailDto.setContent(communityBoard.getContent());
         communityDetailDto.setCategory(communityBoard.getCommunityCategory());
         communityDetailDto.setName(communityBoard.getMember().getName());
+        communityDetailDto.setMemberAccessId(communityBoard.getMember().getAccessId());
         communityDetailDto.setWriteDate(communityBoard.getWriteDate());
         communityDetailDto.setUpdateDate(communityBoard.getUpdateDate());
         communityDetailDto.setComments(communityCommentsDtos);

@@ -73,3 +73,8 @@
 #loginWrap .visible{
     font-size: 32px;
 }
+
+@media screen and (max-width:700px){
+    #loginWrap{width:90%;}
+
+}
