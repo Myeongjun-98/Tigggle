@@ -2,10 +2,7 @@ package com.Tigggle.Controller.community;
 
 import com.Tigggle.Constant.Community.CommunityCategory;
 import com.Tigggle.Constant.Community.SearchType;
-import com.Tigggle.DTO.community.CommunityBoardListDto;
-import com.Tigggle.DTO.community.CommunityDetailDto;
-import com.Tigggle.DTO.community.CommunitySearchDto;
-import com.Tigggle.DTO.community.CommunityWriteDto;
+import com.Tigggle.DTO.community.*;
 import com.Tigggle.Service.community.CommunityBoardService;
 import com.Tigggle.Service.community.CommunityCommentService;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +42,18 @@ public class CommunityController {
         Page<CommunityBoardListDto> communityBoardListDtos = communityBoardService
                 .searchCommunityTip(communitySearchDto, pageable);
 
+        int currentPage = communityBoardListDtos.getNumber();
+        int totalPages = communityBoardListDtos.getTotalPages();
+        int blockSize = 10;
+
+        if (communityBoardListDtos.isEmpty() && currentPage >= totalPages && totalPages > 0) {
+            totalPages--; // 페이지 수에서 하나 빼주기
+        }
+
+        PageInfoDto pageInfoDto = communityBoardService
+                .getPageInfo(currentPage, totalPages, blockSize);
+
+        model.addAttribute("pageInfoDto", pageInfoDto);
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
         model.addAttribute("searchTypes", SearchType.values());
 
@@ -135,6 +144,18 @@ public class CommunityController {
         Page<CommunityBoardListDto> communityBoardListDtos = communityBoardService
                 .searchCommunityDiscussion(communitySearchDto, pageable);
 
+        int currentPage = communityBoardListDtos.getNumber();
+        int totalPages = communityBoardListDtos.getTotalPages();
+        int blockSize = 10;
+
+        if (communityBoardListDtos.isEmpty() && currentPage >= totalPages && totalPages > 0) {
+            totalPages--; // 페이지 수에서 하나 빼주기
+        }
+
+        PageInfoDto pageInfoDto = communityBoardService
+                .getPageInfo(currentPage, totalPages, blockSize);
+
+        model.addAttribute("pageInfoDto", pageInfoDto);
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
         model.addAttribute("searchTypes", SearchType.values());
 
@@ -186,6 +207,18 @@ public class CommunityController {
         Page<CommunityBoardListDto> communityBoardListDtos = communityBoardService
                 .searchCommunityEconomicMarket(communitySearchDto, pageable);
 
+        int currentPage = communityBoardListDtos.getNumber();
+        int totalPages = communityBoardListDtos.getTotalPages();
+        int blockSize = 10;
+
+        if (communityBoardListDtos.isEmpty() && currentPage >= totalPages && totalPages > 0) {
+            totalPages--; // 페이지 수에서 하나 빼주기
+        }
+
+        PageInfoDto pageInfoDto = communityBoardService
+                .getPageInfo(currentPage, totalPages, blockSize);
+
+        model.addAttribute("pageInfoDto", pageInfoDto);
         model.addAttribute("communityBoardListDto", communityBoardListDtos);
         model.addAttribute("searchTypes", SearchType.values());
 

@@ -11,6 +11,7 @@
 </th:block>
 
 <div  layout:fragment="content">
+
   <a th:href="@{/communityDiscussion}">
     <h2>예/적금 분석 및 토론 게시판</h2>
   </a>
@@ -48,9 +49,9 @@
            class="existing-image"></div>
     </div>
 
-    <div>
+    <div class="button-group">
       <button type="submit">작성 완료</button>
-      <a th:href="@{/communityDiscussion}">취소</a>
+      <a th:href="@{/communityDiscussion}" class="btn-cancel">취소</a>
     </div>
   </form>
 
