@@ -85,11 +85,14 @@
 
     <!-- ✅ 삭제되지 않은 댓글이면 -->
     <div th:unless="${comment.deleted}" class="comment-item">
-      <div>
-        <strong th:text="${comment.name}">작성자</strong>
+      <div class="comment-meta">
+        <div class="comment-author" th:text="${comment.name}">작성자</div>
+
+        <div class="comment-date">
         <span th:text="${#temporals.format(
                           comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
-        <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
+          <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
+        </div>
       </div>
 
       <!--      댓글 내용-->
@@ -110,8 +113,11 @@
       <div th:id="|update-form-${comment.id}|" style="display: none;">
         <form th:action="@{/community/comment/update/{commentId}(commentId=${comment.id})}" method="post">
           <textarea name="content" th:text="${comment.content}"></textarea>
-          <button type="submit">저장</button>
-          <button type="button" th:onclick="|cancelUpdate(${comment.id})|">취소</button>
+
+          <div class="update-form-buttons">
+            <button type="submit">저장</button>
+            <button type="button" th:onclick="|cancelUpdate(${comment.id})|">취소</button>
+          </div>
         </form>
       </div>
     </div>

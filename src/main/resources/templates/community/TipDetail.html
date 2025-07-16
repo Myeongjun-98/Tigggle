@@ -101,11 +101,14 @@
 
     <!-- ✅ 삭제되지 않은 댓글이면 -->
     <div th:unless="${comment.deleted}" class="comment-item">
-      <div>
-        <strong th:text="${comment.name}">작성자</strong>
+      <div class="comment-meta">
+        <div class="comment-author" th:text="${comment.name}">작성자</div>
+
+        <div class="comment-date">
         <span th:text="${#temporals.format(
                           comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
         <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
+        </div>
       </div>
 
 <!--      댓글 내용-->

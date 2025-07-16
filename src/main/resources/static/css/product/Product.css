@@ -21,7 +21,7 @@ th, td {
 th {
     text-align: center;
     color: #fff;
-    background-color: #0D5BD3;
+    background-color: var(--primary-color);
 }
 
 .bank-header-common {
@@ -119,10 +119,10 @@ th {
 
 /* 검색창 박스 */
 #bank-search-box {
-    margin: 20px 0;
     display: flex;
     gap: 10px;
     align-items: center;
+    margin: 0; /* 기존 여백 제거 */
 }
 
 /* 검색 input */
@@ -171,11 +171,6 @@ th {
     margin-bottom: 20px;
 }
 
-#bank-search-box {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin: 0; /* 기존 여백 제거 */
-}
+
 
 

@@ -18,7 +18,7 @@
 
 /* 폼 전체 스타일 */
 form {
-  background-color: #fff;
+  background-color: #f0f4ff;
   padding: 30px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -74,6 +74,7 @@ form input[type="file"] {
 .button-group {
   text-align: right;
   margin-top: 20px;
+  min-height: 50px;
 }
 
 /* 작성 완료 버튼과 취소 버튼 동일 스타일 적용 */
