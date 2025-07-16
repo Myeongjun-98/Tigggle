@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>월간 Insite 리포트</title>
+    <style>
+        body { font-family: "Noto Sans KR", sans-serif; font-size: 12px; }
+        h2 { margin-bottom: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    </style>
+</head>
+<body>
+<h2 th:text="${memberName} + '님의 소비 리포트'"></h2>
+<h3>최근 6개월 소비 내역</h3>
+<table>
+    <tr><th>월</th><th>지출액</th></tr>
+    <tr th:each="item : ${responseDto.monthlyDateDtoList}">
+        <td th:text="${item.whatMonth} + '월'"></td>
+        <td th:text="${#numbers.formatInteger(item.totalAmount, 3, 'COMMA')} + '원'"></td>
+    </tr>
+</table>
+
+<h3>키워드별 소비 내역</h3>
+<table>
+    <tr><th>키워드</th><th>6월 사용금액</th></tr>
+    <tr th:each="item : ${keywordData}">
+        <td th:text="${item.keyword}"></td>
+        <td th:text="${#numbers.formatInteger(item.monthlyAmount[5], 3, 'COMMA')} + '원'"></td> <!-- 6월 (6번째 값) -->
+    </tr>
+</table>
+</body>
+</html>

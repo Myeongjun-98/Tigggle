@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter @Setter
 public class AlertDto {
     private String keyword; //키워드
-    private Long goalAmount; //목표금액
     private Long expenseAmount; //사용금액
     private Long excessAmount; //초과금액
 

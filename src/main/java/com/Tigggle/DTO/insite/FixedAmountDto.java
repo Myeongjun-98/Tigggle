@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter @Setter
 public class FixedAmountDto {
-    private Long fixedIncome; //고정수익
-    private Long fiedExpense; //고정지출
+    private Long income;     // 고정수익 (급여)
+    private Long saving;     // 고정저축 (저축/보험)
+    private Double saveRate;  // 저축률 (%)
 }

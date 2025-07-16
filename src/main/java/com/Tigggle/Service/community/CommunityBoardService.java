@@ -487,7 +487,6 @@ public class CommunityBoardService {
                     .existsByCommunityBoardId(communityBoard.getId());
             boolean hasGraph = communityBoardGraphRepository
                     .existsByCommunityBoardId(communityBoard.getId());
-
             return CommunityBoardListDto.from(communityBoard, commentCount, hasImage, hasGraph);
         });
     }
