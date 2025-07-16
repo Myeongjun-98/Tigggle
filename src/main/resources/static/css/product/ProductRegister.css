@@ -1,0 +1,93 @@
+#content {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 0 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* 폼 전체 스타일 */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 라벨과 인풋 묶음 스타일 */
+label {
+    font-weight: 600;
+    color: #00377b;
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+}
+
+/* 라벨 고정 너비 */
+label > span,
+label {
+    width: 140px; /* 라벨 영역 너비 고정 */
+    flex-shrink: 0; /* 축소 방지 */
+}
+
+/* 인풋 박스 스타일 */
+input[type="text"],
+input[type="number"],
+select {
+    flex-grow: 1; /* 남는 공간 모두 차지 */
+    padding: 8px 10px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+/* 인풋 포커스 스타일 */
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    outline: none;
+    border-color: #0D5BD3;
+}
+
+/* 버튼 공통 스타일 */
+button, input[type="submit"] {
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    padding: 8px 16px;
+    font-size: 15px;
+    border: none;
+    color: white;
+    margin-top: 12px;
+}
+
+/* 등록 버튼 스타일 */
+input[type="submit"] {
+    background-color: #0D5BD3;
+    width: 120px;
+}
+
+input[type="submit"]:hover {
+    background-color: #0949a8;
+}
+
+/* 취소 버튼 스타일 */
+button.cancel-button {
+    background-color: #999999;
+    width: 120px;
+    margin-left: 12px;
+}
+
+button.cancel-button:hover {
+    background-color: #666666;
+}
+
+/* 버튼 그룹을 가로로 배치 + 가운데 정렬 */
+.form-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 16px;
+    justify-content: center;
+}

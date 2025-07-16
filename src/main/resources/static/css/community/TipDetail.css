@@ -1,0 +1,257 @@
+/* 공통 레이아웃 */
+#content {
+  max-width: 1500px;
+  margin: 50px auto;
+  padding: 0 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+#content p {
+  font-size: 15px;
+  margin: 5px 0;
+}
+
+#content strong {
+  font-weight: 600;
+  color: #444;
+}
+
+/* 제목 & 메타 정보 */
+#content > a > h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #222;
+  display: inline-block;
+  padding-bottom: 10px;
+}
+
+#content h3 {
+  font-size: 24px;
+  margin: 30px 0 15px;
+  padding: 12px 20px;
+  background-color: #f0f4ff;
+  border-left: 6px solid var(--primary-color);
+  color: #222;
+  border-radius: 4px;
+}
+
+#content .post-meta {
+  margin: 15px 0;
+  padding: 10px 15px;
+  background-color: #f0f4ff;
+  border-left: 4px solid var(--primary-color);
+  font-size: 14px;
+  color: #555;
+  border-radius: 4px;
+}
+
+#content .post-meta p {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+/* 본문내용 & 이미지 */
+#content > div > p {
+  margin: 20px 0;
+  line-height: 1.6;
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+}
+
+#content .post-content {
+  background-color: #f0f4ff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 6px;
+  line-height: 1.7;
+  font-size: 16px;
+  white-space: pre-wrap;
+  margin: 20px 0;
+}
+
+.detail-image {
+  max-width: 150px;
+  height: auto;
+  border-radius: 8px;
+  margin: 10px 10px 20px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.detail-image:hover {
+  transform: scale(1.05);
+}
+
+.image-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/* 리스트 (그래프 등) */
+#content ul {
+  list-style: none;
+  padding-left: 0;
+  font-size: 15px;
+  margin-top: 10px;
+}
+
+#content ul li {
+  margin-bottom: 8px;
+}
+
+/* 버튼 스타일 */
+#content button,
+#content form button {
+  padding: 8px 16px;
+  font-size: 14px;
+  margin-right: 8px;
+  margin-top: 10px;
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#content button:hover,
+#content form button:hover,
+.comment-action-btn:hover,
+.comment-btn:hover {
+  /*background-image: linear-gradient(to bottom, #1748b4, #2d66d9);*/
+}
+
+.post-button-wrap {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* 댓글 관련 */
+.comment-title {
+  margin-top: 40px;
+}
+
+#commentForm {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end; /* 버튼 우측 정렬 */
+}
+
+#content textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+  margin: 10px 0;
+}
+
+/* 댓글 블럭 전체 */
+#content .comment-block {
+  border-top: 1px solid #ddd;
+  padding-top: 15px;
+  margin-top: 15px;
+}
+
+#content .comment-list {
+  margin-top: 40px;
+}
+
+#content .comment-block p {
+  margin: 6px 0;
+}
+
+/* 개별 댓글 */
+.comment-item {
+  background-color: #f0f4ff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 16px;
+  margin-top: 20px;
+}
+
+/* 댓글 제출 */
+.comment-submit-wrap {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.comment-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.comment-author {
+  font-weight: bold;
+  color: #333;
+}
+
+.comment-date {
+  color: #888;
+  text-align: right;
+}
+
+
+/* 댓글 수정/삭제 버튼 */
+.comment-button-wrap,
+.update-form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 5px;
+}
+
+.update-buttons {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+/* 모달 관련 */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: auto;
+  max-width: 90vw;
+  max-height: 80vh;
+  background-color: rgba(0, 0, 0, 0.9);
+  border-radius: 10px;
+  overflow: auto;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.modal-content {
+  display: inline-block;
+  max-width: 90%;
+  max-height: 70vh;
+  border-radius: 8px;
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  color: #fff;
+  font-size: 30px;
+  font-weight: bold;
+  cursor: pointer;
+  user-select: none;
+}

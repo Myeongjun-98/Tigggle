@@ -1,0 +1,250 @@
+html {
+    overflow-y: scroll;
+}
+
+table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+td, th {
+    word-wrap: break-word;
+}
+
+.pagination {
+    min-height: 60px;
+}
+
+/* 검색 폼 전체 영역 정렬 */
+.search-form {
+    margin-top: 30px;
+    text-align: center;
+}
+
+/* 드롭다운 스탕릴 */
+.search-form select {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* 입력창 스타일 */
+.search-form input[type="text"] {
+    padding: 6px 10px;
+    font-size: 14px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+/* 게시판 전체 컨테이너 */
+#content {
+    max-width: 1500px;
+    margin: 50px auto;
+    padding: 0 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+/* 제목 */
+#content > a > h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #222;
+    padding-bottom: 10px;
+    display: inline;
+}
+
+/* 작성 버튼 */
+.write-button {
+    display: inline-block;
+    margin-bottom: 15px;
+    padding: 10px 30px;
+    font-size: 15px;
+    background-color: #0D5BD3;
+    color: #fff;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.write-button-container {
+    text-align: right;
+    margin-bottom: 5px;
+}
+
+.write-button:hover {
+    background-color: #0b4ab1;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+thead {
+    background-color: var(--primary-color);
+    color: #fff;
+    font-weight: bold;
+}
+
+thead th {
+    padding: 15px 12px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+tbody tr {
+    border-bottom: 1px solid #eee;
+}
+
+tbody tr:hover {
+    background-color: #f5f7ff;
+}
+
+tbody td {
+    padding: 12px;
+    vertical-align: middle;
+    font-size: 15px;
+    text-align: center;
+}
+
+tbody td:nth-child(1) {
+    text-align: left;
+    padding-left: 20px;
+}
+
+
+/* 게시글 제목 링크 스타일 */
+tbody td a {
+    color: #222;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+tbody td a:hover {
+    text-decoration: underline;
+    color: #000;
+}
+
+/* 아이콘 및 댓글 수 마진 */
+tbody td span {
+    margin-left: 6px;
+    font-size: 14px;
+}
+
+/* 검색 폼 */
+.search-form {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.search-form select,
+.search-form input[type="text"] {
+    padding: 8px 12px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    vertical-align: middle;
+    margin-right: 8px;
+    width: 180px;
+    max-width: 100%;
+}
+
+.search-form button {
+    padding: 8px 18px;
+    font-size: 14px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    vertical-align: middle;
+}
+
+.search-form button:hover {
+    /*background-color: #0b4ab1;*/
+}
+
+/* 반응형 간단 처리 */
+@media (max-width: 600px) {
+    div[layout\\:fragment="content"] {
+        margin: 20px 10px;
+        padding: 0 10px;
+    }
+
+    thead {
+        display: none;
+    }
+
+    tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+        padding: 15px;
+        border-radius: 6px;
+        background-color: #fff;
+    }
+
+    tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        font-size: 14px;
+    }
+
+    tbody td:nth-child(2) {
+        text-align: left;
+        padding-left: 20px;
+    }
+
+    tbody td a {
+        flex-grow: 1;
+    }
+}
+
+/* 페이지네이션 컨테이너 스타일 */
+.pagination {
+    text-align: center;
+    margin: 30px 0; /* 위아래 공간 확보 */
+}
+
+.pagination {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.pagination ul {
+  list-style: none;
+  display: inline-flex;
+  gap: 6px;
+  padding: 0;
+}
+
+.pagination li {
+  display: inline;
+}
+
+.pagination a {
+  padding: 6px 12px;
+  border: 1px solid #ccc;
+  text-decoration: none;
+  color: #333;
+  border-radius: 4px;
+}
+
+.pagination .active a {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+

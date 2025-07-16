@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html
+  lang="ko"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layout/defaultLayout}"
+>
+
+<head>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+
+  <th:block layout:fragment="css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link rel="stylesheet" th:href="@{/css/transaction/wallet.css}">
+  <link rel="stylesheet" th:href="@{/css/transaction/transaction-modal.css}">
+  </th:block>
+</head>
+
+
+
+  <div id="wallet-container" layout:fragment="content">
+    <div id="wallet-content-container">
+
+    <!-- 사이드바 -->
+      <div id="TR-sidebar-area">
+        <div class="TR-menu-box">
+          <div class="TR-menu-box-inner">
+            <ul class="TR-menu-list">
+              <li class="TR-sub-menu"><a href="/transaction/wallet"><span class="material-symbols-outlined">wallet</span><span>현금/보통예금</span></a></li>
+              <li class="TR-sub-menu"><a href="/transaction/saving"><span class="material-symbols-outlined">savings</span><span>저축</span></a></li>
+              <li class="TR-sub-menu"><a href="/transaction/creditcard"><span class="material-symbols-outlined">credit_card</span><span>신용카드</span></a></li>
+              <li class="TR-sub-menu"><a href="javascript:void(0);" id="open-schedule-popup-btn"><span class="material-symbols-outlined">calendar_clock</span><span>정기 입/출금</span></a></li>
+              <li class="TR-sub-menu"><a href="/transaction/goals"><span class="material-symbols-outlined">rewarded_ads</span><span>목표</span></a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    <!-- 사이드바 -->
+
+    <!-- 멤버 이름이 들어간 공간 -->
+    <div class="TR-main-content">
+
+      <div class="TR-member-container">
+        <span style="color: #3340CBFF; font-size: 20px; font-weight: 900" class="material-symbols-outlined">circle</span><span th:text="|  ${memberInfo.getName()}님의 가계부|"></span>
+      </div>
+    <!-- 멤버 이름이 들어간 공간 -->
+
+    <!-- 사용자 자산들 관련 종합 정보 표시 및 핸들링하는 공간 -->
+      <div id="TR-asset-info-container" class="TR-wallet-list">
+        <ul>
+          <li th:each="asset : ${AssetList}" th:if="${asset.type == 'ORDINARY'}">
+            <a th:href="@{/transaction/wallet/{id}(id=${asset.id})}" th:text="${asset.alias}">
+              보통예금 계좌 별칭
+            </a>
+          </li>
+
+          <li th:each="asset : ${AssetList}" th:if="${asset.type == 'CASH'}">
+            <a th:href="@{/transaction/wallet/{id}(id=${asset.id})}" th:text="${asset.alias}">
+              현금 자산 별칭
+            </a>
+          </li>
+        </ul>
+        <br>
+        <div id="TR-ordinary-account-info">
+        </div>
+
+      <!-- 일단.. 나중에 수정 시 아이디 및 클래스 확인할 것-->
+        <div class="summary-section">
+          <div class="TR-date-navigator">
+            <span style="font-size: 48px" class="material-symbols-outlined">calendar_month</span>
+            <button id="TR-previous-month-btn" class="arrow-button">◀</button>
+            <h2 id="TR-current-month-display" style="font-weight: bold">2025년 7월</h2>
+            <button id="TR-next-month-btn" class="arrow-button">▶</button>
+          </div>
+          <div class="TR-summary-cards">
+            <div class="TR-card">
+              <label th:text = "|${memberInfo.getName()}님의 잔액|"></label>
+              <span id="TR-asset-balance" class="amount">???원</span>
+            </div>
+            <div class="TR-card">
+              <label>7월 지출액</label>
+              <span id="TR-monthly-expense" class="amount">???원</span>
+            </div>
+            <div class="TR-card">
+              <label>7월 수익</label>
+              <span id="TR-monthly-income" class="amount">???원</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 일단.. 나중에 수정 시 아이디 및 클래스 확인할 것 -->
+    <!-- 사용자 자산들 관련 종합 정보 표시 및 핸들링하는 공간 -->
+
+      <div>
+        <div class="TR-controls">
+<!--          <div class="TR-Filters">-->
+<!--              <button class="TR-controls-by-date">최신순</button>-->
+<!--              <button class="TR-controls-by-keyword">키워드</button>-->
+<!--          </div>-->
+          <div class="TR-actions">
+              <button class="TR-delete-selected-btn">내역 삭제</button>
+              <button class="TR-actions-save">내역 입력</button>
+          </div>
+        </div>
+        <!-- 거래내역 공간, API를 불러와서 배치하는 곳 -->
+        <div id="TR-history-container" class="TR-history">
+          <div class="TR-loading">데이터를 불러오는 중...</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 거래내역 추가 시 발생하는 모달창 -->
+    <div id="transaction-modal" class="TR-modal-overlay TR-hidden">
+      <div class="TR-modal-content">
+        <h2>새로운 거래내역 작성</h2>
+
+        <form id="TR-create-form" novalidate>
+          <div class="TR-create-form-group">
+            <label>구분</label>
+            <div class="TR-radio-group-wrapper">
+              <input type="radio" id="TR-type-expense" name="transactionType" value="EXPENSE" checked>
+              <label for="TR-type-expense">지출</label>
+              <input type="radio" id="TR-type-income" name="transactionType" value="INCOME">
+              <label for="TR-type-income">수입</label>
+            </div>
+          </div>
+
+          <div class="TR-create-form-group">
+            <label for="TR-tx-date">날짜</label>
+            <input type="datetime-local" id="TR-tx-date" required>
+          </div>
+          <div class="TR-create-form-group">
+            <label for="TR-tx-amount">금액</label>
+            <input type="number" id="TR-tx-amount" placeholder="금액을 입력하세요" required>
+          </div>
+          <div class="TR-create-form-group">
+            <label for="TR-tx-description">내용</label>
+            <input type="text" id="TR-tx-description" placeholder="내용을 입력하세요" required>
+          </div>
+          <div class="TR-create-form-group">
+            <label for="TR-tx-keyword">카테고리</label>
+            <select id="TR-tx-keyword">
+              <option th:each="keyword : ${keywords}"
+                      th:value="${keyword.id}"
+                      th:text="${keyword.minorKeyword == null ? keyword.majorKeyword
+                       : keyword.majorKeyword + ' > ' + keyword.minorKeyword}"
+              >식비</option>
+            </select>
+          </div>
+          <div id="income-details" class="TR-form-section TR-hidden">
+            <div class="TR-create-form-group">
+              <label for="TR-tx-income-asset">자산</label>
+              <select id="TR-tx-income-asset">
+                <option value="" selected>== 입금 계좌 선택 ==</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="TR-create-form-group" style="align-items: start;">
+            <label for="TR-tx-note" style="padding-top: 10px;">메모</label>
+            <textarea id="TR-tx-note" placeholder="메모를 입력하세요"></textarea>
+          </div>
+
+          <div id="expense-details" class="TR-form-section TR-hidden">
+            <div class="TR-create-form-group">
+              <label for="TR-tx-pay-method">거래 방식</label>
+              <select id="TR-tx-pay-method">
+                <option value="" selected>== 거래 방식 선택 ==</option>
+                <option value="NORMAL">보통거래</option>
+                <option value="CREDIT_CARD">신용카드</option>
+                <option value="MY_ACCOUNT_TRANSFER">내 자산 간 이체</option>
+              </select>
+            </div>
+            <div class="TR-create-form-group">
+              <label for="TR-tx-source-asset">자산</label>
+              <select id="TR-tx-source-asset">
+                <option value="" selected>== 선택 ==</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="TR-credit-card-details" class="TR-form-section TR-hidden">
+            <div class="TR-create-form-group">
+              <label for="TR-tx-installment">할부 개월</label>
+              <input type="number" id="TR-tx-installment" value="0" min="0">
+            </div>
+          </div>
+
+          <div id="TR-my-account-transfer-details" class="TR-form-section TR-hidden">
+            <h4>입금처</h4>
+            <div class="TR-create-form-group">
+              <label for="TR-tx-destination-asset">현금/계좌</label>
+              <select id="TR-tx-destination-asset">
+                <option value="" selected> ====== 선택 ======</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="TR-create-form-actions">
+          <button type="submit" class="transaction-submit-btn">저장하기</button>
+          <button type="button" class="close-button">닫기</button>
+          </div>
+
+        </form>
+      </div>
+    <!-- 거래내역 추가 시 발생하는 모달창 -->
+
+    </div>
+    <!-- 알림 모달 -->
+    <div id="TR-alert-modal" class="TR-modal-overlay TR-hidden">
+      <div class="TR-alert-modal-content">
+        <p id="TR-alert-message"></p>
+        <button id="TR-alert-close-btn">확인</button>
+      </div>
+    </div>
+    <!-- 알림 모달 -->
+
+    <!-- 거래내역 디테일 모달 -->
+    <div id="TR-detail-modal" class="TR-modal-overlay TR-hidden">
+      <div class="TR-modal-content">
+        <h2>거래내역 상세</h2>
+            <div id="detail-item-container">
+            <div class="detail-item">
+              <label>내용</label>
+              <span id="detail-description">GS25 편의점</span>
+            </div>
+
+          <div class="detail-section">
+            <div class="detail-item">
+              <label>금액</label>
+              <span id="detail-amount" class="amount-expense"></span>
+            </div>
+
+            <div class="detail-item">
+              <label>거래일시</label>
+              <span id="detail-date">2025-06-28 14:30</span>
+            </div>
+
+            <div class="detail-item">
+              <label>분류</label>
+              <span id="detail-keyword">식비 > 간식</span>
+            </div>
+
+            <div id="detail-paymethod-section" class="detail-item">
+              <label>결제 수단</label>
+              <span id="detail-payMethod">현금</span>
+            </div>
+
+            <div class="detail-item note-item">
+              <label>메모</label>
+              <p id="detail-note">
+                친구랑 같이 먹을 아이스크림 구매
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="detail-edit-btn" class="action-button-primary">수정</button>
+          <button class="detail-close-button">닫기</button>
+        </div>
+      </div>
+    </div>
+    <!-- 거래내역 디테일 모달 -->
+    </div>
+
+  <th:block layout:fragment="script">
+  <script th:src="@{/javascript/transaction/modal.js}"></script>
+  <script th:src="@{/javascript/transaction/wallet.js}"></script>
+  </th:block>
+  </div>
+</html>

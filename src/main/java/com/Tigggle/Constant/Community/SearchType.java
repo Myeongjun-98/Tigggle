@@ -1,4 +1,4 @@
-package com.Tigggle.Constant;
+package com.Tigggle.Constant.Community;
 
 public enum SearchType {
     TITLE("제목"), WRITER("작성자");

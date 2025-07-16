@@ -1,0 +1,101 @@
+/* 전체 컨테이너 스타일 */
+#content {
+  max-width: 1500px;
+  margin: 50px auto;
+  padding: 0 30px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* 제목 링크 */
+#content > a > h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #222;
+  padding-bottom: 10px;
+  display: inline-block;
+}
+
+/* 폼 전체 스타일 */
+form {
+  background-color: #f0f4ff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-top: 30px;
+}
+
+/* 라벨 */
+form label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  color: #222;
+}
+
+/* input, textarea 공통 */
+form input[type="text"],
+form textarea {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* ✅ 폰트 지정 */
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+
+/* 파일 업로드 input */
+form input[type="file"] {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* 이미지 미리보기 컨테이너 */
+#preview-container {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+/* 미리보기 이미지 */
+#preview-container img {
+  max-width: 100px;
+  max-height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+/* 버튼 그룹 우측 정렬 및 스타일 */
+.button-group {
+  text-align: right;
+  margin-top: 20px;
+  min-height: 50px;
+}
+
+/* 작성 완료 버튼과 취소 버튼 동일 스타일 적용 */
+.button-group button,
+.button-group a.btn-cancel {
+  background-color: var(--primary-color); /* 버튼 색상 */
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 10px; /* 버튼 사이 간격 */
+  display: inline-block;
+  text-decoration: none; /* a 태그 밑줄 제거 */
+  line-height: normal;
+  transition: background-color 0.3s ease;
+}
+
+.button-group button:hover,
+.button-group a.btn-cancel:hover {
+  /*background-color: #0b4ab1;*/ /* 호버 시 짙은 색 */
+}
