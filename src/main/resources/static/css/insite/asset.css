@@ -210,7 +210,7 @@ body {
     border: 1px solid #E7E7E7;
 }
 .total-box {
-    width: 400px;
+    width: 90%;
     height: 750px;
     background-color: #F2F3F8;
     border: 1px solid #E7E7E7;
@@ -328,24 +328,42 @@ body {
     background-color: #F2F3F8;
     border: 1px solid #E7E7E7;
     border-radius: 10px;
+    display: flex;
+    align-items: center;
 }
 .consum-result-box-2, .consum-result-box-3, .consum-result-box-4 {
     margin-top: 30px;
 }
 .c-char-1, .c-char-2, .c-char-3, .c-char-4 {
-    width: 70px;
     height: 70px;
     border-radius: 50px;
     display: inline-block;
-    margin-top: 15px;
     margin-left: 30px;
+    width: 10%;
 }
 .c-r-text {
+    width: 50%;
     font-size: 22px;
     margin-left: 50px;
+    justify-content: flex-start;
 }
 .c-r-content {
+    width: 40%;
   font-size: 28px;
-    margin-left: 50px;
     font-weight: 600;
+    margin-right: 50px;
+    text-align: end;
+}
+
+.c-char-1 img, .c-char-2 img, .c-char-3 img, .c-char-4 img {
+    width: 80px;
+    height: 80px;
+}
+
+.fit-amount {
+    color: #5497FF;
+    margin-top: 15px;
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
 }

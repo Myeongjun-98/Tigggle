@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.Tigggle.Entity.Transaction.Goal;
 
 @Repository
-public interface GoalRepository extends JpaRepository<Goal, Long>{
+public interface TransactionGoalRepository extends JpaRepository<Goal, Long>{
 
 }

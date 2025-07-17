@@ -1,0 +1,176 @@
+#content {
+    max-width: 1500px;
+    margin: 50px auto;
+    padding: 0 30px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    text-align: center;
+    color: #fff;
+    background-color: var(--primary-color);
+}
+
+.bank-header-common {
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.bank-header-common img {
+    height: 40px;           /* 기존 60px → 40px로 줄이면 조금 더 정돈됨 */
+    width: auto;
+    max-width: none;
+    object-fit: contain;    /* 비율 유지하면서 최대 크기 안에서 조정 */
+    vertical-align: middle;
+}
+
+.bank-block {
+  margin-top: 50px;
+}
+
+.manual-product-table {
+  table-layout: fixed;
+  width: 100%;
+}
+
+.manual-product-table th:nth-child(1),
+.manual-product-table td:nth-child(1) {
+  width: 30%;  /* 상품명 */
+}
+
+.manual-product-table th:nth-child(2),
+.manual-product-table td:nth-child(2) {
+  width: 20%;  /* 금리 */
+}
+
+.manual-product-table th:nth-child(3),
+.manual-product-table td:nth-child(3) {
+  width: 25%;  /* 가입기간 */
+}
+
+.manual-product-table th:nth-child(4),
+.manual-product-table td:nth-child(4) {
+  width: 25%;  /* 금액 */
+}
+
+
+
+.bank-header-common a {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00377b;
+}
+
+/* 상품 등록 버튼 */
+.register-button {
+    padding: 0 20px;
+    height: 40px;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0D5BD3;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.register-button:hover {
+    background-color: #0949a8; /* 진한 파랑으로 hover */
+}
+
+/* 삭제 버튼 */
+.delete-button {
+    padding: 5px 10px;
+    background-color: #0D5BD3; /* 같은 파란색 */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #d32f2f; /* 삭제라서 빨간 계열로 강렬하게 변경 가능 */
+    color: white;
+}
+
+/* 검색창 박스 */
+#bank-search-box {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 0; /* 기존 여백 제거 */
+}
+
+/* 검색 input */
+#bank-search-input {
+    padding: 10px 15px;
+    font-size: 16px;
+    height: 40px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#bank-search-input::placeholder {
+    color: #999; /* placeholder 글자 색 연한 회색으로 변경 */
+}
+
+#bank-search-input:focus {
+    outline: none;
+    border-color: #0D5BD3; /* 포커스 시 테두리 파란색 강조 */
+}
+
+/* 검색 버튼 */
+/* 기존 .register-button, .delete-button 스타일과 비슷하게 */
+#bank-search-box button {
+    padding: 0 20px;
+    height: 40px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: #0D5BD3;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#bank-search-box button:hover {
+    background-color: #0949a8;
+}
+
+.top-action-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+
+
+

@@ -72,7 +72,7 @@
                             <div style="display: flex; gap: 30px; margin-bottom:30px;">
                                 <div class="flex w-30 myp-info flex-item-center">
                                     <label>성별</label>
-                                    <select>
+                                    <select name="gender">
                                         <option th:selected="${myPageDto.gender}==false"   value="0">여성</option>
                                         <option th:selected="${myPageDto.gender}==true" value="1">남성</option>
                                     </select>

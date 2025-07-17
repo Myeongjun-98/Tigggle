@@ -32,6 +32,4 @@ public interface CommunityBoardRepository extends JpaRepository<CommunityBoard, 
     // 작성자 검색
     Page<CommunityBoard> findByCommunityCategoryAndMemberNameContainingAndDeletedIsFalseOrderByWriteDateDesc(
             CommunityCategory category, String keyword, Pageable pageable);
-
-
 }

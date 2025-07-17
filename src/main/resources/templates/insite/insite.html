@@ -15,10 +15,10 @@
         document.addEventListener('DOMContentLoaded', () => {
 
             const leftCtx = document.getElementById('barChartLeft').getContext('2d');
-            const rightCtx = document.getElementById('barChartRight').getContext('2d');
+            // const rightCtx = document.getElementById('barChartRight').getContext('2d');
 
             let leftChart;
-            let rightChart;
+            // let rightChart;
 
             function renderLeftChart(months, amounts) {
 
@@ -46,30 +46,30 @@
                 });
             }
 
-            function renderRightChart(keywords, amounts) {
-                if (rightChart) rightChart.destroy();
-                rightChart = new Chart(rightCtx, {
-                    type: 'bar',
-                    data: {
-                        labels: keywords,
-                        datasets: [{
-                            label: '키워드 소비',
-                            data: amounts,
-                            backgroundColor: '#3340cb'
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: ctx => `${ctx.raw.toLocaleString()}원`
-                                }
-                            }
-                        }
-                    }
-                });
-            }
+            // function renderRightChart(keywords, amounts) {
+            //     if (rightChart) rightChart.destroy();
+            //     rightChart = new Chart(rightCtx, {
+            //         type: 'bar',
+            //         data: {
+            //             labels: keywords,
+            //             datasets: [{
+            //                 label: '키워드 소비',
+            //                 data: amounts,
+            //                 backgroundColor: '#3340cb'
+            //             }]
+            //         },
+            //         options: {
+            //             responsive: true,
+            //             plugins: {
+            //                 tooltip: {
+            //                     callbacks: {
+            //                         label: ctx => `${ctx.raw.toLocaleString()}원`
+            //                     }
+            //                 }
+            //             }
+            //         }
+            //     });
+            // }
 
             // 초기 로딩
             fetch("/api/insite/spending-summary")
@@ -122,10 +122,10 @@
             fetch("/api/insite/keyword-monthly")
                 .then(res => res.json())
                 .then(data => {
-                    const currentMonth = new Date().getMonth() + 1;
-                    const keywords = data.map(item => item.keyword);
-                    const amounts = data.map(item => item.monthlyAmount[currentMonth - 1]);
-                    renderRightChart(keywords, amounts);
+                    // const currentMonth = new Date().getMonth() + 1;
+                    // const keywords = data.map(item => item.keyword);
+                    // const amounts = data.map(item => item.monthlyAmount[currentMonth - 1]);
+                    // renderRightChart(keywords, amounts);
 
                     // 🔹 키워드 버튼 동적 생성
                     const box = document.querySelector('.keyword-btn-box');
@@ -134,7 +134,7 @@
                         btn.textContent = item.keyword;
                         btn.onclick = () => {
                             renderLeftChart(
-                                ["2월", "3월", "4월", "5월", "6월", "7월"],
+                                ["2", "3", "4", "5", "6", "7"],
                                 item.monthlyAmount
                             );
                         };
@@ -142,10 +142,10 @@
                     });
                 });
 
-            const monthText = document.getElementById("monthText");
-            const calendarIcon = document.getElementById("calendarIcon");
-            const dateInput = document.getElementById("datepicker");
-            let currentDate = new Date(2025, 5); // 2025년 6월 (0-indexed)
+            // const monthText = document.getElementById("monthText");
+            // const calendarIcon = document.getElementById("calendarIcon");
+            // const dateInput = document.getElementById("datepicker");
+            // let currentDate = new Date(2025, 5); // 2025년 6월 (0-indexed)
 
             // 데이터를 다시 로드하는 함수를 새로 만듦
             function reloadDataForDate(date) {
@@ -158,113 +158,113 @@
                     .then(data => { /* ... 차트 다시 그리기 ... */
                     });
 
-                // 오른쪽 그래프 데이터도 다시 fetch
-                fetch(`/api/insite/keyword-monthly?year=${year}&month=${month}`)
-                    .then(res => res.json())
-                    .then(data => { /* ... 차트 다시 그리기 ... */
-                    });
+                // // 오른쪽 그래프 데이터도 다시 fetch
+                // fetch(`/api/insite/keyword-monthly?year=${year}&month=${month}`)
+                //     .then(res => res.json())
+                //     .then(data => { /* ... 차트 다시 그리기 ... */
+                //     });
             }
 
-            function updateMonthText() {
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth() + 1;
-                monthText.textContent = `${year}년 ${month}월`;
-            }
+            // function updateMonthText() {
+            //     const year = currentDate.getFullYear();
+            //     const month = currentDate.getMonth() + 1;
+            //     monthText.textContent = `${year}년 ${month}월`;
+            // }
 
-            document.getElementById("prevMonth").onclick = () => {
-                currentDate.setMonth(currentDate.getMonth() - 1);
-                updateMonthText();
-                reloadDataForDate(currentDate);
-            };
+            // document.getElementById("prevMonth").onclick = () => {
+            //     currentDate.setMonth(currentDate.getMonth() - 1);
+            //     updateMonthText();
+            //     reloadDataForDate(currentDate);
+            // };
+            //
+            // document.getElementById("nextMonth").onclick = () => {
+            //     currentDate.setMonth(currentDate.getMonth() + 1);
+            //     updateMonthText();
+            //     reloadDataForDate(currentDate);
+            // };
 
-            document.getElementById("nextMonth").onclick = () => {
-                currentDate.setMonth(currentDate.getMonth() + 1);
-                updateMonthText();
-                reloadDataForDate(currentDate);
-            };
-
-            flatpickr("#datepicker", {
-                dateFormat: "Y-m-d",
-                defaultDate: currentDate,
-                onChange: function (selectedDates) {
-                    if (selectedDates.length > 0) {
-                        currentDate = selectedDates[0];
-                        updateMonthText();
-                    }
-                },
-            });
-
-            calendarIcon.onclick = () => {
-                dateInput._flatpickr.open();
-            };
-            updateMonthText();
+            // flatpickr("#datepicker", {
+            //     dateFormat: "Y-m-d",
+            //     defaultDate: currentDate,
+            //     onChange: function (selectedDates) {
+            //         if (selectedDates.length > 0) {
+            //             currentDate = selectedDates[0];
+            //             updateMonthText();
+            //         }
+            //     },
+            // });
+            //
+            // calendarIcon.onclick = () => {
+            //     dateInput._flatpickr.open();
+            // };
+            // updateMonthText();
 
         });
 
         // 총 소비내역 출력하기
-        function renderLeftChart(months, amounts) {
-            if (leftChart) leftChart.destroy();
+        // function renderLeftChart(months, amounts) {
+        //     if (leftChart) leftChart.destroy();
+        //
+        //     // ✅ 합계 계산
+        //     const total = amounts.reduce((sum, val) => sum + val, 0);
+        //     // ✅ DOM에 반영
+        //     document.getElementById('leftTotalAmount').innerText = `${total.toLocaleString()}원`;
+        //     document.getElementById('amount-of-this-month').innerText = `${amounts[amounts.length - 1].toLocaleString()}원`;
+        //
+        //     leftChart = new Chart(leftCtx, {
+        //         type: 'bar',
+        //         data: {
+        //             labels: months.map(m => `${m}월`),
+        //             datasets: [{
+        //                 label: '총 소비',
+        //                 data: amounts,
+        //                 backgroundColor: '#3340cb'
+        //             }]
+        //         },
+        //         options: {
+        //             responsive: true,
+        //             plugins: {
+        //                 tooltip: {
+        //                     callbacks: {
+        //                         label: ctx => `${ctx.raw.toLocaleString()}원`
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     });
+        // }
 
-            // ✅ 합계 계산
-            const total = amounts.reduce((sum, val) => sum + val, 0);
-            // ✅ DOM에 반영
-            document.getElementById('leftTotalAmount').innerText = `${total.toLocaleString()}원`;
-            document.getElementById('amount-of-this-month').innerText = `${amounts[amounts.length - 1].toLocaleString()}원`;
-
-            leftChart = new Chart(leftCtx, {
-                type: 'bar',
-                data: {
-                    labels: months.map(m => `${m}월`),
-                    datasets: [{
-                        label: '총 소비',
-                        data: amounts,
-                        backgroundColor: '#3340cb'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => `${ctx.raw.toLocaleString()}원`
-                            }
-                        }
-                    }
-                }
-            });
-        }
-
-        // 오른쪽 그래프 총 지출 출력
-        function renderRightChart(keywords, amounts) {
-            if (rightChart) rightChart.destroy();
-
-            // ✅ 합계 계산
-            const total = amounts.reduce((sum, val) => sum + val, 0);
-            // ✅ DOM에 반영
-            document.getElementById('rightTotalAmount').innerText = `${total.toLocaleString()}원`;
-
-            rightChart = new Chart(rightCtx, {
-                type: 'bar',
-                data: {
-                    labels: keywords,
-                    datasets: [{
-                        label: '키워드 소비',
-                        data: amounts,
-                        backgroundColor: '#3340cb'
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        tooltip: {
-                            callbacks: {
-                                label: ctx => `${ctx.raw.toLocaleString()}원`
-                            }
-                        }
-                    }
-                }
-            });
-        }
+        // // 오른쪽 그래프 총 지출 출력
+        // function renderRightChart(keywords, amounts) {
+        //     if (rightChart) rightChart.destroy();
+        //
+        //     // ✅ 합계 계산
+        //     const total = amounts.reduce((sum, val) => sum + val, 0);
+        //     // ✅ DOM에 반영
+        //     document.getElementById('rightTotalAmount').innerText = `${total.toLocaleString()}원`;
+        //
+        //     rightChart = new Chart(rightCtx, {
+        //         type: 'bar',
+        //         data: {
+        //             labels: keywords,
+        //             datasets: [{
+        //                 label: '키워드 소비',
+        //                 data: amounts,
+        //                 backgroundColor: '#3340cb'
+        //             }]
+        //         },
+        //         options: {
+        //             responsive: true,
+        //             plugins: {
+        //                 tooltip: {
+        //                     callbacks: {
+        //                         label: ctx => `${ctx.raw.toLocaleString()}원`
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     });
+        // }
 
         document.querySelector(".export-button").addEventListener("click", () => {
             window.location.href = "/insite/export-pdf";
@@ -301,9 +301,9 @@
 
                 <!-- 월 이동 표시 -->
                 <div class="month-display">
-                    <button id="prevMonth">◀</button>
-                    <span id="monthText">2025년 6월</span>
-                    <button id="nextMonth">▶</button>
+<!--                    <button id="prevMonth">◀</button>-->
+                    <span id="monthText">2025년 7월</span>
+<!--                    <button id="nextMonth">▶</button>-->
                 </div>
 
                 <!-- 내보내기 -->
@@ -321,21 +321,21 @@
                 <div class="left-consump">
                     <p>월간 소비내역 그래프</p>
                     <div class="consump-graph-box">
-<!--                        <img src="images/consump-img.png" alt="이미지">-->
-                        <p class="consump-amount" id="leftTotalAmount">
-                            1,200,000원</p>
+<!--                        <img src="images/consump-mainpagePicture2.png" alt="이미지">-->
+<!--                        <p class="consump-amount" id="leftTotalAmount">-->
+<!--                            1,200,000원</p>-->
                         <canvas class="consump-graph-content" id="barChartLeft"></canvas>
                     </div>
                     <div class="keyword-btn-box">
                     </div>
                 </div>
-                <div class="right-consump">
-                    <p>6월 소비내역</p>
-                    <div class="month-graph-box">
-                        <p id="rightTotalAmount">1,200,000원</p>
-                        <canvas class="consump-graph-content-2" id="barChartRight"></canvas>
-                    </div>
-                </div>
+<!--                <div class="right-consump">-->
+<!--                    <p>6월 소비내역</p>-->
+<!--                    <div class="month-graph-box">-->
+<!--                        <p id="rightTotalAmount">1,200,000원</p>-->
+<!--                        <canvas class="consump-graph-content-2" id="barChartRight"></canvas>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
         <!-- 나/평균 연령대 별 소비금액 비교 -->
@@ -364,8 +364,7 @@
                     <!-- 하단: 본인 소비, 차이 -->
                     <div class="l-r-box">
                         <div class="left-consump-box">
-                            <p class="left-consump-text-1" th:text="${memberName} + '님의 이번 달 소비금액'"><
-                                /p>
+                            <p class="left-consump-text-1" th:text="${memberName} + '님의 이번 달 소비금액'"></p>
                             <p class="left-consump-text-2" id="amount-of-this-month">원</p>
                             <button class="left-consump-text-btn"><a href="/transaction/wallet">가계부 바로가기</a></button>
                         </div>

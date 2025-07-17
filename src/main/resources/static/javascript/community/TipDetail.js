@@ -1,14 +1,3 @@
-/* 댓글 */
-function updateComment(commentId) {
-  const contentEl = document.getElementById(`comment-content-${commentId}`);
-  const formEl = document.getElementById(`update-form-${commentId}`);
-
-  if (contentEl && formEl) {
-    contentEl.style.display = 'none';
-    formEl.style.display = 'block';
-  }
-}
-
 /* 이미지 클릭시 모달창으로 확대 */
 function openModal(src) {
   const modal = document.getElementById("imageModal");
@@ -47,3 +36,31 @@ function markImageForDeletion(button) {
     button.innerText = checkbox.checked ? "복원" : "삭제";
   }
 }
+
+/* 댓글 */
+function updateComment(commentId) {
+  // 댓글 본문 숨김, 수정 폼 표시
+  document.getElementById(`comment-content-${commentId}`).style.display = "none";
+  document.getElementById(`update-form-${commentId}`).style.display = "block";
+
+  // 수정 / 삭제 버튼 숨김
+  const buttonArea = document.getElementById(`action-buttons-${commentId}`);
+  if (buttonArea) {
+    buttonArea.style.display = "none";
+  }
+}
+
+function cancelUpdate(commentId) {
+  // 댓글 본문 표시, 수정 폼 숨김
+  document.getElementById(`comment-content-${commentId}`).style.display = "block";
+  document.getElementById(`update-form-${commentId}`).style.display = "none";
+
+  // 수정 / 삭제 버튼 다시 표시
+  const buttonArea = document.getElementById(`action-buttons-${commentId}`);
+  if (buttonArea) {
+    buttonArea.style.display = "flex";
+  }
+}
+
+
+

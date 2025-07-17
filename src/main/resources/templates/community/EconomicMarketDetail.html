@@ -22,7 +22,7 @@
   </a>
 
   <!-- 게시글 수정/삭제 버튼 (작성자만 보임) -->
-  <div th:if="${loginUserName == DetailDto.memberAccessId}">
+  <div th:if="${loginUserName == DetailDto.memberAccessId}" class="post-button-wrap">
     <form th:action="@{/community/delete/{id}(id=${DetailDto.id})}" method="post" style="display:inline">
       <button type="submit" onclick="return confirm('정말 삭제하시겠습니까?')">게시글 삭제</button>
     </form>
@@ -44,9 +44,9 @@
     <p>
       <strong>작성일 :</strong>
       <span th:text="${#temporals.format(
-      DetailDto.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+                      DetailDto.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
       <span th:if="${DetailDto.updateDate != null and
-       DetailDto.writeDate != DetailDto.updateDate}">(수정됨)</span>
+                      DetailDto.writeDate != DetailDto.updateDate}">(수정됨)</span>
     </p>
   </div>
 
@@ -72,7 +72,9 @@
   <form th:action="@{/community/detail/{id}/comment(id=${DetailDto.id})}"
         method="post" id="commentForm">
     <textarea name="content" placeholder="댓글을 입력하세요" required></textarea>
-    <button type="submit">댓글 등록</button>
+    <div class="comment-submit-wrap">
+      <button type="submit">댓글 등록</button>
+    </div>
   </form>
 
   <!-- 댓글 목록 -->
@@ -84,38 +86,43 @@
     </div>
 
     <!-- ✅ 삭제되지 않은 댓글이면 -->
-    <div th:unless="${comment.deleted}">
-      <p>
-        <strong th:text="${comment.name}">작성자</strong>
-        <span th:text="${#temporals.format(
-        comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
-        <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
-      </p>
+    <div th:unless="${comment.deleted}" class="comment-item">
+      <div class="comment-meta">
+        <div class="comment-author" th:text="${comment.name}">작성자</div>
 
-      <!-- 로그인한 사용자와 작성자가 같을 경우 수정/삭제 가능 -->
-      <div th:if="${#strings.equals(comment.userAccessId, loginUserName)}">
-        <button type="button" th:onclick="|updateComment(${comment.id})|">수정</button>
-        <form th:action="@{/community/comment/delete/{commentId}(commentId=${comment.id})}"
-              method="post" style="display:inline">
-          <button type="submit">삭제</button>
-        </form>
+        <div class="comment-date">
+        <span th:text="${#temporals.format(
+                          comment.writeDate, 'yyyy-MM-dd HH:mm')}">작성일</span>
+          <span th:if="${comment.updateDate != null and comment.writeDate != comment.updateDate}">(수정됨)</span>
+        </div>
       </div>
 
-
-      <!-- 댓글 내용 -->
+      <!--      댓글 내용-->
       <p th:id="|comment-content-${comment.id}|" th:text="${comment.content}">댓글 내용</p><br>
+
+      <!--      수정 삭제 버튼-->
+      <div th:if="${#strings.equals(comment.userAccessId, loginUserName)}"
+           th:id="'action-buttons-' + ${comment.id}"
+           class="comment-button-wrap">
+        <form th:action="@{/community/comment/delete/{commentId}(commentId=${comment.id})}"
+              method="post" style="display: inline;">
+          <button type="button" th:onclick="|updateComment(${comment.id})|">수정</button>
+          <button type="submit" onclick="return confirm('삭제 하시겠습니까?')">삭제</button>
+        </form>
+      </div>
 
       <!-- 인라인 수정 폼 -->
       <div th:id="|update-form-${comment.id}|" style="display: none;">
         <form th:action="@{/community/comment/update/{commentId}(commentId=${comment.id})}" method="post">
           <textarea name="content" th:text="${comment.content}"></textarea>
-          <button type="submit">저장</button>
+
+          <div class="update-form-buttons">
+            <button type="submit">저장</button>
+            <button type="button" th:onclick="|cancelUpdate(${comment.id})|">취소</button>
+          </div>
         </form>
       </div>
     </div>
-
   </div>
-
 </div>
-
 </html>
