@@ -260,7 +260,7 @@ async function openDetailModal(transactionId) {
     detailModal.classList.remove('TR-hidden');
 
     try {
-        const response = await fetch(`/api/transactions/${transactionId}`);
+        const response = await fetch(`/Tigggle/api/transactions/${transactionId}`);
         if (!response.ok) throw new Error('상세 내역을 불러오는데 실패했습니다.');
 
         const detailData = await response.json();
@@ -324,7 +324,7 @@ function convertPaymethodKo(payMethod){
 async function deleteSelectedTransactions(ids) {
 
     try {
-        const response = await fetch('/api/transactions', { // URL에서 ID 제거
+        const response = await fetch('/Tigggle/api/transactions', { // URL에서 ID 제거
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', // Body가 JSON임을 명시
@@ -357,7 +357,7 @@ async function openCreateModalInEditMode(transactionId) {
     const createModal = document.getElementById('transaction-modal');
 
     try {
-        const response = await fetch(`/api/transactions/${transactionId}`);
+        const response = await fetch(`/Tigggle/api/transactions/${transactionId}`);
         if (!response.ok) throw new Error('수정할 내역을 불러오는 데 실패했습니다.');
         const detailData = await response.json();
 

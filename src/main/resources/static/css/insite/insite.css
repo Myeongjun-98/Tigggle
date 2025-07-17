@@ -8,6 +8,11 @@ body {
 .container {
   width: 1440px;
 }
+
+.menuBox {
+    margin: 0;
+}
+
 .insight-header {
   display: flex;
   justify-content: space-between;

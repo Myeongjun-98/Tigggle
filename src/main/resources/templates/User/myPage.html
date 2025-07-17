@@ -3,7 +3,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout/defaultLayout}">
 
-<th:block layout:fragment="css"><link rel="stylesheet" href="/css/mypage.css"></th:block>
+<th:block layout:fragment="css"><link rel="stylesheet" th:href="@{/css/mypage.css}"></th:block>
 <th:block layout:fragment="script"></th:block>
 
 <div  layout:fragment="content">
@@ -24,7 +24,7 @@
                 <div class="side-section flex flex-col cs">
                     <p class="side-text1">전문 상담사의 도움이 필요하신가요?</p>
                     <div class="cs-img">
-                        <img src="/images/commentator.png">
+                        <img th:src="@{/images/commentator.png}">
                         <div class="cs-count" th:text="${myPageDto.counselingTokken}">2</div>
                     </div>
                     <a href="">초기화</a>
@@ -38,7 +38,7 @@
                             <li>생활비 : 300,000원</li>
                             <li>기타 : 200,000원</li>
                         </ul>
-                        <a href="/transaction/wallet">가계부로 이동</a>
+                        <a th:href="@{/transaction/wallet}">가계부로 이동</a>
                 </div>
                 <div class="member-drar-bt">
                     <a href="">회원탈퇴</a>
@@ -102,7 +102,7 @@
                             <td th:text="${stat.count}">1</td>
                             <td><span class="category" th:text="${row.category}">커뮤니티글</span></td>
                             <td style="text-align:left" >
-                                <a th:href="'/community/detail/'+${row.id}" th:text="${row.title}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</a>
+                                <a th:href="@{/community/detail/{id}(id=${row.id})}" th:text="${row.title}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</a>
                             </td>
                             <td th:text="${row.writeDate}">2025.07.07</td>
                             <td>댓글<span th:text="${row.commentCount}"></span></td>
@@ -123,7 +123,7 @@
                             <td> <input type="checkbox"> </td>
                             <td th:text="${stat.count}">1</td>
                             <td style="text-align:left" >
-                                <a th:href="'/community/detail/'+${row.boardId}" th:text="${row.content}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</a>
+                                <a th:href="@{/community/detail/{id}(id=${row.boardId})}" th:text="${row.content}">내가 작성한 글 제목이 출력되고 링크 넘어갈 수 있음.</a>
                             </td>
                             <td th:text="${row.name}">username</td>
                             <td th:text="${row.writeDate}">2025.07.07</td>
@@ -137,7 +137,7 @@
             </div>
         </div>
     </div>
-    <script src="/javascript/mypage.js"></script>
+    <script th:src="@{/javascript/mypage.js}"></script>
 </div>
 
 </html>

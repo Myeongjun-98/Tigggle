@@ -21,7 +21,7 @@ const goalForm = document.getElementById('goal-form');
 const fetchAndRenderGoals = async () => {
     try {
         // 1. 서버로부터 목표 목록 데이터를 가져옵니다 (API URL은 예시입니다).
-        const response = await fetch('/transaction/goals/api'); // 🚨 백엔드에 이 API를 만들어야 합니다.
+        const response = await fetch('/Tigggle/transaction/goals/api'); // 🚨 백엔드에 이 API를 만들어야 합니다.
         if (!response.ok) throw new Error('데이터를 불러오는데 실패했습니다.');
         const goals = await response.json();
 
@@ -67,7 +67,7 @@ const openCreateModal = () => {
 
 const openEditModal = async (id) => {
     try {
-        const response = await fetch(`/transaction/goals/api/${id}`); // 🚨 백엔드에 이 API를 만들어야 합니다.
+        const response = await fetch(`/Tigggle/transaction/goals/api/${id}`); // 🚨 백엔드에 이 API를 만들어야 합니다.
         if (!response.ok) throw new Error('목표 정보를 불러올 수 없습니다.');
         const goal = await response.json();
 
@@ -114,7 +114,7 @@ goalForm.addEventListener('submit', async (e) => {
         note: document.getElementById('goal-note').value,
     };
 
-    const url = isEditMode ? `/transaction/goals/api/${id}` : '/transaction/goals/api';
+    const url = isEditMode ? `/Tigggle/transaction/goals/api/${id}` : '/Tigggle/transaction/goals/api';
     const method = isEditMode ? 'PUT' : 'POST'; // 🚨 PUT, POST API를 만들어야 합니다.
 
     try {
@@ -163,7 +163,7 @@ deleteSelectedGoalsBtn.addEventListener('click', async () => {
     const idsToDelete = Array.from(checkedCheckboxes).map(cb => cb.dataset.id);
 
     try {
-        const response = await fetch('/transaction/goals/api', { // 🚨 DELETE API를 만들어야 합니다.
+        const response = await fetch('/Tigggle/transaction/goals/api', { // 🚨 DELETE API를 만들어야 합니다.
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

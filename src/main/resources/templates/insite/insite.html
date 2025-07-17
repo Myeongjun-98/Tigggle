@@ -4,12 +4,12 @@
       layout:decorate="~{layout/defaultLayout}">
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" href="/css/insite/insite.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" th:href="@{/css/insite/insite.css}" />
+    <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css}">
 </th:block>
 <th:block layout:fragment="script">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/chart.js}"></script>
+    <script th:src="@{https://cdn.jsdelivr.net/npm/flatpickr}"></script>
     <script>
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -72,7 +72,7 @@
             // }
 
             // 초기 로딩
-            fetch("/api/insite/spending-summary")
+            fetch("/Tigggle/api/insite/spending-summary")
                 .then(res => res.json())
                 .then(data => {
                     const months = data.monthlyDateDtoList.map(item => item.whatMonth);
@@ -119,7 +119,7 @@
                 });
 
             // 오른쪽 그래프 로딩
-            fetch("/api/insite/keyword-monthly")
+            fetch("/Tigggle/api/insite/keyword-monthly")
                 .then(res => res.json())
                 .then(data => {
                     // const currentMonth = new Date().getMonth() + 1;
@@ -153,7 +153,7 @@
                 const month = date.getMonth() + 1;
 
                 // 왼쪽 그래프 데이터 다시 fetch
-                fetch(`/api/insite/spending-summary?year=${year}&month=${month}`) // <-- API가 연/월 파라미터를 받아야 함
+                fetch(`/Tigggle/api/insite/spending-summary?year=${year}&month=${month}`) // <-- API가 연/월 파라미터를 받아야 함
                     .then(res => res.json())
                     .then(data => { /* ... 차트 다시 그리기 ... */
                     });
@@ -267,7 +267,7 @@
         // }
 
         document.querySelector(".export-button").addEventListener("click", () => {
-            window.location.href = "/insite/export-pdf";
+            window.location.href = "/Tigggle/insite/export-pdf";
         });
 
         // btn.onclick = () => {
@@ -307,7 +307,7 @@
                 </div>
 
                 <!-- 내보내기 -->
-                <button class="export-button" onclick="window.location.href='/insite/export-pdf'">내보내기</button>
+                <button class="export-button" onclick="window.location.href='/Tigggle/insite/export-pdf'">내보내기</button>
             </div>
         </div>
         <!-- 타이틀 -->
@@ -344,7 +344,7 @@
                 <!-- 왼쪽: 프로필 및 안내 문구 -->
                 <div class="foot-text-box">
                     <div class="f-profile-photo">
-                        <img src="images/foot-title-img.png">
+                        <img th:src="@{images/foot-title-img.png}">
                     </div>
                     <div class="foot-title">
                         <p th:text="${memberName} + '님,'"></p>
@@ -366,13 +366,13 @@
                         <div class="left-consump-box">
                             <p class="left-consump-text-1" th:text="${memberName} + '님의 이번 달 소비금액'"></p>
                             <p class="left-consump-text-2" id="amount-of-this-month">원</p>
-                            <button class="left-consump-text-btn"><a href="/transaction/wallet">가계부 바로가기</a></button>
+                            <button class="left-consump-text-btn"><a th:href="@{/transaction/wallet}">가계부 바로가기</a></button>
                         </div>
                         <!-- 차이 -->
                         <div class="right-consump-box">
                             <div class="r-consump-sub-box">
                                 <div class="profile-photo" style="margin-bottom: 10px; margin-top: 20px;">
-                                    <img src="images/r-consump-text.png" alt="이미지">
+                                    <img th:src="@{images/r-consump-text.png}" alt="이미지">
                                 </div>
                                 <input type="hidden" id="age-group-average-amount" th:value="${ageGroupAverageDto.getAverageAmount()}"/>
                                 <p class="r-consump-text" id="spending-comparison-result"></p>

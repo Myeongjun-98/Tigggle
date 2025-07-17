@@ -44,9 +44,6 @@ dependencies {
 	// https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
 	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect:3.0.0'
 
-
-	// 선우가 넣었습니다
-//	implementation 'org.xhtmlrenderer:flying-saucer-pdf-openpdf:9.1.22'
 	implementation 'com.openhtmltopdf:openhtmltopdf-pdfbox:1.0.10'
 }
 

@@ -4,8 +4,8 @@
       layout:decorate="~{layout/defaultLayout}">
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" href="/css/insite/asset.css" />
-    <link rel="stylesheet" href="/css/insite/asset-modal.css" />
+    <link rel="stylesheet" th:href="@{/css/insite/asset.css}" />
+    <link rel="stylesheet" th:href="@{/css/insite/asset-modal.css}" />
 </th:block>
 <th:block layout:fragment="script">
     <!-- modal script -->
@@ -138,7 +138,6 @@
 </th:block>
 
 <div  layout:fragment="content">
-
     <div class="container">
         <!-- 타이틀 -->
         <div class="asset-header">
@@ -147,103 +146,103 @@
                 <div class="dot"></div>
                 <span>자산관리</span>
                 <!-- modal -->
-                <div class="modal-overlay" id="myModal">
-                    <div class="modal-content">
-                        <div class="modal-title" id="modal-title">내 자산 추가</div>
+<!--                <div class="modal-overlay" id="myModal">-->
+<!--                    <div class="modal-content">-->
+<!--                        <div class="modal-title" id="modal-title">내 자산 추가</div>-->
 
-                        <form id="assetForm" action="/submit-asset" method="POST">
-                            <div class="section-title">계좌타입</div>
-                            <div class="button-group" id="accountTypeGroup">
-                                <button type="button" class="type-button"  id="cash-button" data-value="cash">
-                                    현금
-                                </button>
-                                <button
-                                        type="button"
-                                        class="type-button selected"
-                                        id="account-button"
-                                        data-value="account"
-                                >
-                                    계좌
-                                </button>
-                                <input
-                                        type="hidden"
-                                        name="accountType"
-                                        id="accountTypeInput"
-                                        value="account"
-                                />
-                            </div>
+<!--                        <form id="assetForm" action="/submit-asset" method="POST">-->
+<!--                            <div class="section-title">계좌타입</div>-->
+<!--                            <div class="button-group" id="accountTypeGroup">-->
+<!--                                <button type="button" class="type-button"  id="cash-button" data-value="cash">-->
+<!--                                    현금-->
+<!--                                </button>-->
+<!--                                <button-->
+<!--                                        type="button"-->
+<!--                                        class="type-button selected"-->
+<!--                                        id="account-button"-->
+<!--                                        data-value="account"-->
+<!--                                >-->
+<!--                                    계좌-->
+<!--                                </button>-->
+<!--                                <input-->
+<!--                                        type="hidden"-->
+<!--                                        name="accountType"-->
+<!--                                        id="accountTypeInput"-->
+<!--                                        value="account"-->
+<!--                                />-->
+<!--                            </div>-->
 
-                            <div class="section-title">계좌번호</div>
-                            <div class="input-group">
-                                <input
-                                        type="text"
-                                        name="accountNumber"
-                                        placeholder="계좌번호 작성"
-                                        required
-                                />
-                            </div>
+<!--                            <div class="section-title">계좌번호</div>-->
+<!--                            <div class="input-group">-->
+<!--                                <input-->
+<!--                                        type="text"-->
+<!--                                        name="accountNumber"-->
+<!--                                        placeholder="계좌번호 작성"-->
+<!--                                        required-->
+<!--                                />-->
+<!--                            </div>-->
 
-                            <div class="section-title">은행</div>
-                            <div class="input-group">
-                                <select name="bankName" required>
-                                    <option value="기엽은행">기엽은행</option>
-                                    <option value="너무옙은행">너무옙은행</option>
-                                    <option value="우리은행">국민은행</option>
-                                    <option value="하나은행">하나은행</option>
-                                    <option value="카카오뱅크">카카오뱅크</option>
-                                    <option value="농협은행">농협은행</option>
-                                </select>
-                            </div>
+<!--                            <div class="section-title">은행</div>-->
+<!--                            <div class="input-group">-->
+<!--                                <select name="bankName" required>-->
+<!--                                    <option value="기엽은행">기엽은행</option>-->
+<!--                                    <option value="너무옙은행">너무옙은행</option>-->
+<!--                                    <option value="우리은행">국민은행</option>-->
+<!--                                    <option value="하나은행">하나은행</option>-->
+<!--                                    <option value="카카오뱅크">카카오뱅크</option>-->
+<!--                                    <option value="농협은행">농협은행</option>-->
+<!--                                </select>-->
+<!--                            </div>-->
 
-                            <div class="section-title">계좌타입</div>
-                            <div class="button-group" id="depositTypeGroup">
-                                <button
-                                        type="button"
-                                        class="type-button selected"
-                                        data-value="normalDeposit"
-                                >
-                                    보통예금
-                                </button>
-                                <button
-                                        type="button"
-                                        class="type-button"
-                                        data-value="installmentSavings"
-                                >
-                                    적금
-                                </button>
-                                <button type="button" class="type-button" data-value="timeDeposit">
-                                    정기예금
-                                </button>
-                                <input
-                                        type="hidden"
-                                        name="depositType"
-                                        id="depositTypeInput"
-                                        value="normalDeposit"
-                                />
-                            </div>
+<!--                            <div class="section-title">계좌타입</div>-->
+<!--                            <div class="button-group" id="depositTypeGroup">-->
+<!--                                <button-->
+<!--                                        type="button"-->
+<!--                                        class="type-button selected"-->
+<!--                                        data-value="normalDeposit"-->
+<!--                                >-->
+<!--                                    보통예금-->
+<!--                                </button>-->
+<!--                                <button-->
+<!--                                        type="button"-->
+<!--                                        class="type-button"-->
+<!--                                        data-value="installmentSavings"-->
+<!--                                >-->
+<!--                                    적금-->
+<!--                                </button>-->
+<!--                                <button type="button" class="type-button" data-value="timeDeposit">-->
+<!--                                    정기예금-->
+<!--                                </button>-->
+<!--                                <input-->
+<!--                                        type="hidden"-->
+<!--                                        name="depositType"-->
+<!--                                        id="depositTypeInput"-->
+<!--                                        value="normalDeposit"-->
+<!--                                />-->
+<!--                            </div>-->
 
-                            <div class="actions">
-                                <button type="button" class="close-button" onclick="closeModal()">
-                                    닫기
-                                </button>
-                                <button type="submit" class="next-button">다음</button>
-                            </div>
-                        </form>
-                    </div>
-                    <!-- 현금 별칭 입력 화면 -->
-                    <div id="cash-alias-page" style="display: none;">
-                        <div class="section-title">현금 별칭 입력</div>
-                        <div class="input-group">
-                            <input type="text" name="cashAlias" placeholder="예: 지갑, 비상금" required />
-                        </div>
-                        <div class="actions">
-                            <button type="button" onclick="closeModal()">취소</button>
-                            <button type="submit" form="aliasForm">확인</button>
-                        </div>
-                    </div>
-                </div>
+<!--                            <div class="actions">-->
+<!--                                <button type="button" class="close-button" onclick="closeModal()">-->
+<!--                                    닫기-->
+<!--                                </button>-->
+<!--                                <button type="submit" class="next-button">다음</button>-->
+<!--                            </div>-->
+<!--                        </form>-->
+<!--                    </div>-->
+<!--                    &lt;!&ndash; 현금 별칭 입력 화면 &ndash;&gt;-->
+<!--                    <div id="cash-alias-page" style="display: none;">-->
+<!--                        <div class="section-title">현금 별칭 입력</div>-->
+<!--                        <div class="input-group">-->
+<!--                            <input type="text" name="cashAlias" placeholder="예: 지갑, 비상금" required />-->
+<!--                        </div>-->
+<!--                        <div class="actions">-->
+<!--                            <button type="button" onclick="closeModal()">취소</button>-->
+<!--                            <button type="submit" form="aliasForm">확인</button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
-            <button class="asset-btn" onclick="openModal()" >내 자산 추가</button>
+<!--            <button class="asset-btn" onclick="openModal()" >내 자산 추가</button>-->
         </div>
 
         <!-- 목표 소비금액 -->
@@ -422,7 +421,7 @@
                         <p class="total-m-t">1일</p>
                         <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.dailySpent, 3, 'COMMA')} + '원'"></div>
                     </div>
-                    <div class="go-schedule"><a href="/transaction/wallet">가계부로 이동</a></div>
+                    <div class="go-schedule"><a th:href="@{/transaction/wallet}">가계부로 이동</a></div>
                 </div>
             </div>
                 <div class="saving-situation">
@@ -497,28 +496,28 @@
                     <div class="next-month-consump">
                         <div class="consum-result-box-1">
                             <div class="c-char-1">
-                                <img src="images/coffee.png" alt="커피이미지">
+                                <img th:src="@{images/coffee.png}" alt="커피이미지">
                             </div>
                             <span class="c-r-text">별다방에 비해 탕비실 커피는 공짜랍니다!</span>
                             <span class="c-r-content" th:text="'아메리카노 ' + ${suggestionDto.americanoCount} + '잔 덜 마시기'"></span>
                         </div>
                         <div class="consum-result-box-2">
                             <div class="c-char-2">
-                                <img src="images/alcohol.png" alt="술이미지">
+                                <img th:src="@{images/alcohol.png}" alt="술이미지">
                             </div>
                             <span class="c-r-text">" 다음에 내가 또 술을 마시면... " 을 실천해볼까요?</span>
                             <span class="c-r-content" th:text="'술자리를 ' + ${suggestionDto.alcoholCount} + '번 덜 가기'"></span>
                         </div>
                         <div class="consum-result-box-3">
                             <div class="c-char-3">
-                                <img src="images/suitcase.png" alt="여행이미지">
+                                <img th:src="@{images/suitcase.png}" alt="여행이미지">
                             </div>
                             <span class="c-r-text">해외여행! 감당 가능하십니까..?</span>
                             <span class="c-r-content" th:text="'해외여행 ' + ${suggestionDto.travelCount} + '번 덜 가기'"></span>
                         </div>
                         <div class="consum-result-box-4">
                             <div class="c-char-4">
-                                <img src="images/bag.png" alt="가방">
+                                <img th:src="@{images/bag.png}" alt="가방">
                             </div>
                             <span class="c-r-text">명품 소유자보단 명품 Tigggler!</span>
                             <span class="c-r-content" th:text="'명품구입 ' + ${suggestionDto.luxuryCount} + '번 덜 하기'"></span>
