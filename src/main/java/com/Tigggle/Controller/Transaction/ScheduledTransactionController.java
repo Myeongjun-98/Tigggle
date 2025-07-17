@@ -17,20 +17,19 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/api/scheduled-transactions")
 public class ScheduledTransactionController {
 
     private final ScheduledTransactionService scheduledTransactionService;
     private final UserRepository memberRepository;
 
-    @GetMapping("")
+    @GetMapping("/api/scheduled-transactions")
     public ResponseEntity<List<ScheduledTransactionDto>> getScheduledTransactionList(Principal principal) {
         Member member = memberRepository.findByAccessId(principal.getName());
         List<ScheduledTransactionDto> dtoList = scheduledTransactionService.getScheduledTransactions(member);
         return ResponseEntity.ok(dtoList);
     }
 
-    @PostMapping("/create") // POST /api/scheduled-transactions 요청을 처리
+    @PostMapping("/api/scheduled-transactions/create") // POST /api/scheduled-transactions 요청을 처리
     public ResponseEntity<Void> createScheduledTransaction(
             @RequestBody ScheduledTransactionCreateDto createDto,
             Principal principal) {
@@ -48,7 +47,7 @@ public class ScheduledTransactionController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @DeleteMapping("")
+    @DeleteMapping("/api/scheduled-transactions")
     public ResponseEntity<Void> deleteScheduledTransactions(
             @RequestBody List<Long> scheduleIds,
             Principal principal) {
@@ -60,7 +59,7 @@ public class ScheduledTransactionController {
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{scheduleId}")
+    @PatchMapping("/api/scheduled-transactions/{scheduleId}")
     public ResponseEntity<Void> updateScheduledTransaction(
             @PathVariable Long scheduleId,
             @RequestBody ScheduledTransactionUpdateDto updateDto,
@@ -73,7 +72,7 @@ public class ScheduledTransactionController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{scheduleId}")
+    @GetMapping("/api/scheduled-transactions/{scheduleId}")
     public ResponseEntity<ScheduledTransactionDto> getScheduledTransaction(@PathVariable Long scheduleId) {
         // 서비스에 상세 DTO를 요청 (소유권 검증은 서비스에서 처리)
         ScheduledTransactionDto scheduleDto = scheduledTransactionService.getSingleScheduledTransaction(scheduleId);

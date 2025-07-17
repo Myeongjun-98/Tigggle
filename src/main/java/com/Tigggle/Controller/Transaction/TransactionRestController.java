@@ -19,7 +19,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/transactions")
 @CrossOrigin(origins = "http://localhost:3000")
 @Log4j2
 public class TransactionRestController {
@@ -29,7 +28,7 @@ public class TransactionRestController {
     private final AssetService assetService;
 
     // * 거래내역 생성
-    @PostMapping("")
+    @PostMapping("/api/transactions")
     public ResponseEntity<Void> createTransaction(
             @RequestBody TransactionCreateRequestDto createDto,
             Principal principal
@@ -41,7 +40,7 @@ public class TransactionRestController {
     }
 
     // * 거래내역 (입금) 모달에서 option값 표현
-    @GetMapping("/when-income")
+    @GetMapping("/api/transactions/when-income")
     public ResponseEntity<List<AssetListDto>> getAssetsWhenIncome(
             @RequestParam boolean isConsumption,
             Principal principal
@@ -55,7 +54,7 @@ public class TransactionRestController {
 
     // * 거래내역 저장(지출) 모달에서 paymethod에 따라 option값 표현
     // 오류로 인해 죽인 코드
-    @GetMapping("/by-paymethod")
+    @GetMapping("/api/transactions/by-paymethod")
     public ResponseEntity<List<AssetListDto>> getAssetsByPayMethod(
         @RequestParam String payMethod,
         Principal principal
@@ -69,7 +68,7 @@ public class TransactionRestController {
     }
 
     // * 거래내역 클릭 시 자세히보기
-    @GetMapping("/{transactionId}")
+    @GetMapping("/api/transactions/{transactionId}")
     public ResponseEntity<TransactionDetailDto> getTransactionDetail(
             @PathVariable Long transactionId,
             Principal principal
@@ -81,7 +80,7 @@ public class TransactionRestController {
     }
 
     // * 내역 삭제 매핑
-    @DeleteMapping("") // URL에서 ID를 제거
+    @DeleteMapping("/api/transactions") // URL에서 ID를 제거
     public ResponseEntity<Void> deleteTransactions(
             @RequestBody List<Long> transactionIds, // Request Body에서 ID 리스트를 받음
             Principal principal) {
@@ -95,7 +94,7 @@ public class TransactionRestController {
     }
 
     // * 내역 수정 매핑
-    @PatchMapping("/{transactionId}")
+    @PatchMapping("/api/transactions/{transactionId}")
     public ResponseEntity<Void> updateTransaction(
             @PathVariable Long transactionId,
             @RequestBody TransactionUpdateDto transactionUpdateDto,
@@ -107,7 +106,7 @@ public class TransactionRestController {
     }
 
     // * 정기 거래내역에서 자산 불러오기
-    @GetMapping("/assets-for-schedule") // URL을 더 명확하게 변경
+    @GetMapping("/api/transactions/assets-for-schedule") // URL을 더 명확하게 변경
     public ResponseEntity<List<AssetListDto>> getAssetsForSchedule(Principal principal) {
         Member member = memberRepository.findByAccessId(principal.getName());
 

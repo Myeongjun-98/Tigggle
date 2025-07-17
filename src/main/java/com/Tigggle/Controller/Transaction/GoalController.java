@@ -20,7 +20,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor // final 필드에 대한 생성자를 자동으로 만들어줍니다.
-@RequestMapping("transaction/goals") // 이 컨트롤러의 모든 메서드는 /api/goals 경로로 시작합니다.
+@RequestMapping("") // 이 컨트롤러의 모든 메서드는 /api/goals 경로로 시작합니다.
 public class GoalController {
 
     private final GoalService goalService; // 비즈니스 로직을 처리할 서비스
@@ -30,10 +30,10 @@ public class GoalController {
     @GetMapping
     public String goalManagementPage(Model model){
         model.addAttribute("keywords", keywordsRepository.findAll());
-        return "transaction/goals";
+        return "/transaction/goals/transaction/goals";
     }
 
-    @GetMapping("/api")
+    @GetMapping("/transaction/goals/api")
     @ResponseBody
     public ResponseEntity<List<GoalDto>> getAllGoals(Principal principal) {
         Member member = memberRepository.findByAccessId(principal.getName());
@@ -42,7 +42,7 @@ public class GoalController {
         return ResponseEntity.ok(goals);
     }
 
-    @GetMapping("/api/{id}")
+    @GetMapping("/transaction/goals/api/{id}")
     @ResponseBody
     public ResponseEntity<GoalDto> getGoalById(@PathVariable Long id, Principal principal) {
         Member member = memberRepository.findByAccessId(principal.getName());
@@ -51,7 +51,7 @@ public class GoalController {
         return ResponseEntity.ok(goal);
     }
 
-    @PostMapping("/api")
+    @PostMapping("/transaction/goals/api")
     @ResponseBody
     public ResponseEntity<Goal> createGoal(@RequestBody GoalDto goalDto, Principal principal) {
         Member member = memberRepository.findByAccessId(principal.getName());
@@ -60,7 +60,7 @@ public class GoalController {
         return ResponseEntity.ok(createdGoal);
     }
 
-    @PutMapping("/api/{id}")
+    @PutMapping("/transaction/goals/api/{id}")
     @ResponseBody
     public ResponseEntity<Goal> updateGoal(@PathVariable Long id, @RequestBody GoalDto goalDto, Principal principal) {
         Member member = memberRepository.findByAccessId(principal.getName());
@@ -69,7 +69,7 @@ public class GoalController {
         return ResponseEntity.ok(updatedGoal);
     }
 
-    @DeleteMapping("/api")
+    @DeleteMapping("/transaction/goals/api")
     @ResponseBody
     public ResponseEntity<Void> deleteGoals(@RequestBody List<Long> ids, Principal principal) {
         Member member = memberRepository.findByAccessId(principal.getName());

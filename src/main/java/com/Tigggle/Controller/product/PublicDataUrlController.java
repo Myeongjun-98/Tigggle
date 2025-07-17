@@ -8,13 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
-@RequestMapping("/api")
 public class PublicDataUrlController {
 
     // 👉 디코딩된(원본) 서비스 키를 그대로 사용해야 함
     private final String serviceKey = "s7XXMDNhYvKn5GaicPEQKaDHCXkkyUTbT6dDBDMkY/FUZshurWeKIB7kuqVAg9t3X8PlSJxSddWLr6hfPz5hog==";
 
-    @GetMapping(value = "/deposit-api-url", produces = "application/xml")
+    @GetMapping(value = "/api/deposit-api-url", produces = "application/xml")
     public ResponseEntity<String> getDepositApi(
             @RequestParam String sBseDt,
             @RequestParam String eBseDt,

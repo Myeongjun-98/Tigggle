@@ -13,14 +13,13 @@ import java.security.Principal;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 public class LedgerController {
 
     private final UserRepository memberRepository;
     private final WalletService walletService;
 
-    @GetMapping("/wallet/page") // 새로운 통합 API 엔드포인트
+    @GetMapping("/api/wallet/page") // 새로운 통합 API 엔드포인트
     public ResponseEntity<WalletPageDto> getWalletPage(
             Principal principal,
             @RequestParam int year,
