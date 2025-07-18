@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     numOfRows: '10'
   });
 
-  fetch(`/Tigggle/api/deposit-api-url?${params.toString()}`)
+  fetch(`/api/deposit-api-url?${params.toString()}`)
     .then(res => {
       if (!res.ok) throw new Error(`API 오류: ${res.status}`);
       return res.text();

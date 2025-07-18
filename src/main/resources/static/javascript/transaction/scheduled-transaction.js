@@ -85,7 +85,7 @@ async function loadScheduledTransactions() {
     tableBody.innerHTML = '<tr><td colspan="14">목록을 불러오는 중...</td></tr>';
 
     try {
-        const response = await fetch('/Tigggle/api/scheduled-transactions');
+        const response = await fetch('/api/scheduled-transactions');
         if (!response.ok) {
             throw new Error('정기 거래 목록을 불러오는데 실패했습니다.');
         }
@@ -161,7 +161,7 @@ function initializeScheduleModal() {
             // 폼 데이터를 기반으로 DTO 객체를 만듭니다.
             const dto = createDtoFromForm();
 
-            const url = isEditMode ? `/Tigggle/api/scheduled-transactions/${currentEditingScheduleId}` : '/Tigggle/api/scheduled-transactions/create';
+            const url = isEditMode ? `/api/scheduled-transactions/${currentEditingScheduleId}` : '/api/scheduled-transactions/create';
             const method = isEditMode ? 'PATCH' : 'POST';
             // fetch API를 사용하여 백엔드로 데이터를 전송합니다.
             try {
@@ -235,7 +235,7 @@ async function populateAssetDropdown() {
     assetSelect.innerHTML = '<option value="">자산을 불러오는 중...</option>';
 
     try {
-        const response = await fetch('/Tigggle/api/transactions/assets-for-schedule'); // 이 API 주소는 실제 프로젝트에 맞게 확인 필요
+        const response = await fetch('/api/transactions/assets-for-schedule'); // 이 API 주소는 실제 프로젝트에 맞게 확인 필요
         if (!response.ok) throw new Error('자산 목록 로딩 실패');
 
         const assets = await response.json();
@@ -264,7 +264,7 @@ async function populateAssetDropdown() {
 async function deleteScheduledTransactions(ids) {
 
     try {
-        const response = await fetch('/Tigggle/api/scheduled-transactions', {
+        const response = await fetch('/api/scheduled-transactions', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -293,7 +293,7 @@ async function openScheduleModalInEditMode(scheduleId) {
     if (!scheduleId) return;
 
     try {
-        const response = await fetch(`/Tigggle/api/scheduled-transactions/${scheduleId}`);
+        const response = await fetch(`/api/scheduled-transactions/${scheduleId}`);
         if(!response.ok){
             throw new Error('서버에서 데이터를 가져오지 못했습니다.')
         }
@@ -359,7 +359,7 @@ async function toggleEditMode(scheduleId) {
         };
 
         // PATCH API 호출
-        const response = await fetch(`/Tigggle/api/scheduled-transactions/${scheduleId}`, { /* ... */ });
+        const response = await fetch(`/api/scheduled-transactions/${scheduleId}`, { /* ... */ });
 
         if (response.ok) {
             alert('수정되었습니다.');
@@ -371,7 +371,7 @@ async function toggleEditMode(scheduleId) {
     } else {
         // --- 수정 모드로 전환 ---
         // 1. 상세 데이터를 가져옵니다. (기존 모달에서 사용하던 API 재활용)
-        const response = await fetch(`/Tigggle/api/scheduled-transactions/${scheduleId}`);
+        const response = await fetch(`/api/scheduled-transactions/${scheduleId}`);
         const data = await response.json();
 
         // 2. 텍스트들을 input으로 바꿉니다.

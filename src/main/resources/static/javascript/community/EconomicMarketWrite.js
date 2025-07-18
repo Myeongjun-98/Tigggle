@@ -157,7 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const header = document.querySelector('meta[name="_csrf_header"]').content;
 
       const isEdit = window.location.pathname.includes('/edit/');
-      const url = isEdit ? window.location.pathname : '/Tigggle/community/EconomicMarketWrite';
+      const url = isEdit ? window.location.pathname : '/community/EconomicMarketWrite';
 
       fetch(url, {
         method: 'POST',
@@ -166,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }).then(response => {
         if (response.ok) {
           alert(isEdit ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
-          window.location.href = '/Tigggle/communityEconomicMarket';
+          window.location.href = '/communityEconomicMarket';
         } else {
           alert(isEdit ? '수정에 실패했습니다.' : '작성에 실패했습니다.');
           isSubmitting = false;

@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
 
             // 팝업을 여는 함수를 여기서 직접 호출합니다.
-            openPopup('/Tigggle/transaction/scheduled-transaction', '정기 입/출금 관리', 900, 700);
+            openPopup('/transaction/scheduled-transaction', '정기 입/출금 관리', 900, 700);
         });
     }
     // 급조, 달력 클릭 시 넘어가기!
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // a 태그의 기본 동작(페이지 이동)을 막습니다.
                 e.preventDefault();
 
-                const popupUrl = '/Tigggle/transaction/goals';
+                const popupUrl = '/transaction/goals';
                 const popupName = '목표 관리';
                 const popupOptions = 'width=1200,height=900,scrollbars=yes,resizable=yes';
 
@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         openGoalLink.addEventListener('click', function(e) {
             e.preventDefault(); // 기본 링크 이동을 막습니다.
 
-            const popupUrl = "/Tigggle/transaction/goals"
+            const popupUrl = "/transaction/goals"
             const popupName = "목표 관리";
             const popupOptions = "width=1200,height=800,scrollbars=yes,resizable=yes";
 
@@ -159,7 +159,7 @@ async function initializeWalletPage(year, month) {
         const assetId = pathParts[pathParts.length - 1]; // 예: /transaction/wallet/5 -> "5"
 
         // 2. 기본 API URL을 만듭니다.
-        let apiUrl = `/Tigggle/api/wallet/page?year=${year}&month=${month}`;
+        let apiUrl = `/api/wallet/page?year=${year}&month=${month}`;
 
         // 3. assetId가 숫자 형태이고, 'wallet'이 아닐 경우에만 파라미터로 추가합니다.
         if (!isNaN(assetId) && assetId.trim() !== 'wallet') {
@@ -275,7 +275,7 @@ async function openDetailModal(transactionId) {
     detailModal.classList.remove('TR-hidden');
 
     try {
-        const response = await fetch(`/Tigggle/api/transactions/${transactionId}`);
+        const response = await fetch(`/api/transactions/${transactionId}`);
         if (!response.ok) throw new Error('상세 내역을 불러오는데 실패했습니다.');
 
         const detailData = await response.json();
@@ -301,7 +301,7 @@ function displayNoAssetMessage() {
     document.getElementById('TR-history-container').innerHTML = `
         <div class="TR-no-data">
             <h2>등록된 지갑 자산이 없습니다.</h2>
-            <a href="/Tigggle/asset/register">자산 등록하러 가기</a>
+            <a href="/asset/register">자산 등록하러 가기</a>
         </div>
     `;
     // 다른 요약 정보들도 비워주는 것이 좋습니다.
@@ -339,7 +339,7 @@ function convertPaymethodKo(payMethod){
 async function deleteSelectedTransactions(ids) {
 
     try {
-        const response = await fetch('/Tigggle/api/transactions', { // URL에서 ID 제거
+        const response = await fetch('/api/transactions', { // URL에서 ID 제거
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', // Body가 JSON임을 명시
@@ -372,7 +372,7 @@ async function openCreateModalInEditMode(transactionId) {
     const createModal = document.getElementById('transaction-modal');
 
     try {
-        const response = await fetch(`/Tigggle/api/transactions/${transactionId}`);
+        const response = await fetch(`/api/transactions/${transactionId}`);
         if (!response.ok) throw new Error('수정할 내역을 불러오는 데 실패했습니다.');
         const detailData = await response.json();
 

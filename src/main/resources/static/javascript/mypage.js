@@ -16,7 +16,7 @@ $("#profile").change(function(){
     const token = $('meta[name="_csrf"]').attr('content');
     const header = $('meta[name="_csrf_header"]').attr('content');
     $.ajax({
-        url: '/Tigggle/user/profile/upload',
+        url: '/user/profile/upload',
         type: 'POST',
         data: formData,
         contentType: false,
@@ -51,7 +51,7 @@ function myInfoUpdate(){
     };
 
     $.ajax({
-        url: '/Tigggle/user/profile/update',
+        url: '/user/profile/update',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(formData),

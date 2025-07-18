@@ -88,7 +88,7 @@ function initializeCreateModal() {
                 try {
                     // 3. 컨트롤러에 정의된 API를 호출합니다.
                     // isConsumption=false 파라미터를 반드시 포함해야 합니다.
-                    const response = await fetch('/Tigggle/api/transactions/when-income?isConsumption=false');
+                    const response = await fetch('/api/transactions/when-income?isConsumption=false');
                     if (!response.ok) {
                         throw new Error('입금 계좌 목록을 불러오는 데 실패했습니다.');
                     }
@@ -149,7 +149,7 @@ function initializeCreateModal() {
         }
 
         try {
-            const response = await fetch(`/Tigggle/api/transactions/by-paymethod?payMethod=${selectedMethod}`);
+            const response = await fetch(`/api/transactions/by-paymethod?payMethod=${selectedMethod}`);
             if (!response.ok) {
                 throw new Error('자산 목록을 불러오는 데 실패했습니다.');
             }
@@ -299,7 +299,7 @@ function initializeCreateModal() {
 
         // --- 2. API 호출 및 결과 처리 (수정 없음) ---
 
-        const url = isEditMode ? `/Tigggle/api/transactions/${currentEditingTransactionId}` : '/Tigggle/api/transactions';
+        const url = isEditMode ? `/api/transactions/${currentEditingTransactionId}` : '/api/transactions';
         const method = isEditMode ? 'PATCH' : 'POST';
 
         // 디버깅을 위해 전송 직전의 DTO를 콘솔에 출력해봅니다.
