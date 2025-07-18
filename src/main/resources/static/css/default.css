@@ -84,8 +84,11 @@ INPUT{
 #nav .menuBox .menu-list .menu a{display:block;}
 #nav .menuBox .menu-list .menu .sub-menu-list{
     position:absolute;
-    top:74px; left:0;
+    top:70px; left:0;
     display: none;
+    background:#fff;
+    border-radius: 10px;
+    padding:10px;
 }
 #nav .menuBox .menu-list .menu .sub-menu-list .sub-menu a{
     padding:5px 30px;
