@@ -107,6 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        const openGoalBtn = document.getElementById("open-goal-popup-btn");
         // 버튼이 존재하면 클릭 이벤트를 추가합니다.
         if (openGoalBtn) {
             openGoalBtn.addEventListener('click', (e) => {

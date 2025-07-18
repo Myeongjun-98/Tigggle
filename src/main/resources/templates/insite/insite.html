@@ -199,6 +199,10 @@
             // };
             // updateMonthText();
 
+            document.querySelector(".export-button").addEventListener("click", () => {
+                window.location.href = "/insite/export-pdf";
+            });
+
         });
 
         // 총 소비내역 출력하기
@@ -266,9 +270,7 @@
         //     });
         // }
 
-        document.querySelector(".export-button").addEventListener("click", () => {
-            window.location.href = "/insite/export-pdf";
-        });
+
 
         // btn.onclick = () => {
         //     renderLeftChart(

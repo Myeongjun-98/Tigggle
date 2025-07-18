@@ -54,7 +54,7 @@ public class SecurityConf {
                                 .permitAll()  // 로그인 페이지 에 대한 모두가 접근할수 있게 허용
                 )
                 .logout(out->out
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                 )
