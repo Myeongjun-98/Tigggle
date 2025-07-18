@@ -20,17 +20,16 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor // final 필드에 대한 생성자를 자동으로 만들어줍니다.
-@RequestMapping("") // 이 컨트롤러의 모든 메서드는 /api/goals 경로로 시작합니다.
 public class GoalController {
 
     private final GoalService goalService; // 비즈니스 로직을 처리할 서비스
     private final KeywordsRepository keywordsRepository;
     private final UserRepository memberRepository;
 
-    @GetMapping
+    @GetMapping("/transaction/goals")
     public String goalManagementPage(Model model){
         model.addAttribute("keywords", keywordsRepository.findAll());
-        return "/transaction/goals/transaction/goals";
+        return "/transaction/goals";
     }
 
     @GetMapping("/transaction/goals/api")

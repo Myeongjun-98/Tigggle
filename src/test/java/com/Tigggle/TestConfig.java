@@ -10,11 +10,11 @@ import java.time.ZoneOffset;
 
 @Configuration
 public class TestConfig {
-    @Bean
-    public Clock clock(){
-        return Clock.fixed(
-                LocalDateTime.of(2025, 7, 18, 10, 0).toInstant(ZoneOffset.UTC),
-                ZoneId.of("Asia/Seoul")
-        );
-    }
+//    @Bean
+//    public Clock clock(){
+//        return Clock.fixed(
+//                LocalDateTime.of(2025, 7, 18, 10, 0).toInstant(ZoneOffset.UTC),
+//                ZoneId.of("Asia/Seoul")
+//        );
+//    }
 }

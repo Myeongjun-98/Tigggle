@@ -106,6 +106,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+
+        // 버튼이 존재하면 클릭 이벤트를 추가합니다.
+        if (openGoalBtn) {
+            openGoalBtn.addEventListener('click', (e) => {
+                // a 태그의 기본 동작(페이지 이동)을 막습니다.
+                e.preventDefault();
+
+                const popupUrl = '/transaction/goals';
+                const popupName = '목표 관리';
+                const popupOptions = 'width=1200,height=900,scrollbars=yes,resizable=yes';
+
+                // 자바스크립트로 새 팝업 창을 엽니다.
+                window.open(popupUrl, popupName, popupOptions);
+            });
+        }
     }
 
     //goals 이동하기

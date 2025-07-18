@@ -367,11 +367,11 @@
                 <div class="asset-text-box">
                     <div>
                         <p th:text="${memberName} + '님의 고정수익'"></p>
-                        <h2 th:text="${#numbers.formatInteger(income, 3, 'COMMA')} + '원'"></h2>
+                        <h2 th:text="${#numbers.formatInteger(income, 1, 'COMMA')} + '원'"></h2>
                     </div>
                     <div>
                         <p th:text="${memberName} + '님의 고정저축'"></p>
-                        <h2 th:text="${#numbers.formatInteger(saving, 3, 'COMMA')} + '원'"></h2>
+                        <h2 th:text="${#numbers.formatInteger(saving, 1, 'COMMA')} + '원'"></h2>
                     </div>
                     <div>
                         <p>저축률</p>
@@ -411,15 +411,15 @@
                     </div>
                     <div class="total-month">
                         <p class="total-m-t">이번 달</p>
-                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.monthlySpent, 3, 'COMMA')} + '원'"></div>
+                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.monthlySpent, 1, 'COMMA')} + '원'"></div>
                     </div>
                     <div class="total-history">
                         <p class="total-m-t">누적</p>
-                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.totalSpent, 3, 'COMMA')} + '원'"></div>
+                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.totalSpent, 1, 'COMMA')} + '원'"></div>
                     </div>
                     <div class="total-today">
                         <p class="total-m-t">1일</p>
-                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.dailySpent, 3, 'COMMA')} + '원'"></div>
+                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.dailySpent, 1, 'COMMA')} + '원'"></div>
                     </div>
                     <div class="go-schedule"><a th:href="@{/transaction/wallet}">가계부로 이동</a></div>
                 </div>
@@ -441,19 +441,19 @@
                     <div class="asset-text-box">
                         <div>
                             <p th:text="${memberName} + '님의 예금'"></p>
-                            <h2 th:text="${#numbers.formatInteger(savingSummary.depositTotal, 3, 'COMMA')} + '원'"></h2>
+                            <h2 th:text="${#numbers.formatInteger(savingSummary.depositTotal, 1, 'COMMA')} + '원'"></h2>
                         </div>
                         <div>
                             <p th:text="${memberName} + '님의 적금'"></p>
-                            <h2 th:text="${#numbers.formatInteger(savingSummary.savingTotal, 3, 'COMMA')} + '원'"></h2>
+                            <h2 th:text="${#numbers.formatInteger(savingSummary.savingTotal, 1, 'COMMA')} + '원'"></h2>
                         </div>
                         <div>
                             <p th:text="${memberName} + '님의 계좌'"></p>
-                            <h2 th:text="${#numbers.formatInteger(savingSummary.accountTotal, 3, 'COMMA')} + '원'"></h2>
+                            <h2 th:text="${#numbers.formatInteger(savingSummary.accountTotal, 1, 'COMMA')} + '원'"></h2>
                         </div>
                         <div>
                             <p><b>토탈금액</b></p>
-                            <h2 th:text="${#numbers.formatInteger(savingSummary.total, 3, 'COMMA')} + '원'"></h2>
+                            <h2 th:text="${#numbers.formatInteger(savingSummary.total, 1, 'COMMA')} + '원'"></h2>
                         </div>
                     </div>
                 </div>
