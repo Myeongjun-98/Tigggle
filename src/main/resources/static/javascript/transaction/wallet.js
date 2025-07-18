@@ -124,13 +124,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //goals 이동하기
-    const openGoalLink = document.querySelector('a[href="/transaction/goals"]');
+    const openGoalLink = document.getElementById('open-goal-popup-btn');
 
     if (openGoalLink) {
         openGoalLink.addEventListener('click', function(e) {
             e.preventDefault(); // 기본 링크 이동을 막습니다.
 
-            const popupUrl = this.href; // a 태그의 href 값 ("/transaction/goals")
+            const popupUrl = "/transaction/goals"
             const popupName = "목표 관리";
             const popupOptions = "width=1200,height=800,scrollbars=yes,resizable=yes";
 
