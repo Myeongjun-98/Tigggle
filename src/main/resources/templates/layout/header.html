@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko"  xmlns:th="http://www.thymeleaf/org"
+<html lang="ko"  xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 
@@ -15,7 +15,11 @@
                     <li class="menu">
                         <div class="userBox">
                             <span sec:authorize="isAuthenticated()" class="px-3 uitem" sec:authentication="name"></span>
-                            <span sec:authorize="isAuthenticated()" class="px-3 uitem"> <a class="nav-link" th:href="@{/logout}">로그아웃</a></span>
+                            <span sec:authorize="isAuthenticated()" class="px-3 uitem">
+    <form th:action="@{/logout}" method="post" style="display: inline;">
+        <a class="nav-link" href="#" onclick="this.closest('form').submit(); return false;">로그아웃</a>
+    </form>
+</span>
                             <span class="uitem" sec:authorize="isAnonymous()"><a th:href="@{/user/signIn}">로그인</a></span>
                             <span class="uitem signUp-bt" sec:authorize="isAnonymous()"><a th:href="@{/user/signUp}">Get Started</a></span>
                         </div>
@@ -59,7 +63,11 @@
             </div>
             <div class="userBox hide700">
                 <span sec:authorize="isAuthenticated()" class="px-3 uitem" sec:authentication="name"></span>
-                <span sec:authorize="isAuthenticated()" class="px-3 uitem"> <a class="nav-link" th:href="@{/logout}">로그아웃</a></span>
+                <span sec:authorize="isAuthenticated()" class="px-3 uitem">
+                   <form th:action="@{/logout}" method="post" style="display: inline;">
+                       <a class="nav-link" href="#" onclick="this.closest('form').submit(); return false;" style="cursor:pointer;">로그아웃</a>
+                   </form>
+                </span>
                 <span class="uitem" sec:authorize="isAnonymous()"><a th:href="@{/user/signIn}">로그인</a></span>
                 <span class="uitem signUp-bt" sec:authorize="isAnonymous()"><a th:href="@{/user/signUp}">Get Started</a></span>
             </div>

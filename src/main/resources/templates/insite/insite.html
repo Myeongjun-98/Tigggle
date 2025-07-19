@@ -104,13 +104,15 @@
 
                     const compareAmount = Math.abs(userSpending - averageAmount);
 
+
+
                     // 4. 두 값을 비교하여 적절한 텍스트를 설정합니다.
                     if (userSpending > averageAmount) {
-                        resultEl.textContent = `또래보다 ${compareAmount}원 더 많이 쓰고 있어요 💸`;
+                        resultEl.textContent = `또래보다 ${compareAmount.toLocaleString()}원 더 많이 쓰고 있어요 💸`;
                     }
                     if (userSpending < averageAmount)
                     {
-                        resultEl.textContent = `또래보다 ${compareAmount} 원 절약하고 있어요 👍`;
+                        resultEl.textContent = `또래보다 ${compareAmount.toLocaleString()} 원 절약하고 있어요 👍`;
                     }
                     if (userSpending === averageAmount){
                         resultEl.textContent = `또래들과 비슷하게 소비하고 있어요 👍`
@@ -360,8 +362,9 @@
                     <div class="top-consump-box">
                         <span th:text="'지난 달 ' + ${ageGroupAverageDto.getAgeGroup()} + ' 한 달 사용 소비금액  '"></span>
                         <span class="top-c-text" style="color: #3340cb;" th:text=
-                              "${ageGroupAverageDto.getAverageAmount()} + '원'"
+                              "|${#numbers.formatInteger(ageGroupAverageDto.getAverageAmount(), 1, 'COMMA')}원|"
                         ></span>
+<!--                        다음 달 소비액은 <span th:text="|${#numbers.formatInteger(nextMonthAmount, 1, 'COMMA')}원|"></span>이 좋을 것 같아요!-->
                     </div>
                     <!-- 하단: 본인 소비, 차이 -->
                     <div class="l-r-box">
