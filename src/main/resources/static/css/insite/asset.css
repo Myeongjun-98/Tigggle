@@ -1,5 +1,8 @@
 * {
     padding: 0;
+
+}
+body, div, section, article, form {
     margin: 0 auto;
 }
 body {
@@ -7,6 +10,7 @@ body {
 }
 .container {
     width: 1440px;
+
 }
 .asset-header {
     display: flex;

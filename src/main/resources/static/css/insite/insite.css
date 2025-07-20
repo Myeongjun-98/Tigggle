@@ -1,7 +1,8 @@
 * {
   padding: 0;
-  margin: 0 auto;
+    margin: 0 auto;
 }
+
 body {
     background-color: #F6F6F8;
 }
@@ -14,6 +15,7 @@ body {
   align-items: center;
   width: 1250px;
   height: 100px;
+    margin-left: 0 !important;
 }
 
 .insight-title {
@@ -256,4 +258,8 @@ body {
     background-color: #FAFBFF;
     border-radius: 15px;
     border: 1px solid #E7E7E7;
+}
+
+html body #header_wrap #nav {
+    margin: 0 auto !important;
 }
