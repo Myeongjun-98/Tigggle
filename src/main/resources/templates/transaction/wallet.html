@@ -27,11 +27,11 @@
         <div class="TR-menu-box">
           <div class="TR-menu-box-inner">
             <ul class="TR-menu-list">
-              <li class="TR-sub-menu"><a href="/transaction/wallet"><span class="material-symbols-outlined">wallet</span><span>현금/보통예금</span></a></li>
-              <li class="TR-sub-menu"><a href="/transaction/saving"><span class="material-symbols-outlined">savings</span><span>저축</span></a></li>
-              <li class="TR-sub-menu"><a href="/transaction/creditcard"><span class="material-symbols-outlined">credit_card</span><span>신용카드</span></a></li>
+              <li class="TR-sub-menu"><a th:href="@{/transaction/wallet}"><span class="material-symbols-outlined">wallet</span><span>현금/보통예금</span></a></li>
+<!--              <li class="TR-sub-menu"><a th:href="@{/transaction/saving}"><span class="material-symbols-outlined">savings</span><span>저축</span></a></li>-->
+<!--              <li class="TR-sub-menu"><a th:href="@{/transaction/creditcard}"><span class="material-symbols-outlined">credit_card</span><span>신용카드</span></a></li>-->
               <li class="TR-sub-menu"><a href="javascript:void(0);" id="open-schedule-popup-btn"><span class="material-symbols-outlined">calendar_clock</span><span>정기 입/출금</span></a></li>
-              <li class="TR-sub-menu"><a href="/transaction/goals"><span class="material-symbols-outlined">rewarded_ads</span><span>목표</span></a></li>
+              <li class="TR-sub-menu"><a href="transaction/goals" id="open-goal-popup-btn"><span class="material-symbols-outlined">rewarded_ads</span><span>목표</span></a></li>
             </ul>
           </div>
         </div>
@@ -65,7 +65,6 @@
         <div id="TR-ordinary-account-info">
         </div>
 
-      <!-- 일단.. 나중에 수정 시 아이디 및 클래스 확인할 것-->
         <div class="summary-section">
           <div class="TR-date-navigator">
             <span style="font-size: 48px" class="material-symbols-outlined">calendar_month</span>
@@ -89,7 +88,6 @@
           </div>
         </div>
       </div>
-      <!-- 일단.. 나중에 수정 시 아이디 및 클래스 확인할 것 -->
     <!-- 사용자 자산들 관련 종합 정보 표시 및 핸들링하는 공간 -->
 
       <div>

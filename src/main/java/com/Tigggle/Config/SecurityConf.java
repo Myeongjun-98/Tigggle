@@ -1,6 +1,7 @@
 package com.Tigggle.Config;
 
 import com.Tigggle.Service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,22 +39,35 @@ public class SecurityConf {
         http.requestCache(rq->rq.requestCache(requestCache))
                 .authorizeHttpRequests(
                         ar -> ar
-//                                .requestMatchers("/*","/user/**")// 요청 매처를 사용하여 요청을 매칭
-//                                .permitAll() // requestMatchers에 작성된 주소요청에대해 모두 허용 - 인증 노!
+                                .requestMatchers("/css/**", "/javascript/**", "/images/**").permitAll() // 정적 리소스
+                                .requestMatchers("/","/user/**")// 요청 매처를 사용하여 요청을 매칭
+                                .permitAll() // requestMatchers에 작성된 주소요청에대해 모두 허용 - 인증 노!
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
-                                .anyRequest().permitAll()  // 모든 요청에 대해
+                                .anyRequest().authenticated()  // 모든 요청에 대해
                                // .authenticated() // 인증 해야 한다. - 로그인 해야함
                 )
                 .formLogin(
                         form -> form
                                 .loginPage("/user/signIn")  // 커스텀 로그인 페이지 주소
-                                .defaultSuccessUrl("/") // 로그인 성공하면 어디로 ?
+                                .loginProcessingUrl("/user/signIn") // formLogin이 담당할 가짜 URL (실제 사용 안 함)
                                 .usernameParameter("accessId") //로그인 할때 계정명 input name
-                                .failureUrl("/user/signIn/error")// 로그인 실패시 어디로?
+
+                                .successHandler((request, response, authentication) -> {
+                                    response.setStatus(HttpServletResponse.SC_OK);
+                                    response.setContentType("application/json");
+                                    response.setCharacterEncoding("UTF-8");
+                                    response.getWriter().write("{\"success\": true}");
+                                }) // 로그인 성공하면 어디로 ?
+                                .failureHandler((request, response, exception) -> {
+                                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                                    response.setContentType("application/json");
+                                    response.setCharacterEncoding("UTF-8");
+                                    response.getWriter().write("{\"success\": false, \"message\": \"아이디나 비밀번호가 잘못되었습니다.\"}");
+                                })// 로그인 실패시 어디로?
                                 .permitAll()  // 로그인 페이지 에 대한 모두가 접근할수 있게 허용
                 )
                 .logout(out->out
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+//                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                         .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                 )

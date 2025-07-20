@@ -28,13 +28,12 @@ import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("/transaction")
 public class TransactionController {
     private final UserRepository memberRepository;
     private final WalletService walletService;
     private final KeywordsRepository keywordsRepository;
 
-    @GetMapping("/wallet")
+    @GetMapping("/transaction/wallet")
     public String DefaultTransactionPage(Principal principal, Model model){
 
         List<Keywords> keywords = keywordsRepository.findAll();
@@ -49,7 +48,7 @@ public class TransactionController {
         return "transaction/wallet";
     }
 
-    @GetMapping("/wallet/{assetId}")
+    @GetMapping("/transaction/wallet/{assetId}")
     public String SpecificTransactionPage(Principal principal, Model model){
 
         List<Keywords> keywords = keywordsRepository.findAll();
@@ -64,7 +63,7 @@ public class TransactionController {
         return "transaction/wallet";
     }
 
-    @GetMapping("/scheduled-transaction")
+    @GetMapping("/transaction/scheduled-transaction")
     public String openPopUpScheduledTransactionPage(Model model, Principal principal){
 
         Member memberInfo = memberRepository.findByAccessId(principal.getName());

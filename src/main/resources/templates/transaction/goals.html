@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html
+        lang="ko"
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>목표 설정</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta name="_csrf" th:content="${_csrf.token}"/>
+  <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+  <link rel="stylesheet" th:href="@{/css/transaction/goals.css}" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+</head>
+
+<body>
+<div id="goal-popup-container" class="popup-container">
+  <h1>나의 목표 관리</h1>
+
+  <div class="actions">
+    <button id="add-goal-btn">새로운 목표 추가</button>
+    <button id="delete-selected-goals-btn">선택 항목 삭제</button>
+  </div>
+
+  <div class="table-container">
+    <table class="goal-table">
+      <thead>
+      <tr>
+        <th><input type="checkbox" id="select-all-goals"></th>
+        <th>번호</th>
+        <th>내용</th>
+        <th>분류 (키워드)</th>
+        <th>목표 금액</th>
+        <th>메모</th>
+        <th>관리</th>
+      </tr>
+      </thead>
+      <tbody id="goal-table-body">
+      <tr>
+        <td colspan="7">목표 내역을 불러오는 중입니다...</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="popup-footer-actions">
+    <button id="goal-popup-close-btn" class="close-popup-btn">닫기</button>
+  </div>
+</div>
+
+<div id="goal-modal" class="TR-modal-overlay TR-hidden">
+  <div class="TR-modal-content">
+    <h2 id="goal-modal-title">새로운 목표 추가</h2>
+
+    <form id="goal-form">
+      <input type="hidden" id="goal-id">
+
+      <div class="form-group">
+        <label for="goal-description">내용</label>
+        <input type="text" id="goal-description" placeholder="예: 여름 휴가 비용 모으기" required>
+      </div>
+
+      <div class="form-group">
+        <label for="goal-keyword">분류</label>
+        <select id="goal-keyword" required>
+          <option value="" selected disabled>== 분류 선택 ==</option>
+          <th:block th:each="keyword : ${keywords}">
+            <option th:value="${keyword.id}"
+                    th:text="${keyword.minorKeyword == null ? keyword.majorKeyword : keyword.majorKeyword + ' > ' + keyword.minorKeyword}">
+            </option>
+          </th:block>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="goal-amount">금액</label>
+        <input type="number" id="goal-amount" placeholder="목표 금액을 입력하세요" required>
+      </div>
+
+      <div class="form-group">
+        <label for="goal-note">메모</label>
+        <textarea id="goal-note" placeholder="메모를 남겨보세요 (선택)"></textarea>
+      </div>
+
+      <button type="submit" class="submit-button">저장하기</button>
+      <button type="button" id="goal-modal-close-btn" class="close-button">닫기</button>
+    </form>
+  </div>
+</div>
+<script th:src="@{/javascript/transaction/goals.js}"></script>
+</body>
+</html>

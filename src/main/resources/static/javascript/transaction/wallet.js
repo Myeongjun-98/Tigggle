@@ -106,7 +106,40 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+
+        const openGoalBtn = document.getElementById("open-goal-popup-btn");
+        // 버튼이 존재하면 클릭 이벤트를 추가합니다.
+        if (openGoalBtn) {
+            openGoalBtn.addEventListener('click', (e) => {
+                // a 태그의 기본 동작(페이지 이동)을 막습니다.
+                e.preventDefault();
+
+                const popupUrl = '/transaction/goals';
+                const popupName = '목표 관리';
+                const popupOptions = 'width=1200,height=900,scrollbars=yes,resizable=yes';
+
+                // 자바스크립트로 새 팝업 창을 엽니다.
+                window.open(popupUrl, popupName, popupOptions);
+            });
+        }
     }
+
+    //goals 이동하기
+    const openGoalLink = document.getElementById('open-goal-popup-btn');
+
+    if (openGoalLink) {
+        openGoalLink.addEventListener('click', function(e) {
+            e.preventDefault(); // 기본 링크 이동을 막습니다.
+
+            const popupUrl = "/transaction/goals"
+            const popupName = "목표 관리";
+            const popupOptions = "width=1200,height=800,scrollbars=yes,resizable=yes";
+
+            // 새 창으로 목표 관리 페이지를 엽니다.
+            window.open(popupUrl, popupName, popupOptions);
+        });
+    }
+
     initializeCreateModal();
 });
 
@@ -185,7 +218,7 @@ function updateAssetInfo(assetData) {
 // * 월별 요약 정보(총수입, 총지출)를 업데이트하는 함수
 // * @param {object} ledgerData - MonthlyLedgerDto에 해당하는 데이터
 function updateMonthlySummary(ledgerData) {
-    document.getElementById('TR-current-month-display').innerText = `📅 ${ledgerData.year}년 ${ledgerData.month}월`;
+    document.getElementById('TR-current-month-display').innerText = `${ledgerData.year}년 ${ledgerData.month}월`;
     document.getElementById('TR-monthly-income').innerText = (ledgerData.monthlyTotalIncome ? ledgerData.monthlyTotalIncome.toLocaleString() : 0) + '원';
     document.getElementById('TR-monthly-expense').innerText = (ledgerData.monthlyTotalExpense ? ledgerData.monthlyTotalExpense.toLocaleString() : 0) + '원';
 
@@ -269,7 +302,7 @@ function displayNoAssetMessage() {
     document.getElementById('TR-history-container').innerHTML = `
         <div class="TR-no-data">
             <h2>등록된 지갑 자산이 없습니다.</h2>
-            <a href="/asset/register">자산 등록하러 가기</a>
+            <a href="/asset">자산 등록하러 가기</a>
         </div>
     `;
     // 다른 요약 정보들도 비워주는 것이 좋습니다.

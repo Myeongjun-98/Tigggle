@@ -1,6 +1,6 @@
 * {
     padding: 0;
-    margin: 0 auto;
+    /*margin: 0 auto;*/
 }
 body {
     background-color: #f6f6f8;
@@ -9,17 +9,14 @@ body {
     width: 1440px;
 }
 .asset-header {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
     width: 1250px;
-    height: 100px;
 }
 
 .asset-title {
     display: flex;
     align-items: center;
-    font-size: 20px;
+    font-size: 28px;
     font-weight: bold;
 }
 
@@ -89,7 +86,7 @@ body {
 }
 .text-box p {
     font-size: 16px;
-    margin-top: 15px;
+    margin-top: 30px;
     text-align: center;
 }
 .now-consump {
@@ -129,7 +126,6 @@ body {
     background-color: #D9D9D9;
     border-radius: 20px;
     overflow: hidden;
-    margin-bottom: 20px;
     margin-top: 70px;
 }
 
@@ -143,6 +139,7 @@ body {
     display: flex;
     justify-content: space-around;
     text-align: center;
+    margin-top: 20px;
 }
 
 .asset-text-box h2 {
@@ -210,7 +207,7 @@ body {
     border: 1px solid #E7E7E7;
 }
 .total-box {
-    width: 400px;
+    width: 90%;
     height: 750px;
     background-color: #F2F3F8;
     border: 1px solid #E7E7E7;
@@ -328,24 +325,52 @@ body {
     background-color: #F2F3F8;
     border: 1px solid #E7E7E7;
     border-radius: 10px;
+    display: flex;
+    align-items: center;
 }
 .consum-result-box-2, .consum-result-box-3, .consum-result-box-4 {
     margin-top: 30px;
 }
 .c-char-1, .c-char-2, .c-char-3, .c-char-4 {
-    width: 70px;
     height: 70px;
     border-radius: 50px;
     display: inline-block;
-    margin-top: 15px;
     margin-left: 30px;
+    width: 10%;
 }
 .c-r-text {
+    width: 50%;
     font-size: 22px;
     margin-left: 50px;
+    justify-content: flex-start;
 }
 .c-r-content {
+    width: 40%;
   font-size: 28px;
-    margin-left: 50px;
     font-weight: 600;
+    margin-right: 50px;
+    text-align: end;
+}
+
+.c-char-1 img, .c-char-2 img, .c-char-3 img, .c-char-4 img {
+    width: 80px;
+    height: 80px;
+}
+
+.fit-amount {
+    color: #5497FF;
+    margin-top: 15px;
+    font-size: 22px;
+    font-weight: 600;
+    text-align: center;
+}
+body, div, section, article, form{
+    margin: 0 auto;
+}
+
+.asset-header-content {
+    display: flex;                  /* 플렉스박스 레이아웃 적용 */
+    justify-content: space-between; /* 양쪽 끝으로 요소를 배치 */
+    align-items: center;            /* 세로 중앙 정렬 */
+    margin: 0 -400px 30px;            /* 아래 영역과의 간격 */
 }

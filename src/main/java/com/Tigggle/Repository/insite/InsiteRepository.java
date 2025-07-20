@@ -67,14 +67,20 @@ public interface InsiteRepository extends JpaRepository<Transaction, Long> {
     // 결과는 Object[] 형식으로, row[0] = 키워드, row[1] = 합계입니다.
 
     @Query(value = """
-SELECT  SUM(t.amount) FROM transaction t, keywords k WHERE t.keyword_id = k.id AND k.major_keyword = :keyword and month(transaction_date)= :mon
-""", nativeQuery = true)
+    SELECT SUM(t.amount)
+    FROM transaction t
+    JOIN asset a ON t.asset_id = a.id
+    JOIN keywords k ON t.keyword_id = k.id
+    WHERE a.member_id = :memberId
+      AND k.major_keyword = :keyword
+      AND MONTH(t.transaction_date) = :mon
+      AND t.is_consumption = true
+    """, nativeQuery = true)
     Long getMonthlySpendingGroupedByMajorKeyword(
             @Param("memberId") Long memberId,
             @Param("keyword") String keyword,
             @Param("mon") int month
     );
-
     // 이번 달 total 금액 구하기
     @Query(value = """
     SELECT SUM(t.amount)

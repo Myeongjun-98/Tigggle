@@ -98,6 +98,7 @@ public class TransactionService {
           tx.setAmount(dto.getAmount());
           tx.setTransactionDate(dto.getTransactionDate());
           tx.setConsumption(false); // 수입이므로 false
+          tx.setPayMethod(PayMethod.NORMAL); // 수입 거래의 pay_method를 NORMAL로 설정합니다.
           tx.setReflectOnAsset(true); // 자산에 즉시 반영
           tx.setNote(dto.getNote());
           tx.setKeyword(keywordsRepository.findById(dto.getKeywordId()).orElseThrow());
@@ -165,7 +166,7 @@ public class TransactionService {
 
                String incomeDesciption = String.format("[%s]로부터 %s", sourceAsset.getAlias(), "자산 이동");
 
-               Asset destinationAsset = assetRepository.findByIdAndMemberWithLock(dto.getSourceAssetId(), member.getId()).orElseThrow(
+               Asset destinationAsset = assetRepository.findByIdAndMemberWithLock(dto.getDestinationAssetId(), member.getId()).orElseThrow(
                        () -> new IllegalArgumentException("자산을 찾을 수 없습니다."));
 
 //               Asset destinationAsset = (Asset) assetRepository.findByIdAndMember(dto.getDestinationAssetId(), member)

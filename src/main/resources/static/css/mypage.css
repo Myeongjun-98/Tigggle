@@ -146,8 +146,9 @@
     width:100px;
 }
 .card a{
-    background: #3340CB;
+    background: #fff;
     border-radius: 5px;
+    color: #000000;
 }
 
 .profile-pic-box label{

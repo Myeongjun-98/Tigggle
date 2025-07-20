@@ -4,246 +4,91 @@
       layout:decorate="~{layout/defaultLayout}">
 
 <th:block layout:fragment="css">
-    <link rel="stylesheet" href="/css/insite/asset.css" />
-    <link rel="stylesheet" href="/css/insite/asset-modal.css" />
+    <link rel="stylesheet" th:href="@{/css/insite/asset.css}" />
+    <link rel="stylesheet" th:href="@{/css/insite/asset-modal.css}" />
 </th:block>
 <th:block layout:fragment="script">
-    <!-- modal script -->
-    <script>
-
-        // 내 자산 추가하기 클릭 시 asset-btn 호출
-        function openModal() {
-            document.getElementById("myModal").style.display = "block";
-            const cashButton = document.getElementById("cash-button");
-            const accountButton = document.getElementById("account-button");
-
-
-
-
-
-
-            cashButton.addEventListener("click", function (){
-                this.classList.add("selected");
-                accountButton.classList.remove("selected");
-
-
-            })
-
-
-
-            // 계좌타입 버튼 클릭 시 처리
-            accountButton.addEventListener("click", function () {
-                this.classList.add("selected");
-                cashButton.classList.remove("selected");
-
-                // const selectedValue = this.dataset.value;
-                // accountTypeInput.value = selectedValue;
-                //
-                // if (selectedValue === "cash") {
-                //     // 현금 선택 시 모든 필드 비활성화
-                //     accountFields.forEach((field) => {
-                //         field.disabled = true;
-                //         field.classList.add("disabled");
-                //     });
-                // } else {
-                //     // 계좌 선택 시 다시 활성화
-                //     accountFields.forEach((field) => {
-                //         field.disabled = false;
-                //         field.classList.remove("disabled");
-                //     });
-                // }
-            });
-
-        }
-
-        function closeModal() {
-            document.getElementById("myModal").style.display = "none";
-        }
-        // 모달 바깥을 클릭하면 닫히도록 하기
-        window.onclick = function(event) {
-            const modal = document.getElementById("myModal");
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        };
-
-        // 현금 별칭 입력 영역 (추후에 이 div를 추가로 HTML에 넣을 예정)
-        const aliasInputPage = document.getElementById("cash-alias-page");
-        const assetForm = document.getElementById("assetForm");
-
-        const modalTitle = document.getElementById("modal-title");
-
-
-
-        // 다음 버튼 클릭 시 처리
-        nextButton.addEventListener("click", function (e) {
-            if (accountTypeInput.value === "cash") {
-                e.preventDefault(); // submit 방지
-                assetForm.style.display = "none";
-                aliasInputPage.style.display = "block";
-            }
-            // else는 기본 submit으로 폼 전송됨 (계좌일 경우)
-        });
-
-
-
-
-        // JavaScript로 버튼 클릭 시 selected 클래스 토글 및 hidden input 값 업데이트
-        document.addEventListener("DOMContentLoaded", function () {
-            // 계좌타입 버튼 처리
-            const accountTypeButtons = document.querySelectorAll(
-                "#accountTypeGroup .type-button"
-            );
-            const accountTypeInput = document.getElementById("accountTypeInput");
-
-            accountTypeButtons.forEach((button) => {
-                button.addEventListener("click", function () {
-                    accountTypeButtons.forEach((btn) =>
-                        btn.classList.remove("selected")
-                    );
-                    this.classList.add("selected");
-                    accountTypeInput.value = this.dataset.value; // data-value 값을 hidden input에 저장
-                });
-            });
-
-            // 예금타입 버튼 처리
-            const depositTypeButtons = document.querySelectorAll(
-                "#depositTypeGroup .type-button"
-            );
-            const depositTypeInput = document.getElementById("depositTypeInput");
-
-            depositTypeButtons.forEach((button) => {
-                button.addEventListener("click", function () {
-                    depositTypeButtons.forEach((btn) =>
-                        btn.classList.remove("selected")
-                    );
-                    this.classList.add("selected");
-                    depositTypeInput.value = this.dataset.value; // data-value 값을 hidden input에 저장
-                });
-            });
-
-            // 모달 닫기 함수 (닫기 버튼 클릭 시 호출)
-            function closeModal() {
-                // 실제 모달을 닫는 로직은 여기에 구현합니다.
-                // 예를 들어, 모달 오버레이를 숨기는 CSS 클래스를 추가/제거하거나,
-                // 이 예시처럼 간단히 alert를 띄울 수 있습니다.
-                alert("모달이 닫힙니다.");
-                // document.querySelector('.modal-overlay').style.display = 'none';
-            }
-
-            // 전역 스코프에 함수 등록 (onclick에서 접근할 수 있도록)
-            window.closeModal = closeModal;
-        });
-    </script>
+    <script th:src="@{/javascript/transaction/asset.js}"></script>
 </th:block>
 
 <div  layout:fragment="content">
-
     <div class="container">
         <!-- 타이틀 -->
         <div class="asset-header">
-            <!-- 좌측 타이틀 -->
-            <div class="asset-title">
-                <div class="dot"></div>
-                <span>자산관리</span>
-                <!-- modal -->
-                <div class="modal-overlay" id="myModal">
-                    <div class="modal-content">
-                        <div class="modal-title" id="modal-title">내 자산 추가</div>
+            <div class="asset-header-content">
+                <div class="asset-title">
+                    <div class="dot"></div>
+                    <span>자산관리</span>
+                </div>
+                <div>
+                    <button class="asset-btn" id="add-asset-btn">내 자산 추가</button>
+                </div>
+            </div>
+                <div id="asset-main-modal" class="asset-modal-overlay hidden">
+                    <div class="asset-modal-content">
 
-                        <form id="assetForm" action="/submit-asset" method="POST">
-                            <div class="section-title">계좌타입</div>
-                            <div class="button-group" id="accountTypeGroup">
-                                <button type="button" class="type-button"  id="cash-button" data-value="cash">
-                                    현금
-                                </button>
-                                <button
-                                        type="button"
-                                        class="type-button selected"
-                                        id="account-button"
-                                        data-value="account"
-                                >
-                                    계좌
-                                </button>
-                                <input
-                                        type="hidden"
-                                        name="accountType"
-                                        id="accountTypeInput"
-                                        value="account"
-                                />
+                        <form id="asset-main-form">
+                            <div class="asset-modal-title">내 자산 추가</div>
+                            <div class="section">
+                                <div class="section-title">자산 타입</div>
+                                <div class="button-group">
+                                    <button type="button" class="type-button selected" data-value="CASH">현금</button>
+                                    <button type="button" class="type-button" data-value="ORDINARY">보통예금</button>
+                                    <input type="hidden" id="asset-type-input" value="CASH">
+                                </div>
                             </div>
 
-                            <div class="section-title">계좌번호</div>
-                            <div class="input-group">
-                                <input
-                                        type="text"
-                                        name="accountNumber"
-                                        placeholder="계좌번호 작성"
-                                        required
-                                />
+                            <div class="section">
+                                <div class="section-title">자산 별칭</div>
+                                <div class="input-group">
+                                    <input type="text" id="asset-alias-input" placeholder="예: 내 지갑, 비상금" required>
+                                </div>
                             </div>
 
-                            <div class="section-title">은행</div>
-                            <div class="input-group">
-                                <select name="bankName" required>
-                                    <option value="기엽은행">기엽은행</option>
-                                    <option value="너무옙은행">너무옙은행</option>
-                                    <option value="우리은행">국민은행</option>
-                                    <option value="하나은행">하나은행</option>
-                                    <option value="카카오뱅크">카카오뱅크</option>
-                                    <option value="농협은행">농협은행</option>
-                                </select>
-                            </div>
-
-                            <div class="section-title">계좌타입</div>
-                            <div class="button-group" id="depositTypeGroup">
-                                <button
-                                        type="button"
-                                        class="type-button selected"
-                                        data-value="normalDeposit"
-                                >
-                                    보통예금
-                                </button>
-                                <button
-                                        type="button"
-                                        class="type-button"
-                                        data-value="installmentSavings"
-                                >
-                                    적금
-                                </button>
-                                <button type="button" class="type-button" data-value="timeDeposit">
-                                    정기예금
-                                </button>
-                                <input
-                                        type="hidden"
-                                        name="depositType"
-                                        id="depositTypeInput"
-                                        value="normalDeposit"
-                                />
+                            <div class="section">
+                                <div class="section-title">초기 잔액</div>
+                                <div class="input-group">
+                                    <input type="number" id="asset-balance-input" placeholder="0" required>
+                                </div>
                             </div>
 
                             <div class="actions">
-                                <button type="button" class="close-button" onclick="closeModal()">
-                                    닫기
-                                </button>
-                                <button type="submit" class="next-button">다음</button>
+                                <button type="button" id="asset-main-cancel-btn">취소</button>
+                                <button type="button" id="asset-main-next-btn" disabled>등록</button>
                             </div>
                         </form>
                     </div>
-                    <!-- 현금 별칭 입력 화면 -->
-                    <div id="cash-alias-page" style="display: none;">
-                        <div class="section-title">현금 별칭 입력</div>
-                        <div class="input-group">
-                            <input type="text" name="cashAlias" placeholder="예: 지갑, 비상금" required />
-                        </div>
-                        <div class="actions">
-                            <button type="button" onclick="closeModal()">취소</button>
-                            <button type="submit" form="aliasForm">확인</button>
-                        </div>
+                </div>
+
+                <div id="asset-bank-modal" class="asset-modal-overlay hidden">
+                    <div class="asset-modal-content">
+                        <div class="asset-modal-title">계좌 정보 입력</div>
+
+                        <form id="asset-bank-form">
+                            <div class="section">
+                                <div class="section-title">은행</div>
+                                <div class="input-group">
+                                    <select id="asset-bank-select" required>
+                                        <option value="" selected disabled>은행을 선택하세요</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="section-title">계좌번호</div>
+                                <div class="input-group">
+                                    <input type="text" id="asset-account-number-input" placeholder="'-' 없이 숫자만 입력" required>
+                                </div>
+                            </div>
+
+                            <div class="actions">
+                                <button type="button" id="asset-bank-cancel-btn">취소</button>
+                                <button type="button" id="asset-bank-register-btn" disabled>등록</button>
+                            </div>
+                        </form>
                     </div>
                 </div>
-            </div>
-            <button class="asset-btn" onclick="openModal()" >내 자산 추가</button>
+
         </div>
 
         <!-- 목표 소비금액 -->
@@ -254,45 +99,47 @@
                     <div class="food-expense-box">
                         <div class="food-expense">
                             <p class="c-title">식비</p>
-                            <p class="c-content" th:text="${goalConsumDto.foodExpense} + '원'"></p>
+                            <p class="c-content" th:text="${#numbers.formatInteger(goalConsumDto.foodExpense, 1, 'COMMA')} + '원'"></p>
                         </div>
                         <div class="foot-food-box">
-                            <div class="warning-box">
+                            <div class="warning-box"
+                                 th:if="${foodAlert.excessAmount > 0}">
                                 ☆★ 이상 소비 탐지 ☆★
                             </div>
                             <div class="text-box">
                             <p>현재 사용금액</p>
-                            <div class="now-consump" th:text="${#numbers.formatInteger(foodAlert.expenseAmount, 3, 'COMMA')} + '원'">
+                            <div class="now-consump" th:text="${#numbers.formatInteger(foodAlert.expenseAmount, 1, 'COMMA')} + '원'">
                             </div>
                             <div class="over-amount"
                                  th:if="${foodAlert.excessAmount > 0}"
-                                 th:text="${#numbers.formatInteger(foodAlert.excessAmount, 3, 'COMMA')} + '원 초과!'">
+                                 th:text="${#numbers.formatInteger(foodAlert.excessAmount, 1, 'COMMA')} + '원 초과!'">
                             </div>
-                                <div class="over-amount"
-                                     th:unless="${foodAlert.excessAmount > 0}">
-                                    사용 금액이 목표 이내입니다.
-                                </div>
+                            <div class="fit-amount"
+                                 th:unless="${foodAlert.excessAmount > 0}">
+                                사용 금액이 목표 이내입니다.
+                            </div>
                         </div>
                         </div>
                     </div>
                     <div class="communication-box">
                         <div class="communication">
                             <p class="c-title">주거/통신</p>
-                            <p class="c-content" th:text="${goalConsumDto.communication} + '원'"></p>
+                            <p class="c-content" th:text="${#numbers.formatInteger(goalConsumDto.communication, 1, 'COMMA')} + '원'"></p>
                         </div>
                         <div class="foot-communication-box">
-                            <div class="warning-box">
+                            <div class="warning-box"
+                                 th:if="${commAlert.excessAmount > 0}">
                                 ☆★ 이상 소비 탐지 ☆★
                             </div>
                             <div class="text-box">
                                 <p>현재 사용금액</p>
-                                <div class="now-consump" th:text="${#numbers.formatInteger(commAlert.expenseAmount, 3, 'COMMA')} + '원'">
+                                <div class="now-consump" th:text="${#numbers.formatInteger(commAlert.expenseAmount, 1, 'COMMA')} + '원'">
                                 </div>
                                 <div class="over-amount"
                                      th:if="${commAlert.excessAmount > 0}"
-                                     th:text="${#numbers.formatInteger(commAlert.excessAmount, 3, 'COMMA')} + '원 초과!'">
+                                     th:text="${#numbers.formatInteger(commAlert.excessAmount, 1, 'COMMA')} + '원 초과!'">
                                 </div>
-                                <div class="over-amount"
+                                <div class="fit-amount"
                                      th:unless="${commAlert.excessAmount > 0}">
                                     사용 금액이 목표 이내입니다.
                                 </div>
@@ -302,21 +149,22 @@
                     <div class="insurance-box">
                         <div class="insurance">
                             <p class="c-title">보험</p>
-                            <p class="c-content" th:text="${goalConsumDto.insurance} + '원'"></p>
+                            <p class="c-content" th:text="${#numbers.formatInteger(goalConsumDto.insurance, 1, 'COMMA')} + '원'"></p>
                         </div>
                         <div class="foot-insurance-box">
-                            <div class="warning-box">
+                            <div class="warning-box"
+                                 th:if="${insuAlert.excessAmount > 0}">
                                 ☆★ 이상 소비 탐지 ☆★
                             </div>
                             <div class="text-box">
                                 <p>현재 사용금액</p>
-                                <div class="now-consump" th:text="${#numbers.formatInteger(insuAlert.expenseAmount, 3, 'COMMA')} + '원'">
+                                <div class="now-consump" th:text="${#numbers.formatInteger(insuAlert.expenseAmount, 1, 'COMMA')} + '원'">
                                 </div>
                                 <div class="over-amount"
                                      th:if="${insuAlert.excessAmount > 0}"
-                                     th:text="${#numbers.formatInteger(insuAlert.excessAmount, 3, 'COMMA')} + '원 초과!'">
+                                     th:text="${#numbers.formatInteger(insuAlert.excessAmount, 1, 'COMMA')} + '원 초과!'">
                                 </div>
-                                <div class="over-amount"
+                                <div class="fit-amount"
                                      th:unless="${insuAlert.excessAmount > 0}">
                                     사용 금액이 목표 이내입니다.
                                 </div>
@@ -326,21 +174,22 @@
                     <div class="etc-box">
                         <div class="etc">
                             <p class="c-title">기타</p>
-                            <p class="c-content" th:text="${goalConsumDto.etc} + '원'"></p>
+                            <p class="c-content" th:text="${#numbers.formatInteger(goalConsumDto.etc, 1, 'COMMA')} + '원'"></p>
                         </div>
                         <div class="foot-insurance-box">
-                            <div class="warning-box">
+                            <div class="warning-box"
+                                 th:if="${etcAlert.excessAmount > 0}"                            >
                                 ☆★ 이상 소비 탐지 ☆★
                             </div>
                             <div class="text-box">
                                 <p>현재 사용금액</p>
-                                <div class="now-consump" th:text="${#numbers.formatInteger(etcAlert.expenseAmount, 3, 'COMMA')} + '원'">
+                                <div class="now-consump" th:text="${#numbers.formatInteger(etcAlert.expenseAmount, 1, 'COMMA')} + '원'">
                                 </div>
                                 <div class="over-amount"
                                      th:if="${etcAlert.excessAmount > 0}"
-                                     th:text="${#numbers.formatInteger(etcAlert.excessAmount, 3, 'COMMA')} + '원 초과!'">
+                                     th:text="${#numbers.formatInteger(etcAlert.excessAmount, 1, 'COMMA')} + '원 초과!'">
                                 </div>
-                                <div class="over-amount"
+                                <div class="fit-amount"
                                      th:unless="${etcAlert.excessAmount > 0}">
                                     사용 금액이 목표 이내입니다.
                                 </div>
@@ -364,11 +213,11 @@
                 <div class="asset-text-box">
                     <div>
                         <p th:text="${memberName} + '님의 고정수익'"></p>
-                        <h2 th:text="${#numbers.formatInteger(income, 3, 'COMMA')} + '원'"></h2>
+                        <h2 th:text="${#numbers.formatInteger(income, 1, 'COMMA')} + '원'"></h2>
                     </div>
                     <div>
                         <p th:text="${memberName} + '님의 고정저축'"></p>
-                        <h2 th:text="${#numbers.formatInteger(saving, 3, 'COMMA')} + '원'"></h2>
+                        <h2 th:text="${#numbers.formatInteger(saving, 1, 'COMMA')} + '원'"></h2>
                     </div>
                     <div>
                         <p>저축률</p>
@@ -378,47 +227,47 @@
             </div>
 
             <div class="total-consump-box">
-                <div class="saving-box">
-                    <div class="saving-title">
-                        <div class="square"></div>
-                        <span th:text="${memberName} + '님의 예/적금'"></span>
-                    </div>
-                    <div class="saving-list-box">
-                        <div class="saving-list">
-                            <div class="saving-header">적금</div>
-                            <div class="saving-content-box">
-                                <div class="saving-account-box">
-                                    <p class="saving-s-title">청년내일 저축 계좌</p>
-                                    <p class="saving-s-account">100,000,000원</p>
-                                </div>
-                                <div class="saving-right">►</div>
-                                <div class="saving-Expectation-box">
-                                    <p class="saving-s-title">14개월 후 예상 금액</p>
-                                    <p class="saving-s-account">1,000,000,000원</p>
-                                </div>
-                            </div>
+<!--                <div class="saving-box">-->
+<!--                    <div class="saving-title">-->
+<!--                        <div class="square"></div>-->
+<!--                        <span th:text="${memberName} + '님의 예/적금'"></span>-->
+<!--                    </div>-->
+<!--                    <div class="saving-list-box">-->
+<!--                        <div class="saving-list">-->
+<!--                            <div class="saving-header">적금</div>-->
+<!--                            <div class="saving-content-box">-->
+<!--                                <div class="saving-account-box">-->
+<!--                                    <p class="saving-s-title">청년내일 저축 계좌</p>-->
+<!--                                    <p class="saving-s-account">100,000,000원</p>-->
+<!--                                </div>-->
+<!--                                <div class="saving-right">►</div>-->
+<!--                                <div class="saving-Expectation-box">-->
+<!--                                    <p class="saving-s-title">14개월 후 예상 금액</p>-->
+<!--                                    <p class="saving-s-account">1,000,000,000원</p>-->
+<!--                                </div>-->
+<!--                            </div>-->
 
-                        </div>
-                    </div>
-                </div>
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="total-box">
                     <div class="saving-title">
                         <div class="square"></div>
-                        <span><b>7월</b>total</span>
+                        <span><b>7월 </b>total</span>
                     </div>
                     <div class="total-month">
                         <p class="total-m-t">이번 달</p>
-                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.monthlySpent, 3, 'COMMA')} + '원'"></div>
+                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.monthlySpent, 1, 'COMMA')} + '원'"></div>
                     </div>
                     <div class="total-history">
                         <p class="total-m-t">누적</p>
-                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.totalSpent, 3, 'COMMA')} + '원'"></div>
+                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.totalSpent, 1, 'COMMA')} + '원'"></div>
                     </div>
                     <div class="total-today">
                         <p class="total-m-t">1일</p>
-                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.dailySpent, 3, 'COMMA')} + '원'"></div>
+                        <div class="total-amount" th:text="${#numbers.formatInteger(monthTotal.dailySpent, 1, 'COMMA')} + '원'"></div>
                     </div>
-                    <div class="go-schedule"><a href="/transaction/wallet">가계부로 이동</a></div>
+                    <div class="go-schedule"><a th:href="@{/transaction/wallet}">가계부로 이동</a></div>
                 </div>
             </div>
                 <div class="saving-situation">
@@ -426,31 +275,32 @@
 
                     <div class="progress-bar-wrapper">
                         <div class="progress-bar-bg">
-                            <div class="progress-bar-fill-deposit"
-                                 th:style="'width:' + ${savingSummary.depositTotal * 100 / savingSummary.total} + '%'"></div>
-                            <div class="progress-bar-fill-saving"
-                                 th:style="'width:' + ${savingSummary.savingTotal * 100 / savingSummary.total} + '%'"></div>
-                            <div class="progress-bar-fill-account"
-                                 th:style="'width:' + ${savingSummary.accountTotal * 100 / savingSummary.total} + '%'"></div>
+                            <th:block th:if="${savingSummary.total > 0}">
+                                <div class="progress-bar-fill-deposit"
+                                     th:style="'width:' + ${savingSummary.depositTotal * 100 / savingSummary.total} + '%'"></div>
+                                <div class="progress-bar-fill-saving"
+                                     th:style="'width:' + ${savingSummary.savingTotal * 100 / savingSummary.total} + '%'"></div>
+                                <div class="progress-bar-fill-account"
+                                     th:style="'width:' + ${savingSummary.accountTotal * 100 / savingSummary.total} + '%'"></div>
+                            </th:block>
                         </div>
                     </div>
-
                     <div class="asset-text-box">
                         <div>
                             <p th:text="${memberName} + '님의 예금'"></p>
-                            <h2 th:text="${#numbers.formatInteger(savingSummary.depositTotal, 3, 'COMMA')} + '원'"></h2>
+                            <h2 th:text="${#numbers.formatInteger(savingSummary.depositTotal, 1, 'COMMA')} + '원'"></h2>
                         </div>
                         <div>
                             <p th:text="${memberName} + '님의 적금'"></p>
-                            <h2 th:text="${#numbers.formatInteger(savingSummary.savingTotal, 3, 'COMMA')} + '원'"></h2>
+                            <h2 th:text="${#numbers.formatInteger(savingSummary.savingTotal, 1, 'COMMA')} + '원'"></h2>
                         </div>
                         <div>
                             <p th:text="${memberName} + '님의 계좌'"></p>
-                            <h2 th:text="${#numbers.formatInteger(savingSummary.accountTotal, 3, 'COMMA')} + '원'"></h2>
+                            <h2 th:text="${#numbers.formatInteger(savingSummary.accountTotal, 1, 'COMMA')} + '원'"></h2>
                         </div>
                         <div>
                             <p><b>토탈금액</b></p>
-                            <h2 th:text="${#numbers.formatInteger(savingSummary.total, 3, 'COMMA')} + '원'"></h2>
+                            <h2 th:text="${#numbers.formatInteger(savingSummary.total, 1, 'COMMA')} + '원'"></h2>
                         </div>
                     </div>
                 </div>
@@ -487,36 +337,37 @@
                 <!-- 절약 방법 -->
                 <div class="presenting-method">
                     <p class="saving-situation-title" th:text="${memberName} + '님을 위한 절약방법 추천'"></p>
-                    <p class="saving-situation-sub-title">다음 달 소비액은 <span th:text="${goalConsumDto.foodExpense + goalConsumDto.communication +
-                                goalConsumDto.insurance + goalConsumDto.etc - gapAmount} + '원'"></span>이 좋을 것 같아요!</p>
+                    <p class="saving-situation-sub-title" th:with="nextMonthAmount=${goalConsumDto.foodExpense + goalConsumDto.communication + goalConsumDto.insurance + goalConsumDto.etc - gapAmount}">
+                        다음 달 소비액은 <span th:text="|${#numbers.formatInteger(nextMonthAmount, 1, 'COMMA')}원|"></span>이 좋을 것 같아요!
+                    </p>
                     <div class="next-month-consump">
                         <div class="consum-result-box-1">
                             <div class="c-char-1">
-                                <img src="images/coffee.png" alt="커피이미지">
+                                <img th:src="@{images/coffee.png}" alt="커피이미지">
                             </div>
-                            <span class="c-r-text">잠 안깬다고 스타X스 가지말고 탕비실 커피를...</span>
-                            <span class="c-r-content" th:text="'아메리카노 ' + ${suggestionDto.americanoCount} + '잔 덜 마시기'"></span>
+                            <span class="c-r-text">별다방에 비해 탕비실 커피는 공짜랍니다!</span>
+                            <span class="c-r-content" th:text="|아메리카노 ${#numbers.formatDecimal(suggestionDto.americanoCount, 1, 1)}잔 덜 마시기|"></span>
                         </div>
                         <div class="consum-result-box-2">
                             <div class="c-char-2">
-                                <img src="images/alcohol.png" alt="술이미지">
+                                <img th:src="@{images/alcohol.png}" alt="술이미지">
                             </div>
-                            <span class="c-r-text">스트레스 받는다고 술먹지 말고 운동장 한바퀴를...</span>
-                            <span class="c-r-content" th:text="'술자리를 ' + ${suggestionDto.alcoholCount} + '번 덜 가기'"></span>
+                            <span class="c-r-text">" 다음에 내가 또 술을 마시면... " 을 실천해볼까요?</span>
+                            <span class="c-r-content" th:text="|술자리를 ${#numbers.formatDecimal(suggestionDto.alcoholCount, 1, 1)}번 덜 가기|"></span>
                         </div>
                         <div class="consum-result-box-3">
                             <div class="c-char-3">
-                                <img src="images/suitcase.png" alt="여행이미지">
+                                <img th:src="@{images/suitcase.png}" alt="여행이미지">
                             </div>
-                            <span class="c-r-text">해외여행이 밥먹여 주나 그럴바에는...</span>
-                            <span class="c-r-content" th:text="'해외여행 ' + ${suggestionDto.travelCount} + '번 덜 가기'"></span>
+                            <span class="c-r-text">해외여행! 감당 가능하십니까..?</span>
+                            <span class="c-r-content" th:text="|해외여행 ${#numbers.formatDecimal(suggestionDto.travelCount, 1, 1)}번 덜 가기|"></span>
                         </div>
                         <div class="consum-result-box-4">
                             <div class="c-char-4">
-                                <img src="images/bag.png" alt="가방">
+                                <img th:src="@{images/bag.png}" alt="가방">
                             </div>
-                            <span class="c-r-text">명품은 어쩌구저쩌구.....</span>
-                            <span class="c-r-content" th:text="'명품구입 ' + ${suggestionDto.luxuryCount} + '번 덜 하기'"></span>
+                            <span class="c-r-text">명품 소유자보단 명품 Tigggler!</span>
+                            <span class="c-r-content" th:text="|명품구입 ${#numbers.formatDecimal(suggestionDto.luxuryCount, 1, 1)}번 덜 하기|"></span>
                         </div>
                     </div>
                 </div>

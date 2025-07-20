@@ -1,0 +1,223 @@
+/* static/css/transaction/goals.css */
+@import "scheduled-transaction.css";
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css");
+:root {
+    --primary-color: #3340CB;
+    --bg-page: #f8f9fa;
+    --bg-card: #ffffff;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --font-family: "Pretendard Variable", Pretendard, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-family);
+}
+
+body {
+    padding: 30px;
+    background-color: var(--bg-page);
+}
+
+.popup-container { /* 페이지 전체 컨테이너 */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+/* --- 상단 버튼 영역 --- */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#add-goal-btn,
+#delete-selected-goals-btn,
+.close-popup-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    background-color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+#add-goal-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.popup-footer-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.close-popup-btn {
+    width: 200px;
+    background-color: #e9ecef;
+}
+
+/* --- 테이블 스타일 --- */
+.table-container{
+    max-height: 75vh;
+    overflow-y: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+}
+
+.goal-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    font-size: 14px;
+    counter-reset: row-num;
+}
+
+.goal-table th,
+.goal-table td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.goal-table thead th {
+    position: sticky;
+    top: 0;
+    background-color: #f8f9fa;
+    z-index: 10;
+    font-weight: 600;
+    color: #4a5568;
+    text-align: center;
+}
+
+.goal-table tbody tr:hover {
+    background-color: #f7f8ff;
+}
+
+/* 테이블 번호 자동 매기기 */
+.goal-table tbody tr td:nth-child(2)::before {
+    counter-increment: row-num;
+    content: counter(row-num);
+}
+.goal-table tbody tr td:nth-child(2) {
+    text-align: center;
+}
+
+/* 수정 버튼 */
+.goal-table .edit-btn {
+    padding: 4px 12px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.goal-table .edit-btn:hover {
+    background-color: #f0f0f0;
+}
+
+#goal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px; /* <-- 이 부분이 요소 사이의 간격을 만듭니다. */
+}
+
+/* 폼 그룹(라벨 + 입력창) 정렬 */
+#goal-form .form-group {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    align-items: center;
+    gap: 15px;
+}
+
+#goal-form .form-group > label {
+    font-weight: 600;
+    color: #4a5568;
+}
+
+/* 모든 입력창 공통 스타일 */
+#goal-form input[type="text"],
+#goal-form input[type="number"],
+#goal-form select,
+#goal-form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    transition: all 0.2s ease;
+    font-size: 15px;
+}
+#goal-form input:focus,
+#goal-form select:focus,
+#goal-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(51, 64, 203, 0.2);
+}
+#goal-form textarea {
+    resize: none;
+    min-height: 80px;
+}
+
+
+/* '저장하기'와 '닫기' 버튼 공통 스타일 */
+#goal-form .submit-button,
+#goal-form .close-button {
+    width: 100%;
+    margin-top: 10px; /* 위쪽 요소와의 간격 */
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s ease;
+}
+
+/* '저장하기' 버튼 고유 스타일 */
+#goal-form .submit-button {
+    background-color: var(--primary-color);
+    color: white;
+}
+#goal-form .submit-button:hover {
+    background-color: #2734a5;
+}
+
+/* '닫기' 버튼 고유 스타일 */
+#goal-form .close-button {
+    background-color: #e9ecef;
+    color: #495057;
+}
+#goal-form .close-button:hover {
+    background-color: #d1d5db;
+}
+
+#goal-modal-title {
+    margin-bottom: 30px;
+}
+
+.goal-table td:nth-child(6) {
+    max-width: 250px;       /* 셀의 최대 너비를 지정 (이 값은 원하는대로 조절 가능) */
+    white-space: nowrap;      /* 텍스트가 너비를 넘어가도 줄바꿈을 하지 않음 */
+    overflow: hidden;         /* 너비를 넘어가는 내용을 숨김 */
+    text-overflow: ellipsis;  /* 숨겨진 텍스트가 있음을 ... 으로 표시 */
+}

@@ -43,10 +43,13 @@ function myInfoUpdate(){
     const token = $('meta[name="_csrf"]').attr('content');
     const header = $('meta[name="_csrf_header"]').attr('content');
 
+    const genderValue = $('select[name="gender"]').val();
+
+
     const formData = {
         tel: $('input[name="tel"]').val(),
         email: $('input[name="email"]').val(),
-        gender: $('select[name="gender"]').val(),
+        gender: genderValue === '1',
         birthday: $('input[name="birthday"]').val()
     };
 
