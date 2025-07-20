@@ -8,241 +8,87 @@
     <link rel="stylesheet" th:href="@{/css/insite/asset-modal.css}" />
 </th:block>
 <th:block layout:fragment="script">
-    <!-- modal script -->
-    <script>
-
-        // 내 자산 추가하기 클릭 시 asset-btn 호출
-        function openModal() {
-            document.getElementById("myModal").style.display = "block";
-            const cashButton = document.getElementById("cash-button");
-            const accountButton = document.getElementById("account-button");
-
-
-
-
-
-
-            cashButton.addEventListener("click", function (){
-                this.classList.add("selected");
-                accountButton.classList.remove("selected");
-
-
-            })
-
-
-
-            // 계좌타입 버튼 클릭 시 처리
-            accountButton.addEventListener("click", function () {
-                this.classList.add("selected");
-                cashButton.classList.remove("selected");
-
-                // const selectedValue = this.dataset.value;
-                // accountTypeInput.value = selectedValue;
-                //
-                // if (selectedValue === "cash") {
-                //     // 현금 선택 시 모든 필드 비활성화
-                //     accountFields.forEach((field) => {
-                //         field.disabled = true;
-                //         field.classList.add("disabled");
-                //     });
-                // } else {
-                //     // 계좌 선택 시 다시 활성화
-                //     accountFields.forEach((field) => {
-                //         field.disabled = false;
-                //         field.classList.remove("disabled");
-                //     });
-                // }
-            });
-
-        }
-
-        function closeModal() {
-            document.getElementById("myModal").style.display = "none";
-        }
-        // 모달 바깥을 클릭하면 닫히도록 하기
-        window.onclick = function(event) {
-            const modal = document.getElementById("myModal");
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        };
-
-        // 현금 별칭 입력 영역 (추후에 이 div를 추가로 HTML에 넣을 예정)
-        const aliasInputPage = document.getElementById("cash-alias-page");
-        const assetForm = document.getElementById("assetForm");
-
-        const modalTitle = document.getElementById("modal-title");
-
-
-
-        // 다음 버튼 클릭 시 처리
-        nextButton.addEventListener("click", function (e) {
-            if (accountTypeInput.value === "cash") {
-                e.preventDefault(); // submit 방지
-                assetForm.style.display = "none";
-                aliasInputPage.style.display = "block";
-            }
-            // else는 기본 submit으로 폼 전송됨 (계좌일 경우)
-        });
-
-
-
-
-        // JavaScript로 버튼 클릭 시 selected 클래스 토글 및 hidden input 값 업데이트
-        document.addEventListener("DOMContentLoaded", function () {
-            // 계좌타입 버튼 처리
-            const accountTypeButtons = document.querySelectorAll(
-                "#accountTypeGroup .type-button"
-            );
-            const accountTypeInput = document.getElementById("accountTypeInput");
-
-            accountTypeButtons.forEach((button) => {
-                button.addEventListener("click", function () {
-                    accountTypeButtons.forEach((btn) =>
-                        btn.classList.remove("selected")
-                    );
-                    this.classList.add("selected");
-                    accountTypeInput.value = this.dataset.value; // data-value 값을 hidden input에 저장
-                });
-            });
-
-            // 예금타입 버튼 처리
-            const depositTypeButtons = document.querySelectorAll(
-                "#depositTypeGroup .type-button"
-            );
-            const depositTypeInput = document.getElementById("depositTypeInput");
-
-            depositTypeButtons.forEach((button) => {
-                button.addEventListener("click", function () {
-                    depositTypeButtons.forEach((btn) =>
-                        btn.classList.remove("selected")
-                    );
-                    this.classList.add("selected");
-                    depositTypeInput.value = this.dataset.value; // data-value 값을 hidden input에 저장
-                });
-            });
-
-            // 모달 닫기 함수 (닫기 버튼 클릭 시 호출)
-            function closeModal() {
-                // 실제 모달을 닫는 로직은 여기에 구현합니다.
-                // 예를 들어, 모달 오버레이를 숨기는 CSS 클래스를 추가/제거하거나,
-                // 이 예시처럼 간단히 alert를 띄울 수 있습니다.
-                alert("모달이 닫힙니다.");
-                // document.querySelector('.modal-overlay').style.display = 'none';
-            }
-
-            // 전역 스코프에 함수 등록 (onclick에서 접근할 수 있도록)
-            window.closeModal = closeModal;
-        });
-    </script>
+    <script th:src="@{/javascript/transaction/asset.js}"></script>
 </th:block>
 
 <div  layout:fragment="content">
     <div class="container">
         <!-- 타이틀 -->
         <div class="asset-header">
-            <!-- 좌측 타이틀 -->
-            <div class="asset-title">
-                <div class="dot"></div>
-                <span>자산관리</span>
-                <!-- modal -->
-<!--                <div class="modal-overlay" id="myModal">-->
-<!--                    <div class="modal-content">-->
-<!--                        <div class="modal-title" id="modal-title">내 자산 추가</div>-->
-
-<!--                        <form id="assetForm" action="/submit-asset" method="POST">-->
-<!--                            <div class="section-title">계좌타입</div>-->
-<!--                            <div class="button-group" id="accountTypeGroup">-->
-<!--                                <button type="button" class="type-button"  id="cash-button" data-value="cash">-->
-<!--                                    현금-->
-<!--                                </button>-->
-<!--                                <button-->
-<!--                                        type="button"-->
-<!--                                        class="type-button selected"-->
-<!--                                        id="account-button"-->
-<!--                                        data-value="account"-->
-<!--                                >-->
-<!--                                    계좌-->
-<!--                                </button>-->
-<!--                                <input-->
-<!--                                        type="hidden"-->
-<!--                                        name="accountType"-->
-<!--                                        id="accountTypeInput"-->
-<!--                                        value="account"-->
-<!--                                />-->
-<!--                            </div>-->
-
-<!--                            <div class="section-title">계좌번호</div>-->
-<!--                            <div class="input-group">-->
-<!--                                <input-->
-<!--                                        type="text"-->
-<!--                                        name="accountNumber"-->
-<!--                                        placeholder="계좌번호 작성"-->
-<!--                                        required-->
-<!--                                />-->
-<!--                            </div>-->
-
-<!--                            <div class="section-title">은행</div>-->
-<!--                            <div class="input-group">-->
-<!--                                <select name="bankName" required>-->
-<!--                                    <option value="기엽은행">기엽은행</option>-->
-<!--                                    <option value="너무옙은행">너무옙은행</option>-->
-<!--                                    <option value="우리은행">국민은행</option>-->
-<!--                                    <option value="하나은행">하나은행</option>-->
-<!--                                    <option value="카카오뱅크">카카오뱅크</option>-->
-<!--                                    <option value="농협은행">농협은행</option>-->
-<!--                                </select>-->
-<!--                            </div>-->
-
-<!--                            <div class="section-title">계좌타입</div>-->
-<!--                            <div class="button-group" id="depositTypeGroup">-->
-<!--                                <button-->
-<!--                                        type="button"-->
-<!--                                        class="type-button selected"-->
-<!--                                        data-value="normalDeposit"-->
-<!--                                >-->
-<!--                                    보통예금-->
-<!--                                </button>-->
-<!--                                <button-->
-<!--                                        type="button"-->
-<!--                                        class="type-button"-->
-<!--                                        data-value="installmentSavings"-->
-<!--                                >-->
-<!--                                    적금-->
-<!--                                </button>-->
-<!--                                <button type="button" class="type-button" data-value="timeDeposit">-->
-<!--                                    정기예금-->
-<!--                                </button>-->
-<!--                                <input-->
-<!--                                        type="hidden"-->
-<!--                                        name="depositType"-->
-<!--                                        id="depositTypeInput"-->
-<!--                                        value="normalDeposit"-->
-<!--                                />-->
-<!--                            </div>-->
-
-<!--                            <div class="actions">-->
-<!--                                <button type="button" class="close-button" onclick="closeModal()">-->
-<!--                                    닫기-->
-<!--                                </button>-->
-<!--                                <button type="submit" class="next-button">다음</button>-->
-<!--                            </div>-->
-<!--                        </form>-->
-<!--                    </div>-->
-<!--                    &lt;!&ndash; 현금 별칭 입력 화면 &ndash;&gt;-->
-<!--                    <div id="cash-alias-page" style="display: none;">-->
-<!--                        <div class="section-title">현금 별칭 입력</div>-->
-<!--                        <div class="input-group">-->
-<!--                            <input type="text" name="cashAlias" placeholder="예: 지갑, 비상금" required />-->
-<!--                        </div>-->
-<!--                        <div class="actions">-->
-<!--                            <button type="button" onclick="closeModal()">취소</button>-->
-<!--                            <button type="submit" form="aliasForm">확인</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+            <div class="asset-header-content">
+                <div class="asset-title">
+                    <div class="dot"></div>
+                    <span>자산관리</span>
+                </div>
+                <div>
+                    <button class="asset-btn" id="add-asset-btn">내 자산 추가</button>
+                </div>
             </div>
-<!--            <button class="asset-btn" onclick="openModal()" >내 자산 추가</button>-->
+                <div id="asset-main-modal" class="asset-modal-overlay hidden">
+                    <div class="asset-modal-content">
+
+                        <form id="asset-main-form">
+                            <div class="asset-modal-title">내 자산 추가</div>
+                            <div class="section">
+                                <div class="section-title">자산 타입</div>
+                                <div class="button-group">
+                                    <button type="button" class="type-button selected" data-value="CASH">현금</button>
+                                    <button type="button" class="type-button" data-value="ORDINARY">보통예금</button>
+                                    <input type="hidden" id="asset-type-input" value="CASH">
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="section-title">자산 별칭</div>
+                                <div class="input-group">
+                                    <input type="text" id="asset-alias-input" placeholder="예: 내 지갑, 비상금" required>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="section-title">초기 잔액</div>
+                                <div class="input-group">
+                                    <input type="number" id="asset-balance-input" placeholder="0" required>
+                                </div>
+                            </div>
+
+                            <div class="actions">
+                                <button type="button" id="asset-main-cancel-btn">취소</button>
+                                <button type="button" id="asset-main-next-btn" disabled>등록</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div id="asset-bank-modal" class="asset-modal-overlay hidden">
+                    <div class="asset-modal-content">
+                        <div class="asset-modal-title">계좌 정보 입력</div>
+
+                        <form id="asset-bank-form">
+                            <div class="section">
+                                <div class="section-title">은행</div>
+                                <div class="input-group">
+                                    <select id="asset-bank-select" required>
+                                        <option value="" selected disabled>은행을 선택하세요</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="section">
+                                <div class="section-title">계좌번호</div>
+                                <div class="input-group">
+                                    <input type="text" id="asset-account-number-input" placeholder="'-' 없이 숫자만 입력" required>
+                                </div>
+                            </div>
+
+                            <div class="actions">
+                                <button type="button" id="asset-bank-cancel-btn">취소</button>
+                                <button type="button" id="asset-bank-register-btn" disabled>등록</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
         </div>
 
         <!-- 목표 소비금액 -->
@@ -429,15 +275,16 @@
 
                     <div class="progress-bar-wrapper">
                         <div class="progress-bar-bg">
-                            <div class="progress-bar-fill-deposit"
-                                 th:style="'width:' + ${savingSummary.depositTotal * 100 / savingSummary.total} + '%'"></div>
-                            <div class="progress-bar-fill-saving"
-                                 th:style="'width:' + ${savingSummary.savingTotal * 100 / savingSummary.total} + '%'"></div>
-                            <div class="progress-bar-fill-account"
-                                 th:style="'width:' + ${savingSummary.accountTotal * 100 / savingSummary.total} + '%'"></div>
+                            <th:block th:if="${savingSummary.total > 0}">
+                                <div class="progress-bar-fill-deposit"
+                                     th:style="'width:' + ${savingSummary.depositTotal * 100 / savingSummary.total} + '%'"></div>
+                                <div class="progress-bar-fill-saving"
+                                     th:style="'width:' + ${savingSummary.savingTotal * 100 / savingSummary.total} + '%'"></div>
+                                <div class="progress-bar-fill-account"
+                                     th:style="'width:' + ${savingSummary.accountTotal * 100 / savingSummary.total} + '%'"></div>
+                            </th:block>
                         </div>
                     </div>
-
                     <div class="asset-text-box">
                         <div>
                             <p th:text="${memberName} + '님의 예금'"></p>
@@ -499,28 +346,28 @@
                                 <img th:src="@{images/coffee.png}" alt="커피이미지">
                             </div>
                             <span class="c-r-text">별다방에 비해 탕비실 커피는 공짜랍니다!</span>
-                            <span class="c-r-content" th:text="'아메리카노 ' + ${suggestionDto.americanoCount} + '잔 덜 마시기'"></span>
+                            <span class="c-r-content" th:text="|아메리카노 ${#numbers.formatDecimal(suggestionDto.americanoCount, 1, 1)}잔 덜 마시기|"></span>
                         </div>
                         <div class="consum-result-box-2">
                             <div class="c-char-2">
                                 <img th:src="@{images/alcohol.png}" alt="술이미지">
                             </div>
                             <span class="c-r-text">" 다음에 내가 또 술을 마시면... " 을 실천해볼까요?</span>
-                            <span class="c-r-content" th:text="'술자리를 ' + ${suggestionDto.alcoholCount} + '번 덜 가기'"></span>
+                            <span class="c-r-content" th:text="|술자리를 ${#numbers.formatDecimal(suggestionDto.alcoholCount, 1, 1)}번 덜 가기|"></span>
                         </div>
                         <div class="consum-result-box-3">
                             <div class="c-char-3">
                                 <img th:src="@{images/suitcase.png}" alt="여행이미지">
                             </div>
                             <span class="c-r-text">해외여행! 감당 가능하십니까..?</span>
-                            <span class="c-r-content" th:text="'해외여행 ' + ${suggestionDto.travelCount} + '번 덜 가기'"></span>
+                            <span class="c-r-content" th:text="|해외여행 ${#numbers.formatDecimal(suggestionDto.travelCount, 1, 1)}번 덜 가기|"></span>
                         </div>
                         <div class="consum-result-box-4">
                             <div class="c-char-4">
                                 <img th:src="@{images/bag.png}" alt="가방">
                             </div>
                             <span class="c-r-text">명품 소유자보단 명품 Tigggler!</span>
-                            <span class="c-r-content" th:text="'명품구입 ' + ${suggestionDto.luxuryCount} + '번 덜 하기'"></span>
+                            <span class="c-r-content" th:text="|명품구입 ${#numbers.formatDecimal(suggestionDto.luxuryCount, 1, 1)}번 덜 하기|"></span>
                         </div>
                     </div>
                 </div>

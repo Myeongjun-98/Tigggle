@@ -107,33 +107,6 @@ public class UserController {
         return "User/findIdAndPassword";
     }
 
-    // 로그인 유지
-    @PostMapping("/user/signIn")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest,
-                                   HttpServletRequest request,
-                                   HttpServletResponse response) {
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword());
-
-        try {
-            Authentication auth = authenticationManager.authenticate(token);
-            SecurityContextHolder.getContext().setAuthentication(auth);
-
-            // Remember-me 수동 처리 (필요시)
-            if (loginRequest.isAutoLogin()) {
-                PersistentTokenBasedRememberMeServices rememberMeServices =
-                        new PersistentTokenBasedRememberMeServices("a-very-secret-key", userDetailsService, tokenRepository);
-                rememberMeServices.setAlwaysRemember(true);
-                rememberMeServices.loginSuccess(request, response, auth);
-            }
-
-            return ResponseEntity.ok().body("로그인 성공");
-        } catch (AuthenticationException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("로그인 실패");
-        }
-    }
-
-
     //로그인 페이지
     @GetMapping("/user/signIn")
     public String signIn(){

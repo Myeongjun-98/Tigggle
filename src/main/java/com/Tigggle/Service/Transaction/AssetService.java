@@ -1,5 +1,7 @@
 package com.Tigggle.Service.Transaction;
 
+import com.Tigggle.Constant.Transaction.LimitType;
+import com.Tigggle.DTO.Transaction.AssetCreateDto;
 import com.Tigggle.DTO.Transaction.AssetListDto;
 import com.Tigggle.Entity.Member;
 import com.Tigggle.Entity.Transaction.*;
@@ -8,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -152,4 +155,34 @@ public class AssetService {
                 .collect(Collectors.toList());
     }
 
+    // * asset.html에서 자산 추가
+    @Transactional
+    public void createAsset(AssetCreateDto dto, Member member) {
+
+        // 1. DTO로부터 받은 assetType을 확인합니다.
+        String assetType = dto.getAssetType();
+        if (!"CASH".equals(assetType) && !"ORDINARY".equals(assetType)) {
+            throw new IllegalArgumentException("지원하지 않는 자산 타입입니다.");
+        }
+
+        // 2. '보통예금'일 경우에만 bankId와 accountNumber를 사용하고, '현금'일 때는 null로 설정합니다.
+        Long bankId = "ORDINARY".equals(assetType) ? dto.getBankId() : null;
+        String accountNumber = "ORDINARY".equals(assetType) ? dto.getAccountNumber() : null;
+
+        // 3. Repository에 정의할 네이티브 쿼리 메서드를 호출하여 DB에 직접 INSERT 합니다.
+        assetRepository.insertNativeAsset(
+                assetType,
+                dto.getAlias(),
+                member.getId(),
+                LocalDate.now(), // openDate는 현재 날짜로 설정
+                dto.getBalance(),
+                accountNumber,
+                bankId,
+                0.0f, // interest (이자율)
+                false, // isCompound (복리여부)
+                0L, // expenseLimit (출금한도)
+                LimitType.MONTHLY.name() // limitType (한도종류)
+        );
+
+    }
 }

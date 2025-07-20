@@ -4,6 +4,7 @@ import com.Tigggle.Entity.product.Bank;
 
 import com.Tigggle.Constant.Transaction.LimitType;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,4 +29,10 @@ public class BankAccount extends Asset{
     private LimitType limitType;        // 출금한도 종류
 
     private Long balance = 0L;               // 잔액
+
+    @JsonProperty("isCompound")
+    public boolean isCompound(){
+        return isCompound;
+    }
+
 }

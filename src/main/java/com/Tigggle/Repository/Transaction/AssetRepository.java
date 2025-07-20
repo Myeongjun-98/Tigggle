@@ -10,7 +10,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.Tigggle.Entity.Transaction.Asset;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,4 +47,23 @@ public interface AssetRepository extends JpaRepository<Asset, Long>{
     @Modifying
     @Query(value = "update asset set balance= :val where id= :assetId" ,nativeQuery = true)
     public void updateBalance( @Param("val") Long val,@Param("assetId") Long assetId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO asset (asset_type, alias, member_id, open_date, balance, " +
+            "account_number, bank_id, interest, is_compound, expense_limit, limit_type) " +
+            "VALUES (:assetType, :alias, :memberId, :openDate, :balance, " +
+            ":accountNumber, :bankId, :interest, :isCompound, :expenseLimit, :limitType)",
+            nativeQuery = true)
+    void insertNativeAsset(@Param("assetType") String assetType,
+                           @Param("alias") String alias,
+                           @Param("memberId") Long memberId,
+                           @Param("openDate") LocalDate openDate,
+                           @Param("balance") Long balance,
+                           @Param("accountNumber") String accountNumber,
+                           @Param("bankId") Long bankId,
+                           @Param("interest") float interest,
+                           @Param("isCompound") boolean isCompound,
+                           @Param("expenseLimit") Long expenseLimit,
+                           @Param("limitType") String limitType);
 }

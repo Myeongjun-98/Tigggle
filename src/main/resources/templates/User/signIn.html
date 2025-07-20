@@ -39,6 +39,21 @@
             <a th:href="@{/user/forget(target=password)}">비밀번호 찾기</a>
         </div>
     </div>
+
+    <div id="login-fail-modal" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); z-index: 1000;">
+        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background-color: white; padding: 30px; border-radius: 8px; text-align: center;">
+            <p id="login-fail-message" style="margin-bottom: 20px;"></p>
+            <button id="login-fail-close-btn">확인</button>
+        </div>
+    </div>
+
+    <div id="alert-modal" class="alert-modal-overlay">
+        <div class="alert-modal-content">
+            <p id="alert-modal-message"></p>
+            <button id="alert-modal-close-btn">확인</button>
+        </div>
+    </div>
+
     <script>
         $(function(){
             $(".wrapTitle").addClass("visible");
@@ -47,61 +62,88 @@
                 $("#accessId").val(savedId);
                 $("#idSave").prop("checked", true);
             }
+            $("#accessId").focus();
         });
-        $("#accessId").focus();
 
+        /**
+         * 메시지를 받아 알림 모달을 보여주는 재사용 가능한 함수
+         * @param {string} message - 모달에 표시할 메시지
+         */
+        function showLoginAlertModal(message) {
+            const modal = $('#alert-modal');
+            $('#alert-modal-message').text(message);
+            modal.css('display', 'flex'); // flex를 이용해 가운데 정렬
 
+            // '확인' 버튼을 클릭하면 모달이 닫히도록 이벤트 연결
+            $('#alert-modal-close-btn').off('click').on('click', function() {
+                modal.hide();
+            });
+        }
+
+        // Enter 키를 눌렀을 때 로그인 버튼 클릭
         $(document).on("keydown", function(e){
-            if(e.key==='Enter'){
+            if(e.key === 'Enter'){
+                // 모달이 떠 있을 때는 Enter 키로 로그인이 다시 시도되지 않도록 방지
+                if ($('#alert-modal').is(':visible')) {
+                    $('#alert-modal-close-btn').trigger('click');
+                    return;
+                }
                 $("#loginBt").trigger('click');
             }
         });
-        $("#loginBt").on("click",function(){
+
+        // 로그인 버튼 클릭 이벤트
+        $("#loginBt").on("click", function(){
             var id = $("#accessId").val();
             var pw = $("#password").val();
-            if(id===''){
-                alert("아이디를 입력하세요");
+
+            // alert() 대신 새로 만든 모달 함수를 호출합니다.
+            if(id === ''){
+                showLoginAlertModal("아이디를 입력해주세요.");
                 $("#accessId").focus();
-            }else if(pw===''){
-                alert("비밀번호를 입력하세요");
-                $("#password").focus();
-            }else{
-                if ($("#idSave").is(":checked")) {
-                    localStorage.setItem("tigggleid", $("#accessId").val());
-                } else {
-                    localStorage.removeItem("tigggleid");
-                }
-                if ($("#loginKeep").is(":checked")) {
-                    const formData = {
-                        username: $("#accessId").val(),
-                        password: $("#password").val(),
-                        autoLogin: $("#loginKeep").is(":checked")
-                    };
-                    const token = $('meta[name="_csrf"]').attr('content');
-                    const header = $('meta[name="_csrf_header"]').attr('content');
-                    $.ajax({
-                        url: "/Tigggle/user/signIn",
-                        method: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify(formData),
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader(header, token);
-                        },
-                        success: function (response) {
-                            // 로그인 성공 시 이동
-                            location.href = "/Tigggle";
-                        },
-                        error: function () {
-                            alert("로그인 실패");
-                        }
-                    });
-                }else {
-                    $("#loginFm").submit();
-                }
+                return;
             }
+            if(pw === ''){
+                showLoginAlertModal("비밀번호를 입력해주세요.");
+                $("#password").focus();
+                return;
+            }
+
+            const formData = {
+                accessId: id,
+                password: pw,
+                autoLogin: $("#loginKeep").is(":checked")
+            };
+
+            const token = $('meta[name="_csrf"]').attr('content');
+            const header = $('meta[name="_csrf_header"]').attr('content');
+
+            $.ajax({
+                url: /*[[@{/user/signIn}]]*/ "/user/signIn",
+                method: "POST",
+                // contentType: "application/json",
+                data: formData,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader(header, token);
+                },
+                success: function (response) {
+                    if ($("#idSave").is(":checked")) {
+                        localStorage.setItem("tigggleid", id);
+                    } else {
+                        localStorage.removeItem("tigggleid");
+                    }
+                    location.href = /*[[@{/}]]*/ "/";
+                },
+                error: function (jqXHR) {
+                    let errorMessage = "올바르지 않은 아이디 및 비밀번호입니다.";
+                    if (jqXHR.responseJSON && jqXHR.responseJSON.message) {
+                        errorMessage = jqXHR.responseJSON.message;
+                    }
+                    // 로그인 실패 시에도 새로 만든 모달 함수를 호출합니다.
+                    showLoginAlertModal(errorMessage);
+                }
+            });
         });
-
-
     </script>
 </div>
 

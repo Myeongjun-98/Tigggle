@@ -1,147 +1,120 @@
-.asset-btn {
-    background-color: #3340cb;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 22px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 144px;
-    height: 44px;
-    font-size: 18px;
+/* asset-modal.css */
 
-
-}
-
-/* 모달 오버레이 (배경 어둡게 처리) */
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+.asset-modal-overlay {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
+}
+
+.asset-modal-overlay.hidden {
     display: none;
 }
 
-/* 모달 컨텐츠 박스 */
-.modal-content {
+.asset-modal-content {
     background-color: #fff;
-    border-radius: 10px;
-    width: 700px;
-    height: 800px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    padding: 40px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* 모달 제목 */
-.modal-title {
-    font-size: 28px;
-    font-weight: bold;
-    color: #333;
-    margin-bottom: 50px;
-}
-
-/* 각 섹션 제목 (예: 계좌타입, 계좌번호) */
-.section-title {
-    font-size: 18px;
-    color: #555;
-    margin-bottom: 20px;
-    align-self: flex-start;
-    margin-left: 100px;
-}
-
-/* 입력 필드 및 드롭다운을 감싸는 그룹 */
-.input-group {
+    padding: 30px 35px;
+    border-radius: 16px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-bottom: 30px;
+    max-width: 420px;
 }
 
-/* 버튼 그룹 (예: 현금/계좌, 보통예금/적금) */
-.button-group {
-    display: flex;
-    gap: 15px;
+.asset-modal-title {
+    font-size: 24px;
+    font-weight: 700;
     margin-bottom: 30px;
+    text-align: center;
 }
 
-/* 버튼 그룹 내 버튼 스타일 */
-.button-group button {
-    padding: 12px 30px;
-    border: 1px solid #ddd;
+.asset-modal-content .section {
+    margin-bottom: 20px;
+}
+
+.asset-modal-content .section-title {
+    font-weight: 600;
+    color: #4a5568;
+    margin-bottom: 10px;
+}
+
+.asset-modal-content .button-group {
+    display: flex;
+    gap: 10px;
+}
+
+.asset-modal-content .type-button {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
-    background-color: #f8f8f8;
-    font-size: 16px;
+    background-color: #f8f9fa;
     cursor: pointer;
-    color: #333;
-    flex-grow: 1;
-    min-width: 120px;
+    font-size: 15px;
+    font-weight: 500;
+    transition: all 0.2s ease;
 }
 
-/* 선택된 버튼 스타일 */
-.button-group button.selected {
-    background-color: #e0eaff;
-    border-color: #6a8cff;
-    color: #000;
-    font-weight: bold;
+.asset-modal-content .type-button.selected {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    font-weight: 600;
 }
 
-/* 텍스트 입력 필드 및 드롭다운 공통 스타일 */
-input[type="text"], select {
-    width: 500px;
-    padding: 15px;
-    border: 1px solid #ddd;
+.asset-modal-content .input-group input,
+.asset-modal-content .input-group select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
-    font-size: 16px;
-    box-sizing: border-box;
+    background-color: #f8f9fa;
+    font-size: 15px;
 }
 
-/* 드롭다운 화살표 커스터마이징 */
-select {
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url('data:image/svg+xml;utf8,<svg fill="%23333333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); /* 커스텀 화살표 SVG */
-    background-repeat: no-repeat;
-    background-position: right 15px center;
-    background-size: 20px;
-    padding-right: 40px;
-}
-
-/* 하단 액션 버튼 그룹 (닫기, 저장) */
-.actions {
-    margin-top: auto;
+.asset-modal-content .actions {
+    margin-top: 30px;
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    justify-content: flex-end;
 }
 
-/* 액션 버튼 공통 스타일 */
-.actions button {
-    padding: 15px 40px;
+.asset-modal-content .actions button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
     border: none;
+}
+
+.asset-modal-content .actions button:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+#asset-main-cancel-btn, #asset-bank-cancel-btn {
+    background-color: #e9ecef;
+}
+
+#asset-main-next-btn, #asset-bank-register-btn {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.asset-btn {
+    padding: 10px 20px;
     border-radius: 8px;
-    font-size: 18px;
+    border: none;
+    background-color: #3340CB; /* var(--primary-color)와 동일 */
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
     cursor: pointer;
-    font-weight: bold;
+    transition: background-color 0.2s ease;
 }
 
-/* 닫기 버튼 스타일 */
-.actions .close-button {
-    background-color: #e0e0e0;
-    color: #555;
-}
-
-.actions .next-button {
-    background-color: #4a6bff;
-    color: #fff;
+.asset-btn:hover {
+    background-color: #2734a5; /* 더 어두운 색상 */
 }

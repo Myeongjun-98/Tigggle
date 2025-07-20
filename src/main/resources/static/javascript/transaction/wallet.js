@@ -302,7 +302,7 @@ function displayNoAssetMessage() {
     document.getElementById('TR-history-container').innerHTML = `
         <div class="TR-no-data">
             <h2>등록된 지갑 자산이 없습니다.</h2>
-            <a href="/asset/register">자산 등록하러 가기</a>
+            <a href="/asset">자산 등록하러 가기</a>
         </div>
     `;
     // 다른 요약 정보들도 비워주는 것이 좋습니다.
